@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GeoScape | 시간을 탐험하는 지리 시뮬레이터</title>
+  <meta name="description" content="GeoScape(지오스케이프) – 시간을 움직이면, 공간이 보인다. 시간에 따른 지리적 공간 변화를 탐구하는 고등학생용 지리 학습 플랫폼">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+
+  <!-- 외부 라이브러리 (API 키 불필요) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js" defer></script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <div class="app" id="app">
+    <script>
+      // 좁은 화면에서는 사이드바·패널을 접힌 상태로 시작 (첫 화면 깜빡임 방지)
+      if (window.matchMedia('(max-width: 1024px)').matches) document.getElementById('app').classList.add('sidebar-collapsed', 'panel-collapsed');
+    </script>
+    <!-- ===== A. 상단 헤더 ===== -->
+    <header class="header">
+      <div class="brand">
+        <img src="assets/logo.svg" alt="" class="brand-logo" width="36" height="36">
+        <div class="brand-text">
+          <div class="brand-name">GeoScape <span class="brand-ko">지오스케이프</span></div>
+          <div class="brand-slogan">시간을 움직이면, 공간이 보인다.</div>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <label class="field">
+          <span class="field-label"><i data-lucide="globe-2"></i>탐구 지역</span>
+          <select id="regionSelect" aria-label="탐구 지역 선택"></select>
+        </label>
+
+        <div class="segmented" role="tablist" aria-label="탐구 모드">
+          <button class="seg-btn is-active" data-mode="explore" role="tab" aria-selected="true"><i data-lucide="clock-3"></i><span>시간 탐색</span></button>
+          <button class="seg-btn" data-mode="compare" role="tab" aria-selected="false"><i data-lucide="columns-2"></i><span>과거·현재 비교</span></button>
+          <button class="seg-btn" data-mode="future" role="tab" aria-selected="false" disabled title="향후 지원 예정"><i data-lucide="sparkles"></i><span>미래 시나리오</span><em class="soon">준비 중</em></button>
+        </div>
+
+        <button class="icon-btn" id="helpBtn" title="도움말" aria-label="도움말"><i data-lucide="circle-help"></i></button>
+      </div>
+    </header>
+
+    <div class="body">
+      <!-- ===== B. 왼쪽 사이드바 ===== -->
+      <aside class="sidebar" id="sidebar" aria-label="탐구 도구">
+        <section class="card" id="regionInfo"></section>
+
+        <section class="card">
+          <h3 class="card-title"><i data-lucide="compass"></i>탐구 주제</h3>
+          <div class="topic-list" id="topicList"></div>
+          <div class="topic-question" id="topicQuestion" hidden></div>
+        </section>
+
+        <section class="card">
+          <h3 class="card-title"><i data-lucide="flag"></i>주요 시점</h3>
+          <ol class="milestone-list" id="milestoneList"></ol>
+        </section>
+
+        <section class="card">
+          <h3 class="card-title"><i data-lucide="layers"></i>지도 레이어</h3>
+          <div class="basemap-switch" id="basemapSwitch"></div>
+          <div class="layer-list" id="layerList"></div>
+        </section>
+
+        <section class="card">
+          <h3 class="card-title"><i data-lucide="images"></i>사진 자료</h3>
+          <p class="muted small" id="photoSummary"></p>
+          <button class="btn btn-primary btn-block" id="openGalleryBtn"><i data-lucide="gallery-horizontal-end"></i>사진 갤러리 열기</button>
+        </section>
+      </aside>
+
+      <!-- ===== C. 중앙 지도 영역 ===== -->
+      <main class="map-area" id="mapArea">
+        <div class="map" id="map" aria-label="탐구 지도"></div>
+
+        <div class="map-overlay top-left">
+          <button class="chip-btn" id="sidebarToggle" title="사이드바 접기/펼치기"><i data-lucide="panel-left"></i></button>
+          <button class="notice-chip" id="dataNoticeBtn"><i data-lucide="triangle-alert"></i><span>공간 레이어는 교육용 데모·개략 데이터입니다</span></button>
+        </div>
+
+        <div class="map-overlay top-right">
+          <div class="year-badge" id="yearBadge" aria-live="polite">
+            <span class="year-badge-year" id="yearBadgeYear">1970</span>
+            <span class="year-badge-era" id="yearBadgeEra"></span>
+          </div>
+          <button class="chip-btn" id="panelToggle" title="정보 패널 접기/펼치기"><i data-lucide="panel-right"></i></button>
+        </div>
+
+        <div class="legend" id="legend"></div>
+
+        <!-- 비교 모드 -->
+        <div class="compare" id="compare" hidden>
+          <div class="compare-maps">
+            <div class="compare-pane">
+              <div class="compare-head">
+                <span class="tag tag-past">과거</span>
+                <select id="compareLeftYear" aria-label="왼쪽 지도 연도"></select>
+              </div>
+              <div class="map" id="mapLeft"></div>
+            </div>
+            <div class="compare-pane">
+              <div class="compare-head">
+                <span class="tag tag-now">현재</span>
+                <select id="compareRightYear" aria-label="오른쪽 지도 연도"></select>
+              </div>
+              <div class="map" id="mapRight"></div>
+            </div>
+          </div>
+          <div class="compare-commentary" id="compareCommentary"></div>
+        </div>
+      </main>
+
+      <!-- ===== D. 오른쪽 정보 패널 ===== -->
+      <aside class="panel" id="panel" aria-label="시기별 정보">
+        <div class="panel-inner" id="panelContent"></div>
+      </aside>
+    </div>
+
+    <!-- ===== E. 하단 타임라인 ===== -->
+    <footer class="timeline" id="timeline">
+      <div class="tl-controls">
+        <button class="icon-btn" id="tlPrev" title="이전 시점" aria-label="이전 시점"><i data-lucide="skip-back"></i></button>
+        <button class="play-btn" id="tlPlay" title="재생" aria-label="재생"><i data-lucide="play"></i></button>
+        <button class="icon-btn" id="tlNext" title="다음 시점" aria-label="다음 시점"><i data-lucide="skip-forward"></i></button>
+        <label class="speed">
+          <span class="sr-only">재생 속도</span>
+          <select id="tlSpeed" aria-label="재생 속도">
+            <option value="0.5">0.5×</option>
+            <option value="1" selected>1×</option>
+            <option value="2">2×</option>
+            <option value="4">4×</option>
+          </select>
+        </label>
+      </div>
+      <div class="tl-track-wrap">
+        <div class="tl-eras" id="tlEras"></div>
+        <div class="tl-track">
+          <input type="range" id="tlSlider" min="1970" max="2025" step="1" value="1970" aria-label="연도 선택">
+          <div class="tl-marks" id="tlMarks"></div>
+        </div>
+        <div class="tl-scale" id="tlScale"></div>
+      </div>
+      <div class="tl-year">
+        <div class="tl-year-num" id="tlYear">1970</div>
+        <div class="tl-year-label">관측 자료</div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ===== 모달: 도움말 / 갤러리 / 확대 보기 / 데이터 안내 ===== -->
+  <div class="modal" id="helpModal" hidden role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="modal-box modal-md">
+      <button class="modal-close" data-close aria-label="닫기"><i data-lucide="x"></i></button>
+      <div class="help-hero">
+        <img src="assets/logo.svg" alt="" width="52" height="52">
+        <div>
+          <h2 id="helpTitle">GeoScape에 오신 것을 환영합니다</h2>
+          <p class="muted">시간을 움직이면, 공간이 보인다. 한 지역의 과거와 현재를 오가며 공간이 <b>어떻게</b>, <b>왜</b> 변했는지 탐구합니다.</p>
+        </div>
+      </div>
+      <ol class="help-steps">
+        <li><span class="step-icon"><i data-lucide="sliders-horizontal"></i></span><div><b>타임라인을 움직이세요.</b> 아래 슬라이더를 끌거나 ▶ 재생을 누르면 지도·설명·사진·통계가 함께 바뀝니다.</div></li>
+        <li><span class="step-icon"><i data-lucide="map-pin"></i></span><div><b>지도 위 마커를 클릭하세요.</b> 개발 지역 설명과 사진 자료를 볼 수 있습니다.</div></li>
+        <li><span class="step-icon"><i data-lucide="message-circle-question"></i></span><div><b>탐구 질문에 답해 보세요.</b> 오른쪽 패널의 질문은 변화의 원인과 영향을 생각하도록 돕습니다.</div></li>
+        <li><span class="step-icon"><i data-lucide="columns-2"></i></span><div><b>과거·현재 비교 모드</b>에서 두 시점의 지도를 나란히 놓고 비교할 수 있습니다.</div></li>
+      </ol>
+      <div class="help-keys">
+        <span><kbd>←</kbd><kbd>→</kbd> 1년 이동</span>
+        <span><kbd>Shift</kbd>+<kbd>←</kbd><kbd>→</kbd> 주요 시점 이동</span>
+        <span><kbd>Space</kbd> 재생/일시정지</span>
+      </div>
+      <p class="callout"><i data-lucide="info"></i><span>사진 55건은 이용 조건을 확인한 <b>실제 역사 사진(1960~1980년대)</b>입니다. 시가지·토지 이용 레이어는 아직 <b>교육용 데모 데이터</b>이며, 1990년대 이후 사진은 추가 확보 중입니다.</span></p>
+      <div class="modal-actions"><button class="btn btn-primary" data-close>탐구 시작하기</button></div>
+    </div>
+  </div>
+
+  <div class="modal" id="galleryModal" hidden role="dialog" aria-modal="true" aria-labelledby="galleryTitle">
+    <div class="modal-box modal-lg">
+      <button class="modal-close" data-close aria-label="닫기"><i data-lucide="x"></i></button>
+      <h2 id="galleryTitle"><i data-lucide="images"></i>사진 갤러리</h2>
+      <div class="gallery-filters" id="galleryFilters"></div>
+      <div id="galleryBody"></div>
+    </div>
+  </div>
+
+  <div class="modal lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="사진 확대 보기">
+    <div class="lightbox-box">
+      <button class="modal-close" data-close aria-label="닫기"><i data-lucide="x"></i></button>
+      <button class="lb-nav lb-prev" id="lbPrev" aria-label="이전 사진"><i data-lucide="chevron-left"></i></button>
+      <figure class="lb-figure">
+        <div class="lb-image-wrap"><img id="lbImg" alt=""><span class="lb-type" id="lbType"></span></div>
+        <figcaption class="lb-meta" id="lbMeta"></figcaption>
+      </figure>
+      <button class="lb-nav lb-next" id="lbNext" aria-label="다음 사진"><i data-lucide="chevron-right"></i></button>
+    </div>
+  </div>
+
+  <div class="modal" id="dataModal" hidden role="dialog" aria-modal="true" aria-labelledby="dataTitle">
+    <div class="modal-box modal-md">
+      <button class="modal-close" data-close aria-label="닫기"><i data-lucide="x"></i></button>
+      <h2 id="dataTitle"><i data-lucide="database"></i>데이터 안내</h2>
+      <div id="dataBody"></div>
+    </div>
+  </div>
+
+  <noscript><div class="fatal">GeoScape를 사용하려면 JavaScript를 켜 주세요.</div></noscript>
+</body>
+</html>

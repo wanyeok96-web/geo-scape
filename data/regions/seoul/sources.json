@@ -1,0 +1,100 @@
+{
+  "sources": [
+    {
+      "id": "src-kosis",
+      "title": "국가통계포털 (KOSIS) – 인구주택총조사",
+      "publisher": "통계청",
+      "url": "https://kosis.kr",
+      "license": "공공데이터 (출처 표시)",
+      "usedFor": "인구 통계"
+    },
+    {
+      "id": "src-seoul-stat",
+      "title": "서울 열린데이터광장 / 서울통계",
+      "publisher": "서울특별시",
+      "url": "https://data.seoul.go.kr",
+      "license": "공공누리 제1유형 등 (자료별 확인)",
+      "usedFor": "지역 개요"
+    },
+    {
+      "id": "src-seoul-archive",
+      "title": "서울역사아카이브",
+      "publisher": "서울역사박물관",
+      "url": "https://museum.seoul.go.kr/archive",
+      "license": "자료별 이용 조건 확인",
+      "usedFor": "역사 사진 후보 자료"
+    },
+    {
+      "id": "src-seoul-solution",
+      "title": "서울정책아카이브",
+      "publisher": "서울연구원",
+      "url": "https://www.seoulsolution.kr",
+      "license": "자료별 이용 조건 확인",
+      "usedFor": "도시 정책·개발 사례 설명"
+    },
+    {
+      "id": "src-seoul-plan",
+      "title": "서울도시계획포털 (도시기본계획)",
+      "publisher": "서울특별시",
+      "url": "https://urban.seoul.go.kr",
+      "license": "자료별 이용 조건 확인",
+      "usedFor": "2030 서울플랜, 2040 서울도시기본계획"
+    },
+    {
+      "id": "src-ngii",
+      "title": "국토정보플랫폼 (옛 항공사진·지도)",
+      "publisher": "국토지리정보원",
+      "url": "https://map.ngii.go.kr",
+      "license": "자료별 이용 조건 확인",
+      "usedFor": "향후 연도별 공간 레이어 제작 원자료"
+    },
+    {
+      "id": "src-osm",
+      "title": "OpenStreetMap",
+      "publisher": "OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/copyright",
+      "license": "ODbL",
+      "usedFor": "배경 지도"
+    },
+    {
+      "id": "src-esri",
+      "title": "Esri World Imagery",
+      "publisher": "Esri",
+      "url": "https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9",
+      "license": "Esri 이용 약관 (출처 표시)",
+      "usedFor": "현재 위성 영상 배경"
+    },
+    {
+      "id": "src-commons",
+      "title": "Wikimedia Commons",
+      "publisher": "Wikimedia Foundation",
+      "url": "https://commons.wikimedia.org",
+      "license": "파일별 자유 라이선스 (CC BY, 공공누리 제1유형, PD)",
+      "usedFor": "역사 사진 파일 및 라이선스 정보"
+    },
+    {
+      "id": "src-gongu",
+      "title": "공유마당",
+      "publisher": "한국저작권위원회",
+      "url": "https://gongu.copyright.or.kr",
+      "license": "자료별 (CC BY 4.0, 공공누리 등)",
+      "usedFor": "역사 사진 원 출처"
+    },
+    {
+      "id": "src-photoarchive",
+      "title": "서울사진아카이브",
+      "publisher": "서울특별시",
+      "url": "https://photoarchives.seoul.go.kr",
+      "license": "자료별 이용 조건 확인",
+      "usedFor": "역사 사진 원 출처"
+    },
+    {
+      "id": "src-archives",
+      "title": "국가기록원",
+      "publisher": "행정안전부 국가기록원",
+      "url": "https://www.archives.go.kr",
+      "license": "공공누리 (자료별)",
+      "usedFor": "역사 사진 원 출처"
+    }
+  ]
+}

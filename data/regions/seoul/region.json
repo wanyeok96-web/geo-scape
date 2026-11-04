@@ -1,0 +1,394 @@
+{
+  "id": "seoul",
+  "name": "서울",
+  "nameEn": "Seoul",
+  "map": {
+    "center": [
+      37.545,
+      126.99
+    ],
+    "zoom": 11,
+    "minZoom": 9,
+    "maxZoom": 17,
+    "maxBounds": [
+      [
+        37.05,
+        126.45
+      ],
+      [
+        37.95,
+        127.45
+      ]
+    ]
+  },
+  "timeRange": {
+    "start": 1960,
+    "end": 2025,
+    "observedEnd": 2025
+  },
+  "info": {
+    "summary": "한반도 중서부, 한강 하류에 위치한 대한민국의 수도. 1970년대 이후 급속한 산업화와 이촌향도로 거대도시(메갈로폴리스)로 성장하였고, 현재는 경기·인천과 함께 수도권 대도시권을 이룬다.",
+    "facts": [
+      {
+        "label": "면적",
+        "value": "약 605km²"
+      },
+      {
+        "label": "행정구역",
+        "value": "25개 자치구"
+      },
+      {
+        "label": "인구(2020)",
+        "value": "약 959만 명"
+      },
+      {
+        "label": "주요 하천",
+        "value": "한강, 중랑천, 안양천"
+      }
+    ],
+    "sourceIds": [
+      "src-kosis",
+      "src-seoul-stat"
+    ]
+  },
+  "topics": [
+    {
+      "id": "urbanization",
+      "icon": "users",
+      "title": "도시화와 인구 이동",
+      "question": "서울의 인구는 언제 가장 빠르게 늘었고, 언제부터 줄기 시작했을까?",
+      "layers": [
+        "urban",
+        "developments"
+      ]
+    },
+    {
+      "id": "transport",
+      "icon": "train-front",
+      "title": "교통망과 공간 구조",
+      "question": "새로운 철도와 도로는 시가지가 확장되는 방향과 어떤 관계가 있을까?",
+      "layers": [
+        "urban",
+        "transport"
+      ]
+    },
+    {
+      "id": "landuse",
+      "icon": "layers",
+      "title": "토지 이용의 변화",
+      "question": "같은 장소의 토지 이용이 바뀐 사례를 찾고, 그 원인을 설명해 보자.",
+      "layers": [
+        "landuse",
+        "developments"
+      ]
+    },
+    {
+      "id": "environment",
+      "icon": "leaf",
+      "title": "도시와 환경",
+      "question": "매립지·하천·군사 시설 부지가 녹지로 바뀐 사례는 도시 환경에 어떤 영향을 주었을까?",
+      "layers": [
+        "landuse",
+        "developments",
+        "photos"
+      ]
+    }
+  ],
+  "milestones": [
+    {
+      "year": 1962,
+      "label": "마포아파트 준공",
+      "focus": {
+        "center": [
+          37.54,
+          126.95
+        ],
+        "zoom": 13
+      }
+    },
+    {
+      "year": 1968,
+      "label": "전차 폐지·청계고가 건설",
+      "focus": {
+        "center": [
+          37.569,
+          126.99
+        ],
+        "zoom": 13
+      }
+    },
+    {
+      "year": 1970,
+      "label": "경부고속도로 개통",
+      "focus": {
+        "featureId": "exp-gyeongbu",
+        "center": [
+          37.47,
+          127.04
+        ],
+        "zoom": 12
+      }
+    },
+    {
+      "year": 1971,
+      "label": "개발제한구역 지정",
+      "focus": {
+        "featureId": "dev-greenbelt",
+        "center": [
+          37.6,
+          126.98
+        ],
+        "zoom": 11
+      }
+    },
+    {
+      "year": 1974,
+      "label": "지하철 1호선 개통",
+      "focus": {
+        "featureId": "subway-1",
+        "center": [
+          37.567,
+          127.005
+        ],
+        "zoom": 13
+      }
+    },
+    {
+      "year": 1975,
+      "label": "강남구 신설·영동 개발",
+      "focus": {
+        "featureId": "dev-gangnam",
+        "center": [
+          37.505,
+          127.035
+        ],
+        "zoom": 13
+      }
+    },
+    {
+      "year": 1984,
+      "label": "지하철 2호선 순환 완성",
+      "focus": {
+        "featureId": "subway-2",
+        "center": [
+          37.52,
+          126.99
+        ],
+        "zoom": 12
+      }
+    },
+    {
+      "year": 1988,
+      "label": "서울올림픽",
+      "focus": {
+        "featureId": "dev-olympicpark",
+        "center": [
+          37.517,
+          127.095
+        ],
+        "zoom": 13
+      }
+    },
+    {
+      "year": 1992,
+      "label": "1기 신도시 입주",
+      "focus": {
+        "featureId": "dev-bundang",
+        "center": [
+          37.5,
+          126.95
+        ],
+        "zoom": 10
+      }
+    },
+    {
+      "year": 2002,
+      "label": "월드컵·상암 DMC",
+      "focus": {
+        "featureId": "dev-sangam",
+        "center": [
+          37.574,
+          126.888
+        ],
+        "zoom": 14
+      }
+    },
+    {
+      "year": 2005,
+      "label": "청계천 복원",
+      "focus": {
+        "featureId": "dev-cheonggye",
+        "center": [
+          37.569,
+          126.99
+        ],
+        "zoom": 14
+      }
+    },
+    {
+      "year": 2009,
+      "label": "지하철 9호선 개통",
+      "focus": {
+        "featureId": "subway-9",
+        "center": [
+          37.54,
+          126.91
+        ],
+        "zoom": 12
+      }
+    },
+    {
+      "year": 2017,
+      "label": "서울로7017·롯데월드타워",
+      "focus": {
+        "featureId": "dev-seoullo",
+        "center": [
+          37.556,
+          126.97
+        ],
+        "zoom": 14
+      }
+    },
+    {
+      "year": 2024,
+      "label": "GTX-A 개통",
+      "focus": {
+        "featureId": "gtx-a",
+        "center": [
+          37.63,
+          126.86
+        ],
+        "zoom": 11
+      }
+    }
+  ],
+  "layers": [
+    {
+      "id": "urban",
+      "label": "시가지 확장 범위",
+      "icon": "building-2",
+      "kind": "urban-stage",
+      "file": "layers/urban-extent.geojson",
+      "dataStatus": "demo",
+      "defaultOn": true,
+      "stageColors": {
+        "1970": "#0b3c5d",
+        "1980": "#126e82",
+        "1990": "#1a9c9c",
+        "2000": "#51c4b5",
+        "2010": "#a6e3d7"
+      },
+      "stageLabels": {
+        "1970": "1970년 이전",
+        "1980": "1970년대",
+        "1990": "1980~90년대",
+        "2000": "2000년대",
+        "2010": "2010년대 이후"
+      }
+    },
+    {
+      "id": "transport",
+      "label": "교통망 (철도·도로)",
+      "icon": "train-track",
+      "kind": "line",
+      "file": "layers/transport.geojson",
+      "dataStatus": "approx",
+      "defaultOn": true,
+      "modeStyles": {
+        "expressway": {
+          "color": "#e07a1f",
+          "weight": 4,
+          "label": "고속도로"
+        },
+        "road": {
+          "color": "#c9a227",
+          "weight": 3,
+          "label": "도시고속도로"
+        },
+        "subway": {
+          "color": "#2563eb",
+          "weight": 4,
+          "label": "지하철"
+        },
+        "rail": {
+          "color": "#7c3aed",
+          "weight": 3,
+          "dashArray": "6 5",
+          "label": "고속철도"
+        },
+        "gtx": {
+          "color": "#db2777",
+          "weight": 4,
+          "dashArray": "2 6",
+          "label": "광역급행철도"
+        }
+      }
+    },
+    {
+      "id": "landuse",
+      "label": "토지 이용 변화",
+      "icon": "map",
+      "kind": "landuse",
+      "file": "layers/landuse.geojson",
+      "dataStatus": "demo",
+      "defaultOn": false,
+      "typeStyles": {
+        "farmland": {
+          "color": "#a3b84f",
+          "label": "농경지·나지"
+        },
+        "residential": {
+          "color": "#f2a541",
+          "label": "주거"
+        },
+        "commercial": {
+          "color": "#e4572e",
+          "label": "상업·업무"
+        },
+        "industrial": {
+          "color": "#7d5ba6",
+          "label": "공업"
+        },
+        "green": {
+          "color": "#2e9e5b",
+          "label": "녹지·공원"
+        },
+        "landfill": {
+          "color": "#6b5e4f",
+          "label": "매립지"
+        },
+        "military": {
+          "color": "#5b6770",
+          "label": "군사 시설"
+        },
+        "airport": {
+          "color": "#8fa3b8",
+          "label": "비행장"
+        }
+      }
+    },
+    {
+      "id": "developments",
+      "label": "주요 개발 지역",
+      "icon": "map-pin",
+      "kind": "point",
+      "file": "layers/developments.geojson",
+      "dataStatus": "approx",
+      "defaultOn": true
+    },
+    {
+      "id": "photos",
+      "label": "역사 사진 (지도 연결)",
+      "icon": "camera",
+      "kind": "photos",
+      "dataStatus": "verified",
+      "defaultOn": true
+    }
+  ],
+  "files": {
+    "eras": "eras.json",
+    "photos": "data/photos.json",
+    "stats": "stats.json",
+    "sources": "sources.json"
+  }
+}

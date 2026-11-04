@@ -1,0 +1,30 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "title": "주요 개발 지역",
+    "dataStatus": "approx",
+    "notice": "대표 지점의 대략적 좌표입니다. 개발 범위 전체가 아니라 상징 지점을 표시합니다."
+  },
+  "features": [
+    { "type": "Feature", "properties": { "id": "dev-yeouido", "name": "여의도 개발", "year": 1971, "eraId": "1970s", "category": "업무지구", "desc": "윤중제 축조(1968) 이후 비행장 부지를 정비하여 국회의사당(1975), 방송사, 금융기관이 들어선 업무지구로 개발되었다." }, "geometry": { "type": "Point", "coordinates": [126.9245, 37.5219] } },
+    { "type": "Feature", "properties": { "id": "dev-gangnam", "name": "영동(강남) 개발", "year": 1973, "eraId": "1970s", "category": "신시가지", "desc": "토지구획정리사업으로 한강 이남 농경지가 격자형 가로망의 신시가지로 바뀌었다. 1975년 강남구가 신설되었다." }, "geometry": { "type": "Point", "coordinates": [127.0276, 37.4979] } },
+    { "type": "Feature", "properties": { "id": "dev-guro", "name": "구로공단", "year": 1970, "eraId": "1970s", "category": "공업지역", "desc": "1960년대 후반 조성된 수출산업공업단지. 섬유·전자 조립 등 노동집약 산업이 집중되었다." }, "geometry": { "type": "Point", "coordinates": [126.8930, 37.4835] } },
+    { "type": "Feature", "properties": { "id": "dev-greenbelt", "name": "개발제한구역 지정", "year": 1971, "eraId": "1970s", "category": "도시계획", "desc": "1971년 서울 외곽에 개발제한구역(그린벨트)을 지정해 시가지의 무분별한 외연 확산을 억제하였다. (표시 지점: 북한산 방면 예시)" }, "geometry": { "type": "Point", "coordinates": [126.9800, 37.6600] } },
+    { "type": "Feature", "properties": { "id": "dev-jamsil", "name": "잠실 종합운동장", "year": 1984, "eraId": "1980s", "category": "체육·주거", "desc": "공유수면 매립으로 조성된 잠실 일대에 대단지 아파트와 1988 서울올림픽 주경기장이 들어섰다." }, "geometry": { "type": "Point", "coordinates": [127.0719, 37.5154] } },
+    { "type": "Feature", "properties": { "id": "dev-olympicpark", "name": "올림픽공원", "year": 1986, "eraId": "1980s", "category": "공원·체육", "desc": "1988 서울올림픽을 위해 조성. 몽촌토성 유적과 경기장 시설이 함께 있다." }, "geometry": { "type": "Point", "coordinates": [127.1214, 37.5206] } },
+    { "type": "Feature", "properties": { "id": "dev-mokdong", "name": "목동 신시가지", "year": 1985, "eraId": "1980s", "category": "주거", "desc": "서남부 저지대를 대규모 아파트 단지로 개발한 신시가지 사업." }, "geometry": { "type": "Point", "coordinates": [126.8750, 37.5266] } },
+    { "type": "Feature", "properties": { "id": "dev-bundang", "name": "분당 신도시", "year": 1991, "eraId": "1990s", "category": "신도시", "desc": "1989년 발표된 수도권 1기 신도시 중 하나. 서울의 주택 부족을 해소하기 위해 조성되었다." }, "geometry": { "type": "Point", "coordinates": [127.1234, 37.3850] } },
+    { "type": "Feature", "properties": { "id": "dev-ilsan", "name": "일산 신도시", "year": 1992, "eraId": "1990s", "category": "신도시", "desc": "서울 서북부의 1기 신도시. 호수공원을 중심으로 계획되었다." }, "geometry": { "type": "Point", "coordinates": [126.7698, 37.6584] } },
+    { "type": "Feature", "properties": { "id": "dev-teheran", "name": "테헤란로 업무지구", "year": 1995, "eraId": "1990s", "category": "업무지구", "desc": "강남 테헤란로를 따라 금융·IT 기업의 고층 업무 시설이 집적되었다." }, "geometry": { "type": "Point", "coordinates": [127.0400, 37.5030] } },
+    { "type": "Feature", "properties": { "id": "dev-sangam", "name": "상암 DMC·월드컵공원", "year": 2002, "eraId": "2000s", "category": "업무·녹지", "desc": "난지도 매립지를 생태공원으로 바꾸고, 주변에 디지털미디어시티를 조성하였다." }, "geometry": { "type": "Point", "coordinates": [126.8895, 37.5793] } },
+    { "type": "Feature", "properties": { "id": "dev-cheonggye", "name": "청계천 복원", "year": 2005, "eraId": "2000s", "category": "하천 복원", "desc": "청계고가도로를 철거하고 복개된 하천을 복원(2003~2005)하여 도심 열섬 완화와 보행 공간 확보에 기여하였다." }, "geometry": { "type": "Point", "coordinates": [126.9784, 37.5696] } },
+    { "type": "Feature", "properties": { "id": "dev-pangyo", "name": "판교 테크노밸리", "year": 2009, "eraId": "2000s", "category": "신도시·산업", "desc": "2기 신도시 판교에 IT·바이오 기업이 집적된 첨단 산업 클러스터가 형성되었다." }, "geometry": { "type": "Point", "coordinates": [127.1112, 37.4012] } },
+    { "type": "Feature", "properties": { "id": "dev-ddp", "name": "동대문디자인플라자", "year": 2014, "eraId": "2010s", "category": "도시 재생", "desc": "동대문운동장 부지에 조성된 복합 문화 공간." }, "geometry": { "type": "Point", "coordinates": [127.0092, 37.5665] } },
+    { "type": "Feature", "properties": { "id": "dev-seoullo", "name": "서울로7017", "year": 2017, "eraId": "2010s", "category": "도시 재생", "desc": "1970년 건설된 서울역 고가도로를 보행길로 재생하였다." }, "geometry": { "type": "Point", "coordinates": [126.9701, 37.5568] } },
+    { "type": "Feature", "properties": { "id": "dev-seongsu", "name": "성수동 공간 변화", "year": 2015, "eraId": "2010s", "category": "산업 전환", "desc": "준공업 지역의 공장·창고가 카페, 전시장, 사무실로 전환되며 젠트리피케이션 논의가 일어났다." }, "geometry": { "type": "Point", "coordinates": [127.0559, 37.5445] } },
+    { "type": "Feature", "properties": { "id": "dev-lwt", "name": "롯데월드타워", "year": 2017, "eraId": "2010s", "category": "랜드마크", "desc": "높이 555m의 초고층 건물로 잠실 일대 경관을 크게 바꾸었다." }, "geometry": { "type": "Point", "coordinates": [127.1025, 37.5126] } },
+    { "type": "Feature", "properties": { "id": "dev-yongsan", "name": "용산공원·용산 일대", "year": 2022, "eraId": "2020s", "category": "녹지·개발", "desc": "반환된 미군기지 부지 일부가 시범 개방되었고, 주변 철도 정비창 부지 개발 계획이 추진되고 있다." }, "geometry": { "type": "Point", "coordinates": [126.9800, 37.5310] } },
+    { "type": "Feature", "properties": { "id": "dev-gtx", "name": "GTX-A 서울역", "year": 2024, "eraId": "2020s", "category": "광역 교통", "desc": "수도권 광역급행철도가 개통되어 서울 도심과 경기 북부·남부의 통근 시간이 단축되었다." }, "geometry": { "type": "Point", "coordinates": [126.9707, 37.5547] } },
+    { "type": "Feature", "properties": { "id": "dev-flood", "name": "도심 침수 대응 (대심도 빗물터널)", "year": 2022, "eraId": "2020s", "category": "기후 적응", "desc": "2022년 8월 집중호우로 강남역 일대가 침수된 뒤 대심도 빗물배수터널 등 기후 적응 대책이 추진되고 있다." }, "geometry": { "type": "Point", "coordinates": [127.0276, 37.4950] } }
+  ]
+}

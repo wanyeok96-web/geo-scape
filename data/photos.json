@@ -1,0 +1,3153 @@
+{
+ "schemaVersion": 2,
+ "description": "GeoScape 사진 자료. photos는 이용 조건이 확인되어 정식 등록된 실제 사진만 포함합니다.",
+ "generatedFrom": [
+  "geoscape_seoul_photo_sources_safe/photo_targets.json",
+  "data/photo-sources/commons-check-report.json"
+ ],
+ "contentTypes": {
+  "historical-photo": "실제 역사 사진",
+  "contemporary-photo": "실제 현대 사진",
+  "reconstruction": "교육용 재구성 이미지 (실제 사진 아님)"
+ },
+ "locationPrecision": {
+  "camera": "촬영 지점 좌표 확인",
+  "subject-facility": "피사체 시설 위치 (촬영 지점 아님)",
+  "none": "위치 미확인 – 지도에 표시하지 않음"
+ },
+ "photos": [
+  {
+   "id": "seoul-001",
+   "region": "seoul",
+   "title": "반도호텔 앞 거리",
+   "originalTitle": "1960년 3월 서울 반도호텔 앞",
+   "date": {
+    "label": "1960년 3월",
+    "iso": "1960-03",
+    "certainty": "month",
+    "basis": "제목"
+   },
+   "year": 1960,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1960,
+    "end": 1960,
+    "label": "1960년 3월"
+   },
+   "place": "중구 을지로 입구",
+   "theme": "도심 경관",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5651,
+     126.981
+    ],
+    "label": "반도호텔 터 (현 롯데호텔 서울, 중구 을지로1가)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "1960년 3월 서울 반도호텔 앞",
+   "geography": "1938년 문을 연 반도호텔은 당시 도심의 대표적인 고층 건물이었다. 1974년 철거된 뒤 그 자리에 롯데호텔이 들어서 도심 건물의 고층화를 보여 준다.",
+   "src": "assets/photos/1960s/seoul-001.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-001.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국저작권위원회",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1960%EB%85%84_3%EC%9B%94_%EC%84%9C%EC%9A%B8_%EB%B0%98%EB%8F%84%ED%98%B8%ED%85%94_%EC%95%9E.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/5/59/1960%EB%85%84_3%EC%9B%94_%EC%84%9C%EC%9A%B8_%EB%B0%98%EB%8F%84%ED%98%B8%ED%85%94_%EC%95%9E.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "CC BY 4.0",
+    "nameKo": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0"
+   },
+   "attribution": "한국저작권위원회 / CC BY 4.0 / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-002",
+   "region": "seoul",
+   "title": "반도호텔 주변",
+   "originalTitle": "1960년 3월 서울 반도호텔 주변",
+   "date": {
+    "label": "1960년 3월",
+    "iso": "1960-03",
+    "certainty": "month",
+    "basis": "제목"
+   },
+   "year": 1960,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1960,
+    "end": 1960,
+    "label": "1960년 3월"
+   },
+   "place": "중구 을지로 입구",
+   "theme": "도심 경관",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5651,
+     126.981
+    ],
+    "label": "반도호텔 터 (현 롯데호텔 서울, 중구 을지로1가)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "1960년 3월 서울 반도호텔 주변",
+   "geography": "을지로 입구 일대의 1960년 경관이다. 현재 같은 장소의 고층 호텔·업무 빌딩과 비교하면 도심의 토지 이용이 얼마나 집약되었는지 알 수 있다.",
+   "src": "assets/photos/1960s/seoul-002.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-002.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국저작권위원회",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1960%EB%85%84_3%EC%9B%94_%EC%84%9C%EC%9A%B8_%EB%B0%98%EB%8F%84%ED%98%B8%ED%85%94_%EC%A3%BC%EB%B3%80.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/3/36/1960%EB%85%84_3%EC%9B%94_%EC%84%9C%EC%9A%B8_%EB%B0%98%EB%8F%84%ED%98%B8%ED%85%94_%EC%A3%BC%EB%B3%80.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "CC BY 4.0",
+    "nameKo": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0"
+   },
+   "attribution": "한국저작권위원회 / CC BY 4.0 / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-003",
+   "region": "seoul",
+   "title": "한국은행",
+   "originalTitle": "1960년 3월 서울 한국은행",
+   "date": {
+    "label": "1960년 3월",
+    "iso": "1960-03",
+    "certainty": "month",
+    "basis": "제목"
+   },
+   "year": 1960,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1960,
+    "end": 1960,
+    "label": "1960년 3월"
+   },
+   "place": "중구 남대문로",
+   "theme": "도심 경관",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5637,
+     126.9792
+    ],
+    "label": "옛 한국은행 본관 (현 화폐박물관, 중구 남대문로)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "1960년 3월 서울 한국은행",
+   "geography": "옛 한국은행 본관은 현재 화폐박물관으로 쓰인다. 남대문로 일대에 은행 본점이 모이면서 도심이 금융 중심지 기능을 갖추었다.",
+   "src": "assets/photos/1960s/seoul-003.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-003.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국저작권위원회",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1960%EB%85%84_3%EC%9B%94_%EC%84%9C%EC%9A%B8_%ED%95%9C%EA%B5%AD%EC%9D%80%ED%96%89.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e8/1960%EB%85%84_3%EC%9B%94_%EC%84%9C%EC%9A%B8_%ED%95%9C%EA%B5%AD%EC%9D%80%ED%96%89.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "CC BY 4.0",
+    "nameKo": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0"
+   },
+   "attribution": "한국저작권위원회 / CC BY 4.0 / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-004",
+   "region": "seoul",
+   "title": "한국상업은행 앞 거리와 시내버스",
+   "originalTitle": "1960년 3월 서울시내 한국상업은행 앞 거리와 시내버스",
+   "date": {
+    "label": "1960년 3월",
+    "iso": "1960-03",
+    "certainty": "month",
+    "basis": "제목"
+   },
+   "year": 1960,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1960,
+    "end": 1960,
+    "label": "1960년 3월"
+   },
+   "place": "서울 도심",
+   "theme": "교통",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "서울 도심",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1960년 3월 서울시내 한국상업은행 앞 거리와 시내버스",
+   "geography": "지하철이 없던 1960년 도심 교통은 시내버스와 노면전차가 담당했다. 도로 위 교통수단의 종류와 혼잡도를 오늘날과 비교해 볼 수 있다.",
+   "src": "assets/photos/1960s/seoul-004.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-004.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국저작권위원회",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1960%EB%85%84_3%EC%9B%94_%EC%84%9C%EC%9A%B8%EC%8B%9C%EB%82%B4_%ED%95%9C%EA%B5%AD%EC%83%81%EC%97%85%EC%9D%80%ED%96%89_%EC%95%9E_%EA%B1%B0%EB%A6%AC%EC%99%80_%EC%8B%9C%EB%82%B4%EB%B2%84%EC%8A%A4.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6a/1960%EB%85%84_3%EC%9B%94_%EC%84%9C%EC%9A%B8%EC%8B%9C%EB%82%B4_%ED%95%9C%EA%B5%AD%EC%83%81%EC%97%85%EC%9D%80%ED%96%89_%EC%95%9E_%EA%B1%B0%EB%A6%AC%EC%99%80_%EC%8B%9C%EB%82%B4%EB%B2%84%EC%8A%A4.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "CC BY 4.0",
+    "nameKo": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0"
+   },
+   "attribution": "한국저작권위원회 / CC BY 4.0 / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-005",
+   "region": "seoul",
+   "title": "하늘에서 내려다 본 한강의 다리들",
+   "originalTitle": "1960년 1월 하늘에서 내려다 본 서울 한강의 다리들",
+   "date": {
+    "label": "1960년 1월",
+    "iso": "1960-01",
+    "certainty": "month",
+    "basis": "제목"
+   },
+   "year": 1960,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1960,
+    "end": 1960,
+    "label": "1960년 1월"
+   },
+   "place": "한강",
+   "theme": "하천·교통",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "한강",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1960년 1월 하늘에서 내려다 본 서울 한강의 다리들",
+   "geography": "1960년 무렵 한강을 건너는 다리는 몇 개에 불과해 강북과 강남의 연결이 제한적이었다. 현재 서울 구간에는 30개가 넘는 다리가 놓여 있다.",
+   "src": "assets/photos/1960s/seoul-005.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-005.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국저작권위원회",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1960%EB%85%84_1%EC%9B%94_%ED%95%98%EB%8A%98%EC%97%90%EC%84%9C_%EB%82%B4%EB%A0%A4%EB%8B%A4_%EB%B3%B8_%EC%84%9C%EC%9A%B8_%ED%95%9C%EA%B0%95%EC%9D%98_%EB%8B%A4%EB%A6%AC%EB%93%A4.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/0/01/1960%EB%85%84_1%EC%9B%94_%ED%95%98%EB%8A%98%EC%97%90%EC%84%9C_%EB%82%B4%EB%A0%A4%EB%8B%A4_%EB%B3%B8_%EC%84%9C%EC%9A%B8_%ED%95%9C%EA%B0%95%EC%9D%98_%EB%8B%A4%EB%A6%AC%EB%93%A4.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "CC BY 4.0",
+    "nameKo": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0"
+   },
+   "attribution": "한국저작권위원회 / CC BY 4.0 / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": [
+     "원본 목록의 지역(서울 중심부)과 달리 사진 설명은 한강 다리 항공사진임"
+    ]
+   }
+  },
+  {
+   "id": "seoul-006",
+   "region": "seoul",
+   "title": "하늘에서 내려다 본 서울 외곽 주택가",
+   "originalTitle": "1960년 5월 하늘에서 내려다 본 서울 외곽지역 주택가",
+   "date": {
+    "label": "1960년 5월",
+    "iso": "1960-05",
+    "certainty": "month",
+    "basis": "제목"
+   },
+   "year": 1960,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1960,
+    "end": 1960,
+    "label": "1960년 5월"
+   },
+   "place": "서울 외곽 (위치 미상)",
+   "theme": "주거",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "서울 외곽 (위치 미상)",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1960년 5월 하늘에서 내려다 본 서울 외곽지역 주택가",
+   "geography": "단층 주택이 낮고 넓게 퍼진 저밀도 주거지의 모습이다. 이후 아파트 단지가 늘면서 주거지의 밀도와 경관이 크게 바뀌었다.",
+   "src": "assets/photos/1960s/seoul-006.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-006.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국저작권위원회",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1960%EB%85%84_5%EC%9B%94_%ED%95%98%EB%8A%98%EC%97%90%EC%84%9C_%EB%82%B4%EB%A0%A4%EB%8B%A4_%EB%B3%B8_%EC%84%9C%EC%9A%B8_%EC%99%B8%EA%B3%BD%EC%A7%80%EC%97%AD_%EC%A3%BC%ED%83%9D%EA%B0%80.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a4/1960%EB%85%84_5%EC%9B%94_%ED%95%98%EB%8A%98%EC%97%90%EC%84%9C_%EB%82%B4%EB%A0%A4%EB%8B%A4_%EB%B3%B8_%EC%84%9C%EC%9A%B8_%EC%99%B8%EA%B3%BD%EC%A7%80%EC%97%AD_%EC%A3%BC%ED%83%9D%EA%B0%80.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "CC BY 4.0",
+    "nameKo": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0"
+   },
+   "attribution": "한국저작권위원회 / CC BY 4.0 / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": [
+     "원본 목록의 지역(서울 중심부)과 달리 사진 설명은 '외곽지역 주택가'임"
+    ]
+   }
+  },
+  {
+   "id": "seoul-007",
+   "region": "seoul",
+   "title": "서울시청 주변 전경",
+   "originalTitle": "서울시 전경(서울시청 주변 전경) (1960)",
+   "date": {
+    "label": "1960년 11월 7일",
+    "iso": "1960-11-07",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1960,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1960,
+    "end": 1960,
+    "label": "1960년 11월 7일"
+   },
+   "place": "중구 태평로 일대",
+   "theme": "도심 경관",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "중구 태평로 일대",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "서울시 전경(서울시청 주변 전경) (1960)",
+   "geography": "1960년 도심은 저층 건물이 대부분이었다. 같은 지역의 현재 모습과 비교하면 도심 재개발과 고층화의 정도를 확인할 수 있다.",
+   "src": "assets/photos/1960s/seoul-007.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-007.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국정책방송원",
+    "credit": "공유마당 (https://gongu.copyright.or.kr/)",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EC%84%9C%EC%9A%B8%EC%8B%9C_%EC%A0%84%EA%B2%BD(%EC%84%9C%EC%9A%B8%EC%8B%9C%EC%B2%AD_%EC%A3%BC%EB%B3%80_%EC%A0%84%EA%B2%BD)_(1960).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/1/11/%EC%84%9C%EC%9A%B8%EC%8B%9C_%EC%A0%84%EA%B2%BD%28%EC%84%9C%EC%9A%B8%EC%8B%9C%EC%B2%AD_%EC%A3%BC%EB%B3%80_%EC%A0%84%EA%B2%BD%29_%281960%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "한국정책방송원 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-008",
+   "region": "seoul",
+   "title": "청계천 복개 공사 (1)",
+   "originalTitle": "청계천 복개공사 (1)",
+   "date": {
+    "label": "1960년 8월 5일",
+    "iso": "1960-08-05",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1960,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1960,
+    "end": 1960,
+    "label": "1960년 8월 5일"
+   },
+   "place": "청계천",
+   "theme": "하천·도시 기반시설",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "청계천",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "청계천 복개공사",
+   "geography": "하천 위에 기둥을 세워 도로로 덮는 복개 공사 장면이다. 하천은 도로가 되었다가 1967~1971년 고가도로가 놓였고, 2003~2005년 다시 하천으로 복원되었다.",
+   "src": "assets/photos/1960s/seoul-008.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-008.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국정책방송원",
+    "credit": "공유마당 (https://gongu.copyright.or.kr/)",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EC%B2%AD%EA%B3%84%EC%B2%9C_%EB%B3%B5%EA%B0%9C%EA%B3%B5%EC%82%AC_(1).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f4/%EC%B2%AD%EA%B3%84%EC%B2%9C_%EB%B3%B5%EA%B0%9C%EA%B3%B5%EC%82%AC_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "한국정책방송원 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-009",
+   "region": "seoul",
+   "title": "청계천 복개 공사 (2)",
+   "originalTitle": "청계천 복개공사 (2)",
+   "date": {
+    "label": "1960년 8월 5일",
+    "iso": "1960-08-05",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1960,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1960,
+    "end": 1960,
+    "label": "1960년 8월 5일"
+   },
+   "place": "청계천",
+   "theme": "하천·도시 기반시설",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "청계천",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "청계천 복개공사",
+   "geography": "하천 주변에 밀집한 주거지와 복개 공사 현장을 함께 볼 수 있다. 도시 성장 과정에서 하천이 교통 공간으로 바뀐 사례이다.",
+   "src": "assets/photos/1960s/seoul-009.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-009.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국정책방송원",
+    "credit": "공유마당 (https://gongu.copyright.or.kr/)",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EC%B2%AD%EA%B3%84%EC%B2%9C_%EB%B3%B5%EA%B0%9C%EA%B3%B5%EC%82%AC_(2).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e2/%EC%B2%AD%EA%B3%84%EC%B2%9C_%EB%B3%B5%EA%B0%9C%EA%B3%B5%EC%82%AC_%282%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "한국정책방송원 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-010",
+   "region": "seoul",
+   "title": "시내 재건설과 판잣집",
+   "originalTitle": "시내 재건설 및 판자집 (1961)",
+   "date": {
+    "label": "1961년 8월 1일",
+    "iso": "1961-08-01",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1961,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1961,
+    "end": 1961,
+    "label": "1961년 8월 1일"
+   },
+   "place": "서울 시내 (위치 미상)",
+   "theme": "주거·재개발",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "서울 시내 (위치 미상)",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "시내 재건설 및 판자집 (1961)",
+   "geography": "전쟁 이후 서울로 몰려든 사람들이 세운 판잣집과 재건 현장이다. 급격한 인구 유입이 주택 부족과 무허가 주거지 문제로 이어졌음을 보여 준다.",
+   "src": "assets/photos/1960s/seoul-010.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-010.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국정책방송원 (KTV)",
+    "credit": "공유마당 (https://gongu.copyright.or.kr/)",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EC%8B%9C%EB%82%B4_%EC%9E%AC%EA%B1%B4%EC%84%A4_%EB%B0%8F_%ED%8C%90%EC%9E%90%EC%A7%91_(1961).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/8/83/%EC%8B%9C%EB%82%B4_%EC%9E%AC%EA%B1%B4%EC%84%A4_%EB%B0%8F_%ED%8C%90%EC%9E%90%EC%A7%91_%281961%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "한국정책방송원 (KTV) / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-011",
+   "region": "seoul",
+   "title": "완공 당시의 워커힐 도로",
+   "originalTitle": "1963년 완공 당시 워커힐 도로",
+   "date": {
+    "label": "1963년 11월 11일",
+    "iso": "1963-11-11",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1963,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1963,
+    "end": 1963,
+    "label": "1963년 11월 11일"
+   },
+   "place": "광진구 광장동 일대",
+   "theme": "도로",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "광진구 광장동 일대",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1963년 완공 당시 워커힐 도로",
+   "geography": "아차산 자락의 워커힐로 이어지는 도로가 새로 놓인 모습이다. 당시 시가지 바깥이던 서울 동쪽 외곽에 도로가 먼저 들어선 사례로 볼 수 있다.",
+   "src": "assets/photos/1960s/seoul-011.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-011.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울특별시",
+    "credit": "『서울, 폐허를 딛고 재건으로Ⅰ: 1957-1963』(2011), 253쪽",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1963%EB%85%84_%EC%99%84%EA%B3%B5_%EB%8B%B9%EC%8B%9C_%EC%9B%8C%EC%BB%A4%ED%9E%90_%EB%8F%84%EB%A1%9C.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b8/1963%EB%85%84_%EC%99%84%EA%B3%B5_%EB%8B%B9%EC%8B%9C_%EC%9B%8C%EC%BB%A4%ED%9E%90_%EB%8F%84%EB%A1%9C.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울특별시 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-012",
+   "region": "seoul",
+   "title": "마포아파트 전경",
+   "originalTitle": "마포아파트",
+   "date": {
+    "label": "1965년 3월 8일",
+    "iso": "1965-03-08",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1965,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1965,
+    "end": 1965,
+    "label": "1965년 3월 8일"
+   },
+   "place": "마포구 도화동",
+   "theme": "주거",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "마포구 도화동",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1965년 마포아파트 전경",
+   "geography": "1962~1964년에 지어진 마포아파트는 우리나라 초기의 단지식 아파트로 알려져 있다. 이후 아파트는 서울의 대표적인 주거 형태가 되었다.",
+   "src": "assets/photos/1960s/seoul-012.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-012.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국정책방송원 (KTV)",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EB%A7%88%ED%8F%AC%EC%95%84%ED%8C%8C%ED%8A%B8.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/2/27/%EB%A7%88%ED%8F%AC%EC%95%84%ED%8C%8C%ED%8A%B8.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "한국정책방송원 (KTV) / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-013",
+   "region": "seoul",
+   "title": "명동 입구",
+   "originalTitle": "명동 입구 (1965.05)",
+   "date": {
+    "label": "1965년 5월",
+    "iso": "1965-05",
+    "certainty": "month",
+    "basis": "제목"
+   },
+   "year": 1965,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1965,
+    "end": 1965,
+    "label": "1965년 5월"
+   },
+   "place": "중구 명동",
+   "theme": "상업",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "중구 명동",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "명동 입구 (1965.05)",
+   "geography": "1960년대에도 명동은 상점과 사람이 모이는 도심의 대표 상업지였다. 현재의 명동 거리와 간판·건물 높이·보행자 밀도를 비교해 보자.",
+   "src": "assets/photos/1960s/seoul-013.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-013.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국정책방송원",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EB%AA%85%EB%8F%99_%EC%9E%85%EA%B5%AC_(1965.05).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/4/43/%EB%AA%85%EB%8F%99_%EC%9E%85%EA%B5%AC_%281965.05%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "한국정책방송원 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-014",
+   "region": "seoul",
+   "title": "서교동 일대 양화로",
+   "originalTitle": "1966년 서교동 일대 양화로",
+   "date": {
+    "label": "1966년",
+    "iso": "1966",
+    "certainty": "year",
+    "basis": "제목·설명"
+   },
+   "year": 1966,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1966,
+    "end": 1966,
+    "label": "1966년"
+   },
+   "place": "마포구 서교동",
+   "theme": "교통·도로",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "마포구 서교동",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1966년 당시 양화로 및 서교동",
+   "geography": "양화로는 1965년 개통한 제2한강교(현 양화대교)로 이어지는 간선도로이다. 새 다리와 도로를 따라 서울 서부의 시가지가 넓어졌다.",
+   "src": "assets/photos/1960s/seoul-014.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-014.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울특별시",
+    "credit": "서울역사아카이브",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1966%EB%85%84_%EC%84%9C%EA%B5%90%EB%8F%99_%EC%9D%BC%EB%8C%80_%EC%96%91%ED%99%94%EB%A1%9C.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/7/72/1966%EB%85%84_%EC%84%9C%EA%B5%90%EB%8F%99_%EC%9D%BC%EB%8C%80_%EC%96%91%ED%99%94%EB%A1%9C.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울특별시 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-015",
+   "region": "seoul",
+   "title": "정비된 광화문 일대",
+   "originalTitle": "1966년 10월 광화문 전경",
+   "date": {
+    "label": "1966년 10월 29일",
+    "iso": "1966-10-29",
+    "certainty": "day",
+    "basis": "설명"
+   },
+   "year": 1966,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1966,
+    "end": 1966,
+    "label": "1966년 10월 29일"
+   },
+   "place": "종로구 세종로",
+   "theme": "도심 경관",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "종로구 세종로",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1966년 10월 29일 정비된 광화문 전경을 찍은 사진",
+   "geography": "1960년대 후반 서울시는 도로 확장과 도심 정비를 활발히 추진했다. 국가 중심 가로였던 세종로 일대의 정비된 모습이다.",
+   "src": "assets/photos/1960s/seoul-015.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-015.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울특별시",
+    "credit": "『돌격 건설! 김현옥 시장의 서울Ⅰ: 1966-1967』(2013), 27쪽",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1966%EB%85%84_10%EC%9B%94_%EA%B4%91%ED%99%94%EB%AC%B8_%EC%A0%84%EA%B2%BD.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d0/1966%EB%85%84_10%EC%9B%94_%EA%B4%91%ED%99%94%EB%AC%B8_%EC%A0%84%EA%B2%BD.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울특별시 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-016",
+   "region": "seoul",
+   "title": "태평로 지하도 개통식",
+   "originalTitle": "Opening ceremony of Taepyeong-no Underpass, 1967",
+   "date": {
+    "label": "1967년 6월 25일",
+    "iso": "1967-06-25",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1967,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1967,
+    "end": 1967,
+    "label": "1967년 6월 25일"
+   },
+   "place": "중구 태평로",
+   "theme": "도시 기반시설",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "중구 태평로",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1967년 태평로 지하도 개통식에 참여한 대한민국 대통령 박정희와 서울특별시장 김현옥",
+   "geography": "보행자를 지하도로 보내고 지상은 자동차가 쓰도록 한 시설이다. 1960~70년대 도시 공간이 자동차 중심으로 바뀌어 간 과정을 보여 준다.",
+   "src": "assets/photos/1960s/seoul-016.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-016.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울특별시",
+    "credit": "『돌격 건설! 김현옥 시장의 서울Ⅰ: 1966-1967』(2013), 51쪽",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:Opening_ceremony_of_Taepyeong-no_Underpass,_1967.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/2/25/Opening_ceremony_of_Taepyeong-no_Underpass%2C_1967.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울특별시 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-017",
+   "region": "seoul",
+   "title": "경인지구 토지구획정리사업 착공",
+   "originalTitle": "경인지구 토지구획 정리사업 착공",
+   "date": {
+    "label": "1967년 12월 1일",
+    "iso": "1967-12-01",
+    "certainty": "day",
+    "basis": "설명"
+   },
+   "year": 1967,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1967,
+    "end": 1967,
+    "label": "1967년 12월 1일"
+   },
+   "place": "서울 서남부 (정확한 범위 미확인)",
+   "theme": "도시 개발",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "서울 서남부 (정확한 범위 미확인)",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1967년 12월 1일 공식적으로 착공한 경인지구 토지구획정리사업",
+   "geography": "토지구획정리사업은 농지나 미개발지에 도로를 내고 필지를 나누어 택지로 만드는 개발 방식이다. 같은 방식이 1970년대 영동(강남) 개발에도 쓰였다.",
+   "src": "assets/photos/1960s/seoul-017.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-017.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울특별시",
+    "credit": "『돌격 건설! 김현옥 시장의 서울Ⅰ: 1966-1967』(2013), 135쪽",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EA%B2%BD%EC%9D%B8%EC%A7%80%EA%B5%AC_%ED%86%A0%EC%A7%80%EA%B5%AC%ED%9A%8D_%EC%A0%95%EB%A6%AC%EC%82%AC%EC%97%85_%EC%B0%A9%EA%B3%B5.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ad/%EA%B2%BD%EC%9D%B8%EC%A7%80%EA%B5%AC_%ED%86%A0%EC%A7%80%EA%B5%AC%ED%9A%8D_%EC%A0%95%EB%A6%AC%EC%82%AC%EC%97%85_%EC%B0%A9%EA%B3%B5.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울특별시 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-018",
+   "region": "seoul",
+   "title": "청계고가도로 건설 현장 (1)",
+   "originalTitle": "Cheonggye overpass construction 1",
+   "date": {
+    "label": "1968년 1월 3일",
+    "iso": "1968-01-03",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1968,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1968,
+    "end": 1968,
+    "label": "1968년 1월 3일"
+   },
+   "place": "청계천",
+   "theme": "교통·도로",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "청계천",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "청계고가도로의 건설 현장. 1968년 1월 촬영.",
+   "geography": "복개된 청계천 위로 고가도로를 세우는 공사 현장이다. 고가도로는 1971년 완공되어 도심 교통을 맡았지만 2003년 청계천 복원과 함께 철거되었다.",
+   "src": "assets/photos/1960s/seoul-018.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-018.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "대한민국 국가기록원",
+    "credit": "https://www.archives.go.kr/next/search/searchTotalUp.do?selectSearch=1&amp;upside_query=%EC%B2%AD%EA%B3%84%EC%B2%9C+%EA%B3%A0%EA%B0%80%EB%8F%84%EB%A1%9C#none",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:Cheonggye_overpass_construction_1.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Cheonggye_overpass_construction_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "대한민국 국가기록원 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-019",
+   "region": "seoul",
+   "title": "청계고가도로 건설 현장 (2)",
+   "originalTitle": "Cheonggye overpass construction 2",
+   "date": {
+    "label": "1968년 1월 3일",
+    "iso": "1968-01-03",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1968,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1968,
+    "end": 1968,
+    "label": "1968년 1월 3일"
+   },
+   "place": "청계천",
+   "theme": "교통·도로",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "청계천",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "청계고가도로의 건설 현장. 1968년 1월 촬영.",
+   "geography": "고가도로 기둥이 늘어선 도심의 모습이다. 하천 → 복개 도로 → 고가도로 → 복원 하천으로 이어진 청계천의 변화를 시대별로 비교해 보자.",
+   "src": "assets/photos/1960s/seoul-019.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-019.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "대한민국 국가기록원",
+    "credit": "https://www.archives.go.kr/next/search/searchTotalUp.do?selectSearch=1&amp;upside_query=%EC%B2%AD%EA%B3%84%EC%B2%9C+%EA%B3%A0%EA%B0%80%EB%8F%84%EB%A1%9C#none",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:Cheonggye_overpass_construction_2.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/6/64/Cheonggye_overpass_construction_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "대한민국 국가기록원 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-020",
+   "region": "seoul",
+   "title": "종로 버스정류소와 시내버스",
+   "originalTitle": "1968년 서울 종로구 버스정류소와 원효여객 시내버스",
+   "date": {
+    "label": "1968년",
+    "iso": "1968",
+    "certainty": "year",
+    "basis": "제목"
+   },
+   "year": 1968,
+   "eraIds": [
+    "1960s"
+   ],
+   "period": {
+    "start": 1968,
+    "end": 1968,
+    "label": "1968년"
+   },
+   "place": "종로구",
+   "theme": "교통",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "종로구",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1968년 서울 종로구 버스정류소와 원효여객 시내버스",
+   "geography": "1968년 서울 노면전차가 운행을 끝내면서 시내버스가 도심 대중교통의 중심이 되었다. 지하철 개통(1974) 이전 도심 교통의 모습이다.",
+   "src": "assets/photos/1960s/seoul-020.jpg",
+   "thumb": "assets/photos/1960s/thumbs/seoul-020.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국저작권위원회",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1968%EB%85%84_%EC%84%9C%EC%9A%B8_%EC%A2%85%EB%A1%9C%EA%B5%AC_%EB%B2%84%EC%8A%A4%EC%A0%95%EB%A5%98%EC%86%8C%EC%99%80_%EC%9B%90%ED%9A%A8%EC%97%AC%EA%B0%9D_%EC%8B%9C%EB%82%B4%EB%B2%84%EC%8A%A4.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/7/72/1968%EB%85%84_%EC%84%9C%EC%9A%B8_%EC%A2%85%EB%A1%9C%EA%B5%AC_%EB%B2%84%EC%8A%A4%EC%A0%95%EB%A5%98%EC%86%8C%EC%99%80_%EC%9B%90%ED%9A%A8%EC%97%AC%EA%B0%9D_%EC%8B%9C%EB%82%B4%EB%B2%84%EC%8A%A4.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "CC BY 4.0",
+    "nameKo": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0"
+   },
+   "attribution": "한국저작권위원회 / CC BY 4.0 / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-021",
+   "region": "seoul",
+   "title": "지하철 1호선 공사 중인 종로",
+   "originalTitle": "1971년 1호선 지하철공사 종로",
+   "date": {
+    "label": "1971년",
+    "iso": "1971",
+    "certainty": "year",
+    "basis": "설명"
+   },
+   "year": 1971,
+   "eraIds": [
+    "1970s"
+   ],
+   "period": {
+    "start": 1971,
+    "end": 1971,
+    "label": "1971년"
+   },
+   "place": "종로",
+   "theme": "지하철·도시화",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "종로",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "지하철 1호선을 건설 중인 1971년 서울 종로의 모습을 버즈아이뷰로 촬영한 사진이다.",
+   "geography": "도로를 파내고 지하에 철도를 놓는 공사 장면이다. 1974년 서울역–청량리 구간이 개통하며 도심 대중교통의 구조가 바뀌기 시작했다.",
+   "src": "assets/photos/1970s/seoul-021.jpg",
+   "thumb": "assets/photos/1970s/thumbs/seoul-021.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "셀수스협동조합",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1971%EB%85%84_1%ED%98%B8%EC%84%A0_%EC%A7%80%ED%95%98%EC%B2%A0%EA%B3%B5%EC%82%AC_%EC%A2%85%EB%A1%9C.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/8/87/1971%EB%85%84_1%ED%98%B8%EC%84%A0_%EC%A7%80%ED%95%98%EC%B2%A0%EA%B3%B5%EC%82%AC_%EC%A2%85%EB%A1%9C.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "셀수스협동조합 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-022",
+   "region": "seoul",
+   "title": "광화문과 정부종합청사",
+   "originalTitle": "1971년 광화문 종합청사",
+   "date": {
+    "label": "1971년",
+    "iso": "1971",
+    "certainty": "year",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1971,
+   "eraIds": [
+    "1970s"
+   ],
+   "period": {
+    "start": 1971,
+    "end": 1971,
+    "label": "1971년"
+   },
+   "place": "종로구 세종로",
+   "theme": "도심 경관",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5752,
+     126.9753
+    ],
+    "label": "정부종합청사 (현 정부서울청사, 종로구 세종로)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "Gwanghwamun in 1971",
+   "geography": "1970년 준공된 정부종합청사와 1968년 콘크리트로 다시 지은 광화문이 함께 보인다. 광화문은 2010년 원래 자리에 목조로 복원되었다.",
+   "src": "assets/photos/1970s/seoul-022.jpg",
+   "thumb": "assets/photos/1970s/thumbs/seoul-022.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "작성자 미상",
+    "credit": "https://gongu.copyright.or.kr/gongu/wrt/wrt/view.do?wrtSn=13297553&amp;menuNo=200018",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1971%EB%85%84_%EA%B4%91%ED%99%94%EB%AC%B8_%EC%A2%85%ED%95%A9%EC%B2%AD%EC%82%AC.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/d/da/1971%EB%85%84_%EA%B4%91%ED%99%94%EB%AC%B8_%EC%A2%85%ED%95%A9%EC%B2%AD%EC%82%AC.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "Public domain",
+    "nameKo": "퍼블릭 도메인 (보호기간 만료)",
+    "url": "https://commons.wikimedia.org/wiki/Template:PD-South_Korea-photo-1977"
+   },
+   "attribution": "작성자 미상 / 퍼블릭 도메인 (보호기간 만료) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": [
+     "Commons 파일 정보의 촬영 좌표(37.5132, 127.0094, 반포 일대)가 사진 내용(광화문)과 맞지 않아 사용하지 않음",
+     "라이선스 근거: PD-South Korea-photo-1977 (1977년 이전 공표 사진 보호기간 만료). 작성자 미상"
+    ]
+   }
+  },
+  {
+   "id": "seoul-023",
+   "region": "seoul",
+   "title": "완공 직후의 청계고가도로",
+   "originalTitle": "Chonggye Expressway 1972-05-20",
+   "date": {
+    "label": "1972년 5월 20일",
+    "iso": "1972-05-20",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1972,
+   "eraIds": [
+    "1970s"
+   ],
+   "period": {
+    "start": 1972,
+    "end": 1972,
+    "label": "1972년 5월 20일"
+   },
+   "place": "청계천",
+   "theme": "교통·도로",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "청계천",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "Cheonggye Expressway in 1972",
+   "geography": "1971년 완공된 청계고가도로가 도심을 가로지르는 모습이다. 2005년 복원된 청계천의 현재 모습과 비교하면 도심 공간의 우선순위 변화를 읽을 수 있다.",
+   "src": "assets/photos/1970s/seoul-023.jpg",
+   "thumb": "assets/photos/1970s/thumbs/seoul-023.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "Photos taken by 전민조 and hosted by the National Museum of Korean Contemporary History",
+    "credit": "https://archive.much.go.kr/archive/publicationRead/InfoDetailInqire.do?publicationId=PLCT_0000000072&amp;pmcd=PTB&amp;pageIndex=1 (File:전민조 기증 사진전 - 사진이 모든 것을 말해 주었다.pdf, originally released under KOGL Type 1)",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:Chonggye_Expressway_1972-05-20.png",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Chonggye_Expressway_1972-05-20.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "Public domain",
+    "nameKo": "퍼블릭 도메인 (보호기간 만료)",
+    "url": "https://commons.wikimedia.org/wiki/Template:PD-South_Korea-photo-1977"
+   },
+   "attribution": "Photos taken by 전민조 and hosted by the National Museum of Korean Contemporary History / 퍼블릭 도메인 (보호기간 만료) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": [
+     "원본 목록 파일명 확장자 오류(.jpg) → Commons 실제 파일은 .png",
+     "라이선스 근거: PD-South Korea-photo-1977 (원 자료는 공공누리 제1유형으로 공개)"
+    ]
+   }
+  },
+  {
+   "id": "seoul-024",
+   "region": "seoul",
+   "title": "경복궁 일대 전경",
+   "originalTitle": "Gyeongbokgung view in 1972",
+   "date": {
+    "label": "1972년 7월 11일",
+    "iso": "1972-07-11",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1972,
+   "eraIds": [
+    "1970s"
+   ],
+   "period": {
+    "start": 1972,
+    "end": 1972,
+    "label": "1972년 7월 11일"
+   },
+   "place": "종로구 세종로",
+   "theme": "도심 경관",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5796,
+     126.977
+    ],
+    "label": "경복궁 (종로구 세종로)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "Gyeongbokgung overview in 1972",
+   "geography": "1972년 경복궁 일대의 모습이다. 당시 경복궁 앞에는 중앙청(옛 조선총독부 건물)이 있었으며, 이 건물은 1995~1996년 철거되었다.",
+   "src": "assets/photos/1970s/seoul-024.jpg",
+   "thumb": "assets/photos/1970s/thumbs/seoul-024.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국정책방송원",
+    "credit": "https://gongu.copyright.or.kr/gongu/wrt/wrt/view.do?wrtSn=13071670&amp;menuNo=200018",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:Gyeongbokgung_view_in_1972.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Gyeongbokgung_view_in_1972.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "한국정책방송원 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-025",
+   "region": "seoul",
+   "title": "KBS 중앙방송국 전경",
+   "originalTitle": "KBS중앙방송국 전경 (1972)",
+   "date": {
+    "label": "1972년",
+    "iso": "1972",
+    "certainty": "year",
+    "basis": "제목"
+   },
+   "year": 1972,
+   "eraIds": [
+    "1970s"
+   ],
+   "period": {
+    "start": 1972,
+    "end": 1972,
+    "label": "1972년"
+   },
+   "place": "중구 남산 일대",
+   "theme": "업무·방송",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "중구 남산 일대",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "KBS중앙방송국 전경이다. 1947년 KBS중앙방송국이 출범하여 호출부호 'HLKA'를 부여받았다. 1948년에는 정부 수립으로 국영방송으로 발족함과 동시에 이름도 서울중앙방송국으로 개명했다. 1973년 3월 1일 방송국의 운영처가 국영방송에서 공영방송으로 바뀜에 따라 지금의 한국방송공사(KBS)가 창립되었다. 1972년에 여의도 현 사옥을 계획하였고, 1976년 준공하였다.",
+   "geography": "남산에 있던 방송국은 1976년 여의도 새 사옥으로 옮겼다. 방송·금융 기능이 여의도로 옮겨 가며 새로운 업무지구가 형성되었다.",
+   "src": "assets/photos/1970s/seoul-025.jpg",
+   "thumb": "assets/photos/1970s/thumbs/seoul-025.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울역사박물관",
+    "credit": "서울역사아카이브",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:KBS%EC%A4%91%EC%95%99%EB%B0%A9%EC%86%A1%EA%B5%AD_%EC%A0%84%EA%B2%BD_(1972).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8b/KBS%EC%A4%91%EC%95%99%EB%B0%A9%EC%86%A1%EA%B5%AD_%EC%A0%84%EA%B2%BD_%281972%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울역사박물관 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-026",
+   "region": "seoul",
+   "title": "어린이대공원 전경",
+   "originalTitle": "Children's Grand Park (1973)",
+   "date": {
+    "label": "1973년 5월 19일",
+    "iso": "1973-05-19",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1973,
+   "eraIds": [
+    "1970s"
+   ],
+   "period": {
+    "start": 1973,
+    "end": 1973,
+    "label": "1973년 5월 19일"
+   },
+   "place": "광진구 능동",
+   "theme": "공원·녹지",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5481,
+     127.0748
+    ],
+    "label": "어린이대공원 (광진구 능동)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "1973년 서울 어린이대공원 전경",
+   "geography": "골프장 부지를 공원으로 바꾸어 1973년 개원한 어린이대공원이다. 시가지가 확장되는 가운데 대규모 녹지가 시민 공간으로 확보된 사례이다.",
+   "src": "assets/photos/1970s/seoul-026.jpg",
+   "thumb": "assets/photos/1970s/thumbs/seoul-026.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국정책방송원 (KTV)",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:Children%27s_Grand_Park_(1973).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/2/28/Children%27s_Grand_Park_%281973%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "한국정책방송원 (KTV) / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-027",
+   "region": "seoul",
+   "title": "남부순환로 제2구간 공사 설명",
+   "originalTitle": "19740429 남부순환로 제2구간 공사 설명",
+   "date": {
+    "label": "1974년 4월 29일",
+    "iso": "1974-04-29",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1974,
+   "eraIds": [
+    "1970s"
+   ],
+   "period": {
+    "start": 1974,
+    "end": 1974,
+    "label": "1974년 4월 29일"
+   },
+   "place": "서울 남부",
+   "theme": "도로·도시 개발",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "서울 남부",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "남부순환도로 제2구간 공사 설명",
+   "geography": "남부순환로는 한강 이남을 동서로 잇는 간선도로이다. 강남 개발과 함께 서울 남부의 도로망이 갖추어지는 과정을 보여 준다.",
+   "src": "assets/photos/1970s/seoul-027.jpg",
+   "thumb": "assets/photos/1970s/thumbs/seoul-027.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울특별시",
+    "credit": "서울역사아카이브",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:19740429_%EB%82%A8%EB%B6%80%EC%88%9C%ED%99%98%EB%A1%9C_%EC%A0%9C2%EA%B5%AC%EA%B0%84_%EA%B3%B5%EC%82%AC_%EC%84%A4%EB%AA%85.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/8/86/19740429_%EB%82%A8%EB%B6%80%EC%88%9C%ED%99%98%EB%A1%9C_%EC%A0%9C2%EA%B5%AC%EA%B0%84_%EA%B3%B5%EC%82%AC_%EC%84%A4%EB%AA%85.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울특별시 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-028",
+   "region": "seoul",
+   "title": "영동출장소 개소",
+   "originalTitle": "1974 Yeongdong Branch Police office",
+   "date": {
+    "label": "1974년 9월 19일",
+    "iso": "1974-09-19",
+    "certainty": "day",
+    "basis": "설명"
+   },
+   "year": 1974,
+   "eraIds": [
+    "1970s"
+   ],
+   "period": {
+    "start": 1974,
+    "end": 1974,
+    "label": "1974년 9월 19일"
+   },
+   "place": "영동지구 (현 강남구 일대)",
+   "theme": "행정·도시 개발",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "영동지구 (현 강남구 일대)",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1974년 9월 19일 개소한 영동출장소",
+   "geography": "개발이 진행되던 영동지구를 관리하기 위해 설치된 출장소이다. 이 지역은 1975년 강남구로 분리되어 독립된 행정구역이 되었다.",
+   "src": "assets/photos/1970s/seoul-028.jpg",
+   "thumb": "assets/photos/1970s/thumbs/seoul-028.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "강남구",
+    "credit": "『가자! 강남으로: 1974-1978(1)』(2016)",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1974_Yeongdong_Branch_Police_office.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/5/52/1974_Yeongdong_Branch_Police_office.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "강남구 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": [
+     "Commons 날짜 필드는 1979-09-19이나, 설명과 출처 도서(1974-1978)는 1974년 9월 19일 개소로 기재 → 1974년으로 판단"
+    ]
+   }
+  },
+  {
+   "id": "seoul-029",
+   "region": "seoul",
+   "title": "북아현 주택개량 재개발사업 기공식",
+   "originalTitle": "북아현 주택개량 재개발사업 기공식",
+   "date": {
+    "label": "1974년 7월 11일",
+    "iso": "1974-07-11",
+    "certainty": "day",
+    "basis": "설명"
+   },
+   "year": 1974,
+   "eraIds": [
+    "1970s"
+   ],
+   "period": {
+    "start": 1974,
+    "end": 1974,
+    "label": "1974년 7월 11일"
+   },
+   "place": "서대문구 북아현동",
+   "theme": "주거·재개발",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "서대문구 북아현동",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1974년 7월 11일 북아현 불량주택을 개량하기 위해 서울시가 시멘트와 밀가루를 지원하는 사진",
+   "geography": "서울시가 시멘트와 밀가루를 지원해 노후 불량주택을 고치도록 한 사업이다. 철거형 재개발 이전의 주택 개량 방식을 보여 준다.",
+   "src": "assets/photos/1970s/seoul-029.jpg",
+   "thumb": "assets/photos/1970s/thumbs/seoul-029.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울역사박물관",
+    "credit": "『두더지 시장 양택식Ⅱ: 1973-1974』(2015",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EB%B6%81%EC%95%84%ED%98%84_%EC%A3%BC%ED%83%9D%EA%B0%9C%EB%9F%89_%EC%9E%AC%EA%B0%9C%EB%B0%9C%EC%82%AC%EC%97%85_%EA%B8%B0%EA%B3%B5%EC%8B%9D.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d7/%EB%B6%81%EC%95%84%ED%98%84_%EC%A3%BC%ED%83%9D%EA%B0%9C%EB%9F%89_%EC%9E%AC%EA%B0%9C%EB%B0%9C%EC%82%AC%EC%97%85_%EA%B8%B0%EA%B3%B5%EC%8B%9D.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울역사박물관 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": [
+     "Commons 날짜 필드(2015-12-01)는 도서 발행일로 보임. 촬영일은 설명 기준"
+    ]
+   }
+  },
+  {
+   "id": "seoul-030",
+   "region": "seoul",
+   "title": "여의도 아파트 단지 전경",
+   "originalTitle": "여의도 아파트 단지 전경 (1975)",
+   "date": {
+    "label": "1975년 5월",
+    "iso": "1975-05",
+    "certainty": "month",
+    "basis": "설명"
+   },
+   "year": 1975,
+   "eraIds": [
+    "1970s"
+   ],
+   "period": {
+    "start": 1975,
+    "end": 1975,
+    "label": "1975년 5월"
+   },
+   "place": "영등포구 여의도동",
+   "theme": "주거·도시 개발",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "영등포구 여의도동",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1975년 5월 여의도 아파트 단지 전경",
+   "geography": "모래섬이던 여의도에 윤중제를 쌓은 뒤 아파트 단지와 업무 시설이 들어섰다. 하중도가 계획 신시가지로 바뀐 대표 사례이다.",
+   "src": "assets/photos/1970s/seoul-030.jpg",
+   "thumb": "assets/photos/1970s/thumbs/seoul-030.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국정책방송원 (KTV)",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EC%97%AC%EC%9D%98%EB%8F%84_%EC%95%84%ED%8C%8C%ED%8A%B8_%EB%8B%A8%EC%A7%80_%EC%A0%84%EA%B2%BD_(1975).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b2/%EC%97%AC%EC%9D%98%EB%8F%84_%EC%95%84%ED%8C%8C%ED%8A%B8_%EB%8B%A8%EC%A7%80_%EC%A0%84%EA%B2%BD_%281975%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "한국정책방송원 (KTV) / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-031",
+   "region": "seoul",
+   "title": "도산공원 전경",
+   "originalTitle": "1975년 도산공원 전경",
+   "date": {
+    "label": "1975년 6월 24일",
+    "iso": "1975-06-24",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1975,
+   "eraIds": [
+    "1970s"
+   ],
+   "period": {
+    "start": 1975,
+    "end": 1975,
+    "label": "1975년 6월 24일"
+   },
+   "place": "강남구 신사동",
+   "theme": "공원·도시 개발",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5244,
+     127.0356
+    ],
+    "label": "도산공원 (강남구 신사동)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "1973년 도산 안창호 선생의 애국과 자주독립 정신을 기리기 위해 도산공원을 조성하였다. 망우리 공동묘지에서 선생의 유해를 이장하고 미국 로스앤젤레스에서 부인 이혜련 여사의 유해를 옮겨와 이곳에 합장하였다. 그 후 강남구 청담동에서 논현동에 이르는 신설가로를 도산대로로 명명하였다.",
+   "geography": "1973년 조성된 도산공원과 주변의 새 가로이다. 공원 주변 길이 도산대로로 이름 붙는 등 강남의 가로망이 이 시기에 만들어졌다.",
+   "src": "assets/photos/1970s/seoul-031.jpg",
+   "thumb": "assets/photos/1970s/thumbs/seoul-031.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울특별시",
+    "credit": "『가자! 강남으로: 1974-1978(1)』(2016), 46쪽",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1975%EB%85%84_%EB%8F%84%EC%82%B0%EA%B3%B5%EC%9B%90_%EC%A0%84%EA%B2%BD.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9d/1975%EB%85%84_%EB%8F%84%EC%82%B0%EA%B3%B5%EC%9B%90_%EC%A0%84%EA%B2%BD.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울특별시 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-032",
+   "region": "seoul",
+   "title": "종로2가 건널목 (1)",
+   "originalTitle": "1975년 8월 서울 종로 2가 건널목 1",
+   "date": {
+    "label": "1975년 8월",
+    "iso": "1975-08",
+    "certainty": "month",
+    "basis": "제목"
+   },
+   "year": 1975,
+   "eraIds": [
+    "1970s"
+   ],
+   "period": {
+    "start": 1975,
+    "end": 1975,
+    "label": "1975년 8월"
+   },
+   "place": "종로2가",
+   "theme": "교통·보행",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "종로2가",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1975년 8월 서울 종로 2가 건널목",
+   "geography": "도심 대로를 건너는 보행자의 모습이다. 지하도·육교가 늘던 시기와 횡단보도를 다시 늘린 오늘날의 보행 정책을 비교해 보자.",
+   "src": "assets/photos/1970s/seoul-032.jpg",
+   "thumb": "assets/photos/1970s/thumbs/seoul-032.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국저작권위원회",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1975%EB%85%84_8%EC%9B%94_%EC%84%9C%EC%9A%B8_%EC%A2%85%EB%A1%9C_2%EA%B0%80_%EA%B1%B4%EB%84%90%EB%AA%A9_1.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/5/51/1975%EB%85%84_8%EC%9B%94_%EC%84%9C%EC%9A%B8_%EC%A2%85%EB%A1%9C_2%EA%B0%80_%EA%B1%B4%EB%84%90%EB%AA%A9_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "CC BY 4.0",
+    "nameKo": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0"
+   },
+   "attribution": "한국저작권위원회 / CC BY 4.0 / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-033",
+   "region": "seoul",
+   "title": "종로2가 건널목 (2)",
+   "originalTitle": "1975년 8월 서울 종로 2가 건널목 2",
+   "date": {
+    "label": "1975년 8월",
+    "iso": "1975-08",
+    "certainty": "month",
+    "basis": "제목"
+   },
+   "year": 1975,
+   "eraIds": [
+    "1970s"
+   ],
+   "period": {
+    "start": 1975,
+    "end": 1975,
+    "label": "1975년 8월"
+   },
+   "place": "종로2가",
+   "theme": "교통·보행",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "종로2가",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1975년 8월 서울 종로 2가 건널목",
+   "geography": "1970년대 도심 간선도로의 교통량과 보행 환경을 관찰할 수 있다. 1974년 지하철 1호선이 종로 지하를 지나게 된 직후의 모습이다.",
+   "src": "assets/photos/1970s/seoul-033.jpg",
+   "thumb": "assets/photos/1970s/thumbs/seoul-033.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국저작권위원회",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1975%EB%85%84_8%EC%9B%94_%EC%84%9C%EC%9A%B8_%EC%A2%85%EB%A1%9C_2%EA%B0%80_%EA%B1%B4%EB%84%90%EB%AA%A9_2.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/2/27/1975%EB%85%84_8%EC%9B%94_%EC%84%9C%EC%9A%B8_%EC%A2%85%EB%A1%9C_2%EA%B0%80_%EA%B1%B4%EB%84%90%EB%AA%A9_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "CC BY 4.0",
+    "nameKo": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0"
+   },
+   "attribution": "한국저작권위원회 / CC BY 4.0 / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-034",
+   "region": "seoul",
+   "title": "명동거리",
+   "originalTitle": "서울 명동거리 (1975년 8월)",
+   "date": {
+    "label": "1975년 8월",
+    "iso": "1975-08",
+    "certainty": "month",
+    "basis": "제목"
+   },
+   "year": 1975,
+   "eraIds": [
+    "1970s"
+   ],
+   "period": {
+    "start": 1975,
+    "end": 1975,
+    "label": "1975년 8월"
+   },
+   "place": "중구 명동",
+   "theme": "상업",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "중구 명동",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "서울 명동거리 (1975년 8월)",
+   "geography": "1970년대 명동은 패션·금융이 모인 서울의 최대 번화가였다. 이후 강남 상권이 성장하며 도심 상업지의 위상이 달라졌다.",
+   "src": "assets/photos/1970s/seoul-034.jpg",
+   "thumb": "assets/photos/1970s/thumbs/seoul-034.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국저작권위원회",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EC%84%9C%EC%9A%B8_%EB%AA%85%EB%8F%99%EA%B1%B0%EB%A6%AC_(1975%EB%85%84_8%EC%9B%94).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c4/%EC%84%9C%EC%9A%B8_%EB%AA%85%EB%8F%99%EA%B1%B0%EB%A6%AC_%281975%EB%85%84_8%EC%9B%94%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "CC BY 4.0",
+    "nameKo": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0"
+   },
+   "attribution": "한국저작권위원회 / CC BY 4.0 / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-035",
+   "region": "seoul",
+   "title": "명동의 골목길",
+   "originalTitle": "서울 명동의 골목길 (1975년 8월)",
+   "date": {
+    "label": "1975년 8월",
+    "iso": "1975-08",
+    "certainty": "month",
+    "basis": "제목"
+   },
+   "year": 1975,
+   "eraIds": [
+    "1970s"
+   ],
+   "period": {
+    "start": 1975,
+    "end": 1975,
+    "label": "1975년 8월"
+   },
+   "place": "중구 명동",
+   "theme": "상업",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "중구 명동",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "서울 명동의 골목길 (1975년 8월)",
+   "geography": "좁은 골목을 따라 상점이 늘어선 도심 상업지의 모습이다. 큰길과 골목의 토지 이용 차이를 관찰해 보자.",
+   "src": "assets/photos/1970s/seoul-035.jpg",
+   "thumb": "assets/photos/1970s/thumbs/seoul-035.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국저작권위원회",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EC%84%9C%EC%9A%B8_%EB%AA%85%EB%8F%99%EC%9D%98_%EA%B3%A8%EB%AA%A9%EA%B8%B8_(1975%EB%85%84_8%EC%9B%94).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/3/39/%EC%84%9C%EC%9A%B8_%EB%AA%85%EB%8F%99%EC%9D%98_%EA%B3%A8%EB%AA%A9%EA%B8%B8_%281975%EB%85%84_8%EC%9B%94%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "CC BY 4.0",
+    "nameKo": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0"
+   },
+   "attribution": "한국저작권위원회 / CC BY 4.0 / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-036",
+   "region": "seoul",
+   "title": "종로·을지로·남대문로 일대 도심 전경",
+   "originalTitle": "1977년 종로 을지로 남대문로 일대",
+   "date": {
+    "label": "1977년 9월 20일",
+    "iso": "1977-09-20",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1977,
+   "eraIds": [
+    "1970s"
+   ],
+   "period": {
+    "start": 1977,
+    "end": 1977,
+    "label": "1977년 9월 20일"
+   },
+   "place": "중구·종로구 도심",
+   "theme": "도심 경관",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "중구·종로구 도심",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1977년 9월 20일 서울 도심의 전경",
+   "geography": "1970년대 후반 도심의 모습이다. 이 무렵부터 도심 재개발로 오래된 저층 건물이 고층 업무 빌딩으로 바뀌기 시작했다.",
+   "src": "assets/photos/1970s/seoul-036.jpg",
+   "thumb": "assets/photos/1970s/thumbs/seoul-036.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울특별시",
+    "credit": "『착실한 전진: 1974-1978(2)』(2017), 10-11쪽",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1977%EB%85%84_%EC%A2%85%EB%A1%9C_%EC%9D%84%EC%A7%80%EB%A1%9C_%EB%82%A8%EB%8C%80%EB%AC%B8%EB%A1%9C_%EC%9D%BC%EB%8C%80.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/3/31/1977%EB%85%84_%EC%A2%85%EB%A1%9C_%EC%9D%84%EC%A7%80%EB%A1%9C_%EB%82%A8%EB%8C%80%EB%AC%B8%EB%A1%9C_%EC%9D%BC%EB%8C%80.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울특별시 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-037",
+   "region": "seoul",
+   "title": "광화문과 중앙청",
+   "originalTitle": "서울 광화문과 중앙청 (1980년 10월 14일)",
+   "date": {
+    "label": "1980년 10월 14일",
+    "iso": "1980-10-14",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1980,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1980,
+    "end": 1980,
+    "label": "1980년 10월 14일"
+   },
+   "place": "종로구 세종로",
+   "theme": "중심업무지구",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5772,
+     126.9768
+    ],
+    "label": "옛 중앙청 터 (경복궁 흥례문 일대)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "서울 광화문과 중앙청 (1980년 10월 14일)",
+   "geography": "광화문 뒤로 중앙청(옛 조선총독부 건물)이 보인다. 중앙청은 1995~1996년 철거되었고, 광화문은 2010년 원래 위치로 옮겨 복원되었다.",
+   "src": "assets/photos/1980s/seoul-037.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-037.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "한국저작권위원회",
+    "credit": "공유마당",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EC%84%9C%EC%9A%B8_%EA%B4%91%ED%99%94%EB%AC%B8%EA%B3%BC_%EC%A4%91%EC%95%99%EC%B2%AD_(1980%EB%85%84_10%EC%9B%94_14%EC%9D%BC).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ea/%EC%84%9C%EC%9A%B8_%EA%B4%91%ED%99%94%EB%AC%B8%EA%B3%BC_%EC%A4%91%EC%95%99%EC%B2%AD_%281980%EB%85%84_10%EC%9B%94_14%EC%9D%BC%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "CC BY 4.0",
+    "nameKo": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0"
+   },
+   "attribution": "한국저작권위원회 / CC BY 4.0 / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-038",
+   "region": "seoul",
+   "title": "광화문 일대",
+   "originalTitle": "광화문 일대 (1980-05-27)",
+   "date": {
+    "label": "1980년 5월 27일",
+    "iso": "1980-05-27",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1980,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1980,
+    "end": 1980,
+    "label": "1980년 5월 27일"
+   },
+   "place": "종로구 세종로",
+   "theme": "중심업무지구",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5772,
+     126.9768
+    ],
+    "label": "옛 중앙청 터 (경복궁 흥례문 일대)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "광화문 일대 모습이다. 지금은 철거된 구 조선총독부 건물과 구 경기도청 건물이 율곡로를 사이에 두고 마주 보고 있다. (1980.05.27)",
+   "geography": "옛 조선총독부 건물과 옛 경기도청 건물이 율곡로를 사이에 두고 마주 보는 모습이다(자료 설명). 두 건물 모두 지금은 남아 있지 않다.",
+   "src": "assets/photos/1980s/seoul-038.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-038.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울역사박물관",
+    "credit": "서울역사아카이브",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EA%B4%91%ED%99%94%EB%AC%B8_%EC%9D%BC%EB%8C%80_(1980-05-27).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1f/%EA%B4%91%ED%99%94%EB%AC%B8_%EC%9D%BC%EB%8C%80_%281980-05-27%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울역사박물관 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-039",
+   "region": "seoul",
+   "title": "반포·논현동 일대 항공사진",
+   "originalTitle": "1981년 반포와 논현동 일대 항공촬영사진",
+   "date": {
+    "label": "1981년 2월 6일",
+    "iso": "1981-02-06",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1981,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1981,
+    "end": 1981,
+    "label": "1981년 2월 6일"
+   },
+   "place": "서초구 반포동·강남구 논현동",
+   "theme": "주거·도시화",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "서초구 반포동·강남구 논현동",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1981년 강남 개발 직후 반포와 논현동 알대",
+   "geography": "강남 개발 직후 격자형 도로와 새 건물이 들어선 모습이다. 1970년대 초 농경지였던 지역이 10년 만에 시가지로 바뀌었다.",
+   "src": "assets/photos/1980s/seoul-039.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-039.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울특별시",
+    "credit": "『선진 수도로의 도약: 1979-1983』(2018), 24쪽",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1981%EB%85%84_%EB%B0%98%ED%8F%AC%EC%99%80_%EB%85%BC%ED%98%84%EB%8F%99_%EC%9D%BC%EB%8C%80_%ED%95%AD%EA%B3%B5%EC%B4%AC%EC%98%81%EC%82%AC%EC%A7%84.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/2/27/1981%EB%85%84_%EB%B0%98%ED%8F%AC%EC%99%80_%EB%85%BC%ED%98%84%EB%8F%99_%EC%9D%BC%EB%8C%80_%ED%95%AD%EA%B3%B5%EC%B4%AC%EC%98%81%EC%82%AC%EC%A7%84.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울특별시 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-040",
+   "region": "seoul",
+   "title": "계동에서 남산 쪽으로 바라본 도심",
+   "originalTitle": "계동에서 남산을 향해 바라본 도심",
+   "date": {
+    "label": "1982년 6월 25일",
+    "iso": "1982-06-25",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1982,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1982,
+    "end": 1982,
+    "label": "1982년 6월 25일"
+   },
+   "place": "종로구 익선동·낙원동·인사동 일대",
+   "theme": "도심 경관",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "종로구 익선동·낙원동·인사동 일대",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "현대건설 사옥 부근에서(덕성여자대학교 종로캠퍼스에서) 남산을 바라보고 찍은 사진이다. 익선동과 낙원동, 인사동 일대로 화면 아래쪽에 교동초등학교와 낙원상가, 익선동 한옥들이 보인다. (1982.06.25) 아카이브번호: 95976",
+   "geography": "익선동 한옥, 낙원상가, 교동초등학교가 보인다(자료 설명). 저층 한옥 주거지와 고층 건물이 맞닿은 도심 경관으로, 익선동은 2010년대 상업 공간으로 크게 바뀌었다.",
+   "src": "assets/photos/1980s/seoul-040.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-040.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "작성자 미상",
+    "credit": "『선진 수도로의 도약: 1979-1983』(2018), 16-17쪽, 서울역사아카이브",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EA%B3%84%EB%8F%99%EC%97%90%EC%84%9C_%EB%82%A8%EC%82%B0%EC%9D%84_%ED%96%A5%ED%95%B4_%EB%B0%94%EB%9D%BC%EB%B3%B8_%EB%8F%84%EC%8B%AC.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a0/%EA%B3%84%EB%8F%99%EC%97%90%EC%84%9C_%EB%82%A8%EC%82%B0%EC%9D%84_%ED%96%A5%ED%95%B4_%EB%B0%94%EB%9D%BC%EB%B3%B8_%EB%8F%84%EC%8B%AC.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "작성자 미상 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": [
+     "작성자 '미상'으로 표기되어 있으나 서울역사아카이브 자료로 공공누리 제1유형 표기"
+    ]
+   }
+  },
+  {
+   "id": "seoul-041",
+   "region": "seoul",
+   "title": "지하철 2호선 개통",
+   "originalTitle": "지하철 2호선 개통 (1983.12.17)",
+   "date": {
+    "label": "1983년 12월 17일",
+    "iso": "1983-12-17",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1983,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1983,
+    "end": 1983,
+    "label": "1983년 12월 17일"
+   },
+   "place": "서울 지하철 2호선",
+   "theme": "교통망",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "서울 지하철 2호선",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1983년 12월 지하철 2호선 중 교대역에서 서울대입구역 구간이 개통되었다. 이 구간이 개통됨에 따라 지하철 2호선의 61%가 개통되었으며 서울대입구역에서 종합운동장역을 거쳐 을지로입구역까지 지하철이 운행하였다. 강남과 강북을 연결하는 순환노선 방식의 지하철 2호선은 1978년 3월에 군자차량기지에서 구로까지의 강남구간부터 착공하였으며 1980년 2월에는 문래동~왕십리에 이르는 강북 구간을 착공하였다. 이후 1980년 10월 '신설동역~종합운동장역' 구간 개통을 시작으로 1982년 12월 '교대역~종합운동장역', 1983년 9월 '성수역~을지로입구역', 1983년 12월 '교대역~서울대입구역', 1984년 5월 '을지로입구역~서울대입구역' 까지 4년에 걸쳐 개통이 완료되었다. (1983.12.17) 『선진 수도로의 도약: 1979-1983』(2018), 154쪽",
+   "geography": "교대–서울대입구 구간이 개통한 날이다(자료 설명). 강남과 강북을 순환으로 잇는 2호선은 서울을 여러 중심을 가진 도시로 바꾸는 데 기여했다.",
+   "src": "assets/photos/1980s/seoul-041.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-041.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울역사박물관",
+    "credit": "서울역사아카이브",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EC%A7%80%ED%95%98%EC%B2%A0_2%ED%98%B8%EC%84%A0_%EA%B0%9C%ED%86%B5_(1983.12.17).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/2/20/%EC%A7%80%ED%95%98%EC%B2%A0_2%ED%98%B8%EC%84%A0_%EA%B0%9C%ED%86%B5_%281983.12.17%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울역사박물관 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-042",
+   "region": "seoul",
+   "title": "지하철 2호선 연장 구간 시운전",
+   "originalTitle": "지하철 2호선 연장구간 시운전 (1983.03.19)",
+   "date": {
+    "label": "1983년 3월 19일",
+    "iso": "1983-03-19",
+    "certainty": "day",
+    "basis": "설명"
+   },
+   "year": 1983,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1983,
+    "end": 1983,
+    "label": "1983년 3월 19일"
+   },
+   "place": "서울대입구–홍대입구 구간",
+   "theme": "교통망",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "서울대입구–홍대입구 구간",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1983년 3월 19일 서울 지하철 2호선 미개통 구간인 서울대입구역-홍대입구역을 서울시장과 함께 시운전하는 모습",
+   "geography": "개통 전 구간을 시험 운행하는 모습이다. 서남부 구간이 연결되면서 1984년 순환선이 완성되었다.",
+   "src": "assets/photos/1980s/seoul-042.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-042.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울특별시",
+    "credit": "『세계는 서울로, 서울은 세계로: 1984-1988』(2019)",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EC%A7%80%ED%95%98%EC%B2%A0_2%ED%98%B8%EC%84%A0_%EC%97%B0%EC%9E%A5%EA%B5%AC%EA%B0%84_%EC%8B%9C%EC%9A%B4%EC%A0%84_(1983.03.19).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/6/69/%EC%A7%80%ED%95%98%EC%B2%A0_2%ED%98%B8%EC%84%A0_%EC%97%B0%EC%9E%A5%EA%B5%AC%EA%B0%84_%EC%8B%9C%EC%9A%B4%EC%A0%84_%281983.03.19%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울특별시 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": [
+     "Commons 날짜 필드(2020-12-31)는 도서 발행일로 보임. 촬영일은 제목·설명 기준"
+    ]
+   }
+  },
+  {
+   "id": "seoul-043",
+   "region": "seoul",
+   "title": "건설 중인 63빌딩 (1)",
+   "originalTitle": "63 Building 1984 01",
+   "date": {
+    "label": "1984년 6월",
+    "iso": "1984-06",
+    "certainty": "month",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1984,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1984,
+    "end": 1984,
+    "label": "1984년 6월"
+   },
+   "place": "영등포구 여의도동",
+   "theme": "도심·건물",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5198,
+     126.9402
+    ],
+    "label": "63빌딩 (영등포구 여의도동)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "This is a panoramic view of the 63 Building in Yeouido, taken in June 1984.",
+   "geography": "1985년 준공된 63빌딩은 당시 국내 최고층 건물이었다. 여의도가 금융·업무 중심지로 성장하는 상징적 경관이다.",
+   "src": "assets/photos/1980s/seoul-043.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-043.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울사진아카이브",
+    "credit": "http://photoarchives.seoul.go.kr/photo/view/47538",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:63_Building_1984_01.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/5/51/63_Building_1984_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "CC BY 3.0",
+    "nameKo": "CC BY 3.0",
+    "url": "https://creativecommons.org/licenses/by/3.0"
+   },
+   "attribution": "서울사진아카이브 / CC BY 3.0 / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-044",
+   "region": "seoul",
+   "title": "건설 중인 63빌딩 (2)",
+   "originalTitle": "63 Building 1984 02",
+   "date": {
+    "label": "1984년 6월",
+    "iso": "1984-06",
+    "certainty": "month",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1984,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1984,
+    "end": 1984,
+    "label": "1984년 6월"
+   },
+   "place": "영등포구 여의도동",
+   "theme": "도심·건물",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5198,
+     126.9402
+    ],
+    "label": "63빌딩 (영등포구 여의도동)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "This is a panoramic view of the 63 Building in Yeouido, taken in June 1984.",
+   "geography": "아파트 단지와 초고층 건물이 함께 보이는 여의도 일대의 경관이다. 한강변 하중도가 고밀도 시가지로 바뀐 과정을 확인할 수 있다.",
+   "src": "assets/photos/1980s/seoul-044.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-044.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울사진아카이브",
+    "credit": "http://photoarchives.seoul.go.kr/photo/view/47539",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:63_Building_1984_02.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/3/34/63_Building_1984_02.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "CC BY 3.0",
+    "nameKo": "CC BY 3.0",
+    "url": "https://creativecommons.org/licenses/by/3.0"
+   },
+   "attribution": "서울사진아카이브 / CC BY 3.0 / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-045",
+   "region": "seoul",
+   "title": "건설 중인 63빌딩 (3)",
+   "originalTitle": "63 Building 1984 03",
+   "date": {
+    "label": "1984년 6월",
+    "iso": "1984-06",
+    "certainty": "month",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1984,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1984,
+    "end": 1984,
+    "label": "1984년 6월"
+   },
+   "place": "영등포구 여의도동",
+   "theme": "도심·건물",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5198,
+     126.9402
+    ],
+    "label": "63빌딩 (영등포구 여의도동)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "This is a panoramic view of the 63 Building in Yeouido, taken in June 1984.",
+   "geography": "같은 시기 다른 각도에서 본 63빌딩이다. 사진마다 보이는 한강·다리·주거지를 찾아 위치 관계를 추론해 보자.",
+   "src": "assets/photos/1980s/seoul-045.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-045.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울사진아카이브",
+    "credit": "http://photoarchives.seoul.go.kr/photo/view/70208",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:63_Building_1984_03.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/9/90/63_Building_1984_03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "CC BY 3.0",
+    "nameKo": "CC BY 3.0",
+    "url": "https://creativecommons.org/licenses/by/3.0"
+   },
+   "attribution": "서울사진아카이브 / CC BY 3.0 / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-046",
+   "region": "seoul",
+   "title": "건설 중인 63빌딩 (4)",
+   "originalTitle": "63 Building 1984 04",
+   "date": {
+    "label": "1984년 6월",
+    "iso": "1984-06",
+    "certainty": "month",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1984,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1984,
+    "end": 1984,
+    "label": "1984년 6월"
+   },
+   "place": "영등포구 여의도동",
+   "theme": "도심·건물",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5198,
+     126.9402
+    ],
+    "label": "63빌딩 (영등포구 여의도동)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "This is a panoramic view of the 63 Building in Yeouido, taken in June 1984.",
+   "geography": "1980년대 중반 여의도 스카이라인이다. 2020년대 여의도의 고층 빌딩군과 비교해 보자.",
+   "src": "assets/photos/1980s/seoul-046.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-046.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울사진아카이브",
+    "credit": "http://photoarchives.seoul.go.kr/photo/view/70350",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:63_Building_1984_04.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9a/63_Building_1984_04.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "CC BY 3.0",
+    "nameKo": "CC BY 3.0",
+    "url": "https://creativecommons.org/licenses/by/3.0"
+   },
+   "attribution": "서울사진아카이브 / CC BY 3.0 / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-047",
+   "region": "seoul",
+   "title": "숭례문 일대",
+   "originalTitle": "숭례문 일대 (1984.10.15)",
+   "date": {
+    "label": "1984년 10월 15일",
+    "iso": "1984-10-15",
+    "certainty": "day",
+    "basis": "설명"
+   },
+   "year": 1984,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1984,
+    "end": 1984,
+    "label": "1984년 10월 15일"
+   },
+   "place": "중구 남대문로",
+   "theme": "도심 경관",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5599,
+     126.9753
+    ],
+    "label": "숭례문 (중구 남대문로4가)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "자료출처: 『세계는 서울로, 서울은 세계로: 1984-1988』(2019) 숭례문 일대의 모습이다. 숭례문 위쪽 세종대로를 기준으로 왼쪽에는 동방생명 빌딩(현 부영대평빌딩), 오른쪽 상단에는 서울 플라자호텔, 서울시청, 프레스센터가 위치하고 있다.(1984.10.15)",
+   "geography": "숭례문 위쪽 세종대로를 따라 업무 빌딩, 호텔, 서울시청이 늘어선 모습이다(자료 설명). 1980년대 도심의 고층 업무지구를 보여 준다.",
+   "src": "assets/photos/1980s/seoul-047.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-047.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울역사박물관",
+    "credit": "서울역사아카이브",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EC%88%AD%EB%A1%80%EB%AC%B8_%EC%9D%BC%EB%8C%80_(1984.10.15).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/0/04/%EC%88%AD%EB%A1%80%EB%AC%B8_%EC%9D%BC%EB%8C%80_%281984.10.15%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울역사박물관 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-048",
+   "region": "seoul",
+   "title": "구로공단역",
+   "originalTitle": "구로공단역 (1984.05.03)",
+   "date": {
+    "label": "1984년 5월 3일",
+    "iso": "1984-05-03",
+    "certainty": "day",
+    "basis": "설명"
+   },
+   "year": 1984,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1984,
+    "end": 1984,
+    "label": "1984년 5월 3일"
+   },
+   "place": "구로구 (현 구로디지털단지역)",
+   "theme": "산업·교통",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.4852,
+     126.9015
+    ],
+    "label": "구로디지털단지역 (옛 구로공단역, 구로구)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "자료출처: 『세계는 서울로, 서울은 세계로: 1984-1988』(2019) 현재 '구로디지털단지'역이 개통 당시에는 '구로공단'역으로 표기되어 있다.(1984.05.03)",
+   "geography": "개통 당시 역 이름은 '구로공단'이었다. 공업단지가 IT 중심의 디지털산업단지로 바뀌면서 2004년 역 이름도 '구로디지털단지'로 바뀌었다.",
+   "src": "assets/photos/1980s/seoul-048.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-048.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울역사박물관",
+    "credit": "서울역사아카이브",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EA%B5%AC%EB%A1%9C%EA%B3%B5%EB%8B%A8%EC%97%AD_(1984.05.03).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c1/%EA%B5%AC%EB%A1%9C%EA%B3%B5%EB%8B%A8%EC%97%AD_%281984.05.03%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울역사박물관 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-049",
+   "region": "seoul",
+   "title": "잠실 종합운동장 주경기장 개장식",
+   "originalTitle": "잠실 종합운동장 주경기장 개장식 (1984.09.29)",
+   "date": {
+    "label": "1984년 9월 29일",
+    "iso": "1984-09-29",
+    "certainty": "day",
+    "basis": "설명"
+   },
+   "year": 1984,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1984,
+    "end": 1984,
+    "label": "1984년 9월 29일"
+   },
+   "place": "송파구 잠실동",
+   "theme": "체육·도시 개발",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5157,
+     127.0728
+    ],
+    "label": "잠실종합운동장 주경기장 (송파구 잠실동)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "자료출처: 『세계는 서울로, 서울은 세계로: 1984-1988』(2019) 노태우 서울올림픽조직위원회(SLOOC), 이영호 체육부장관, 염보현 서울시장 등 내외귀빈이 참석한 가운데 테이프 커팅과 함께 개장식이 시작되었다. 좌석 7만 5천, 입석 2만 5천을 수용하는 이 경기장에는 7천여 명의 인원이 동원되어 체조매스게임과 풍물놀이 등 5개 종목의 식전문화행사가 치러졌으며 이어 국제육상 경기대회가 열렸다. (1984.09.29)",
+   "geography": "1986 아시안게임과 1988 서울올림픽을 위해 지은 주경기장의 개장식이다. 국제 행사는 잠실 일대의 개발을 앞당겼다.",
+   "src": "assets/photos/1980s/seoul-049.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-049.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울역사박물관",
+    "credit": "서울역사아카이브",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EC%9E%A0%EC%8B%A4_%EC%A2%85%ED%95%A9%EC%9A%B4%EB%8F%99%EC%9E%A5_%EC%A3%BC%EA%B2%BD%EA%B8%B0%EC%9E%A5_%EA%B0%9C%EC%9E%A5%EC%8B%9D_(1984.09.29).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4e/%EC%9E%A0%EC%8B%A4_%EC%A2%85%ED%95%A9%EC%9A%B4%EB%8F%99%EC%9E%A5_%EC%A3%BC%EA%B2%BD%EA%B8%B0%EC%9E%A5_%EA%B0%9C%EC%9E%A5%EC%8B%9D_%281984.09.29%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울역사박물관 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-050",
+   "region": "seoul",
+   "title": "남산에서 내려다 본 도심 전경",
+   "originalTitle": "남산에서 내려다 본 1984년 서울도심 전경",
+   "date": {
+    "label": "1984년 4월 20일",
+    "iso": "1984-04-20",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1984,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1984,
+    "end": 1984,
+    "label": "1984년 4월 20일"
+   },
+   "place": "남산에서 본 도심",
+   "theme": "도심 경관",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "남산에서 본 도심",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "Segye Nŭn Sŏul Ro, Sŏul Ŭn Segye Ro 1984-1988. Sŏul Yŏksa Pangmulgwan, 2019 (ISBN 9791190480062), pp. 14~15.",
+   "geography": "남산에서 본 1984년 도심이다. 같은 방향의 현재 사진과 비교하며 고층 건물이 늘어난 지역을 찾아보자.",
+   "src": "assets/photos/1980s/seoul-050.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-050.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울특별시청",
+    "credit": "서울역사아카이브 &gt; 서울시정사진&gt; 촬영연도별 &gt; 1984-1988 &gt; 남산에서 내려다 본 서울전경",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EB%82%A8%EC%82%B0%EC%97%90%EC%84%9C_%EB%82%B4%EB%A0%A4%EB%8B%A4_%EB%B3%B8_1984%EB%85%84_%EC%84%9C%EC%9A%B8%EB%8F%84%EC%8B%AC_%EC%A0%84%EA%B2%BD.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b1/%EB%82%A8%EC%82%B0%EC%97%90%EC%84%9C_%EB%82%B4%EB%A0%A4%EB%8B%A4_%EB%B3%B8_1984%EB%85%84_%EC%84%9C%EC%9A%B8%EB%8F%84%EC%8B%AC_%EC%A0%84%EA%B2%BD.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울특별시청 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-051",
+   "region": "seoul",
+   "title": "지하철 2호선 순환열차",
+   "originalTitle": "지하철 2호선 순환열차 (1984.08.07)",
+   "date": {
+    "label": "1984년 8월 7일",
+    "iso": "1984-08-07",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1984,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1984,
+    "end": 1984,
+    "label": "1984년 8월 7일"
+   },
+   "place": "서울 지하철 2호선",
+   "theme": "교통망",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "서울 지하철 2호선",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "시민들이 지하철 2호선 순환열차를 이용하는 모습이다. 1984년 5월 22일 시청~영등포~서울대입구 19.2km 구간이 개통되면서 지하철 2호선 48.8km 전구간이 완전 개통되었다. 지하철 2호선의 완전 개통으로 서울의 지하철 운행구간은 1호선 서울역~청량리 구간을 합쳐 총 58.3km가 되었으며, 하루 230만 명을 수송함으로써 서울 시내 1일 교통인구 1,600만 명 중 14.4%를 분담하게 되었다.(1984.08.07) 『세계는 서울로, 서울은 세계로: 1984-1988』(2019)",
+   "geography": "1984년 5월 2호선 전 구간이 개통되어 순환 운행이 시작되었다(자료 설명). 지하철이 도심·강남·영등포를 하나로 묶는 교통 축이 되었다.",
+   "src": "assets/photos/1980s/seoul-051.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-051.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울역사박물관",
+    "credit": "서울역사아카이브",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EC%A7%80%ED%95%98%EC%B2%A0_2%ED%98%B8%EC%84%A0_%EC%88%9C%ED%99%98%EC%97%B4%EC%B0%A8_(1984.08.07).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3e/%EC%A7%80%ED%95%98%EC%B2%A0_2%ED%98%B8%EC%84%A0_%EC%88%9C%ED%99%98%EC%97%B4%EC%B0%A8_%281984.08.07%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울역사박물관 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-052",
+   "region": "seoul",
+   "title": "시운전 중인 이대역",
+   "originalTitle": "이대역 (1984.04.15)",
+   "date": {
+    "label": "1984년 4월 15일",
+    "iso": "1984-04-15",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1984,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1984,
+    "end": 1984,
+    "label": "1984년 4월 15일"
+   },
+   "place": "마포구 이대역",
+   "theme": "교통망",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5567,
+     126.9461
+    ],
+    "label": "이대역 (마포구 대흥동·신촌로)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "시운전 중인 지하철 2호선이 이대역을 지나고 있다.(1984.04.15) 『세계는 서울로, 서울은 세계로: 1984-1988』(2019)",
+   "geography": "개통을 앞두고 시운전 중인 2호선 열차이다(자료 설명). 지하철역 주변은 이후 대학가 상권과 함께 성장했다.",
+   "src": "assets/photos/1980s/seoul-052.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-052.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울역사박물관",
+    "credit": "서울역사아카이브",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:%EC%9D%B4%EB%8C%80%EC%97%AD_(1984.04.15).jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/d/df/%EC%9D%B4%EB%8C%80%EC%97%AD_%281984.04.15%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울역사박물관 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-053",
+   "region": "seoul",
+   "title": "한강 모형도",
+   "originalTitle": "1986년 1월 한강 모형도",
+   "date": {
+    "label": "1986년 1월 22일",
+    "iso": "1986-01-22",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1986,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1986,
+    "end": 1986,
+    "label": "1986년 1월 22일"
+   },
+   "place": "한강",
+   "theme": "하천·도시계획",
+   "location": {
+    "precision": "none",
+    "coords": null,
+    "label": "한강",
+    "note": "정확한 촬영 위치가 확인되지 않아 지도에 표시하지 않음"
+   },
+   "mapLinked": false,
+   "description": "1986년 1월 당시 한강을 중심으로 만든 서울 모형도",
+   "geography": "한강을 중심으로 만든 서울 모형이다. 1980년대 한강종합개발로 한강변에 도로와 둔치 공원이 정비되었다.",
+   "src": "assets/photos/1980s/seoul-053.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-053.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울특별시",
+    "credit": "『세계는 서울로, 서울은 세계로: 1984-1988』(2019)",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:1986%EB%85%84_1%EC%9B%94_%ED%95%9C%EA%B0%95_%EB%AA%A8%ED%98%95%EB%8F%84.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8c/1986%EB%85%84_1%EC%9B%94_%ED%95%9C%EA%B0%95_%EB%AA%A8%ED%98%95%EB%8F%84.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울특별시 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-054",
+   "region": "seoul",
+   "title": "덕수궁 (1)",
+   "originalTitle": "Deoksugung in 1988-1",
+   "date": {
+    "label": "1988년 4월 14일",
+    "iso": "1988-04-14",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1988,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1988,
+    "end": 1988,
+    "label": "1988년 4월 14일"
+   },
+   "place": "중구 정동",
+   "theme": "도심 경관",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5658,
+     126.9751
+    ],
+    "label": "덕수궁 (중구 정동)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "The view of Deoksugung in April 1988.",
+   "geography": "도심 한가운데 남아 있는 궁궐 공간이다. 궁궐 주변 고층 건물과의 경관 대비를 관찰해 보자.",
+   "src": "assets/photos/1980s/seoul-054.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-054.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울특별시",
+    "credit": "http://photoarchives.seoul.go.kr/photo/view/97586?ca_id=41&amp;viewtype=normal&amp;ordertype=p_dt&amp;page=70#70_53411",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:Deoksugung_in_1988-1.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Deoksugung_in_1988-1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울특별시 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  },
+  {
+   "id": "seoul-055",
+   "region": "seoul",
+   "title": "덕수궁 (2)",
+   "originalTitle": "Deoksugung in 1988-2",
+   "date": {
+    "label": "1988년 4월 14일",
+    "iso": "1988-04-14",
+    "certainty": "day",
+    "basis": "Commons 촬영일"
+   },
+   "year": 1988,
+   "eraIds": [
+    "1980s"
+   ],
+   "period": {
+    "start": 1988,
+    "end": 1988,
+    "label": "1988년 4월 14일"
+   },
+   "place": "중구 정동",
+   "theme": "도심 경관",
+   "location": {
+    "precision": "subject-facility",
+    "coords": [
+     37.5658,
+     126.9751
+    ],
+    "label": "덕수궁 (중구 정동)",
+    "note": "사진 속 시설(피사체)의 위치이며 촬영 지점 좌표가 아님"
+   },
+   "mapLinked": true,
+   "description": "The view of Deoksugung in April 1988.",
+   "geography": "올림픽이 열린 1988년 덕수궁의 모습이다. 역사 경관 보존과 도심 개발의 관계를 생각해 보자.",
+   "src": "assets/photos/1980s/seoul-055.jpg",
+   "thumb": "assets/photos/1980s/thumbs/seoul-055.jpg",
+   "contentType": "historical-photo",
+   "source": {
+    "author": "서울특별시",
+    "credit": "http://photoarchives.seoul.go.kr/photo/view/129677?ca_id=41&amp;viewtype=normal&amp;ordertype=p_dt&amp;page=69#70_97586",
+    "commonsPage": "https://commons.wikimedia.org/wiki/File:Deoksugung_in_1988-2.jpg",
+    "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Deoksugung_in_1988-2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+   },
+   "license": {
+    "name": "KOGL Type 1",
+    "nameKo": "공공누리 제1유형 (출처표시)",
+    "url": "http://www.kogl.or.kr/info/licenseType1.do"
+   },
+   "attribution": "서울특별시 / 공공누리 제1유형 (출처표시) / Wikimedia Commons",
+   "verification": {
+    "licenseCheckedOn": "2026-11-04",
+    "method": "Wikimedia Commons API (imageinfo·extmetadata·categories)",
+    "imageAccessible": true,
+    "notes": []
+   }
+  }
+ ],
+ "unverified": [],
+ "needed": [
+  {
+   "id": "need-01",
+   "eraId": "1970s",
+   "topic": "영동(강남) 토지구획정리 이전 농경지",
+   "place": "강남구 일대",
+   "why": "농경지 → 시가지 전환을 보여 줄 1970년대 초 사진이 목록에 없음 (1981년 항공사진과 비교용)",
+   "suggestedSources": [
+    "서울역사아카이브",
+    "국토정보플랫폼 항공사진"
+   ]
+  },
+  {
+   "id": "need-02",
+   "eraId": "1970s",
+   "topic": "지하철 1호선 개통 (1974)",
+   "place": "서울역·종로",
+   "why": "1971년 공사 사진만 있고 개통 당시 사진 없음",
+   "suggestedSources": [
+    "서울역사아카이브",
+    "국가기록원"
+   ]
+  },
+  {
+   "id": "need-03",
+   "eraId": "1970s",
+   "topic": "구로공단 (공업단지 시기)",
+   "place": "구로구",
+   "why": "1984년 역 사진뿐, 공장 지대 경관 사진 없음",
+   "suggestedSources": [
+    "국가기록원",
+    "공유마당"
+   ]
+  },
+  {
+   "id": "need-04",
+   "eraId": "1980s",
+   "topic": "난지도 매립지",
+   "place": "마포구 상암동",
+   "why": "매립지 → 월드컵공원 변화의 '이전' 자료",
+   "suggestedSources": [
+    "서울역사아카이브",
+    "서울사진아카이브"
+   ]
+  },
+  {
+   "id": "need-05",
+   "eraId": "1980s",
+   "topic": "목동·상계 신시가지 조성",
+   "place": "양천구·노원구",
+   "why": "1980년대 택지 개발 사례 사진 없음",
+   "suggestedSources": [
+    "서울역사아카이브"
+   ]
+  },
+  {
+   "id": "need-06",
+   "eraId": "1990s",
+   "topic": "1기 신도시 입주 초기 (분당·일산)",
+   "place": "성남시 분당구, 고양시 일산",
+   "why": "1990년대 사진이 한 건도 없음",
+   "suggestedSources": [
+    "Wikimedia Commons",
+    "국가기록원",
+    "경기도 기록물"
+   ]
+  },
+  {
+   "id": "need-07",
+   "eraId": "1990s",
+   "topic": "테헤란로 업무지구",
+   "place": "강남구 테헤란로",
+   "why": "강남 업무 중심지 성장 자료",
+   "suggestedSources": [
+    "서울사진아카이브"
+   ]
+  },
+  {
+   "id": "need-08",
+   "eraId": "2000s",
+   "topic": "청계고가도로 철거·청계천 복원 전후",
+   "place": "청계천",
+   "why": "1960~70년대 청계천 사진과 짝을 이룰 '복원 전후' 사진",
+   "suggestedSources": [
+    "Wikimedia Commons",
+    "서울사진아카이브"
+   ]
+  },
+  {
+   "id": "need-09",
+   "eraId": "2000s",
+   "topic": "월드컵공원·상암 DMC",
+   "place": "마포구 상암동",
+   "why": "매립지의 공원화 결과 자료",
+   "suggestedSources": [
+    "Wikimedia Commons"
+   ]
+  },
+  {
+   "id": "need-10",
+   "eraId": "2010s",
+   "topic": "서울로7017",
+   "place": "중구 서울역 고가",
+   "why": "고가도로 재생 사례",
+   "suggestedSources": [
+    "Wikimedia Commons",
+    "서울사진아카이브"
+   ]
+  },
+  {
+   "id": "need-11",
+   "eraId": "2010s",
+   "topic": "성수동 산업 전환",
+   "place": "성동구 성수동",
+   "why": "준공업지역 변화·젠트리피케이션 사례",
+   "suggestedSources": [
+    "Wikimedia Commons"
+   ]
+  },
+  {
+   "id": "need-12",
+   "eraId": "2020s",
+   "topic": "현재 같은 지점 비교 사진 (광화문·숭례문·명동·여의도)",
+   "place": "도심·여의도",
+   "why": "과거 사진과 같은 방향의 현재 사진이 있어야 과거·현재 비교가 가능",
+   "suggestedSources": [
+    "직접 촬영 (교사·학생, 라이선스 명시)",
+    "Wikimedia Commons"
+   ]
+  },
+  {
+   "id": "need-13",
+   "eraId": "2020s",
+   "topic": "용산공원 시범 개방, GTX-A",
+   "place": "용산구, 서울역",
+   "why": "2020년대 사진이 한 건도 없음",
+   "suggestedSources": [
+    "Wikimedia Commons",
+    "직접 촬영"
+   ]
+  }
+ ]
+}

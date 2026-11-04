@@ -1,0 +1,15 @@
+[
+ { "id": "need-01", "eraId": "1970s", "topic": "영동(강남) 토지구획정리 이전 농경지", "place": "강남구 일대", "why": "농경지 → 시가지 전환을 보여 줄 1970년대 초 사진이 목록에 없음 (1981년 항공사진과 비교용)", "suggestedSources": ["서울역사아카이브", "국토정보플랫폼 항공사진"] },
+ { "id": "need-02", "eraId": "1970s", "topic": "지하철 1호선 개통 (1974)", "place": "서울역·종로", "why": "1971년 공사 사진만 있고 개통 당시 사진 없음", "suggestedSources": ["서울역사아카이브", "국가기록원"] },
+ { "id": "need-03", "eraId": "1970s", "topic": "구로공단 (공업단지 시기)", "place": "구로구", "why": "1984년 역 사진뿐, 공장 지대 경관 사진 없음", "suggestedSources": ["국가기록원", "공유마당"] },
+ { "id": "need-04", "eraId": "1980s", "topic": "난지도 매립지", "place": "마포구 상암동", "why": "매립지 → 월드컵공원 변화의 '이전' 자료", "suggestedSources": ["서울역사아카이브", "서울사진아카이브"] },
+ { "id": "need-05", "eraId": "1980s", "topic": "목동·상계 신시가지 조성", "place": "양천구·노원구", "why": "1980년대 택지 개발 사례 사진 없음", "suggestedSources": ["서울역사아카이브"] },
+ { "id": "need-06", "eraId": "1990s", "topic": "1기 신도시 입주 초기 (분당·일산)", "place": "성남시 분당구, 고양시 일산", "why": "1990년대 사진이 한 건도 없음", "suggestedSources": ["Wikimedia Commons", "국가기록원", "경기도 기록물"] },
+ { "id": "need-07", "eraId": "1990s", "topic": "테헤란로 업무지구", "place": "강남구 테헤란로", "why": "강남 업무 중심지 성장 자료", "suggestedSources": ["서울사진아카이브"] },
+ { "id": "need-08", "eraId": "2000s", "topic": "청계고가도로 철거·청계천 복원 전후", "place": "청계천", "why": "1960~70년대 청계천 사진과 짝을 이룰 '복원 전후' 사진", "suggestedSources": ["Wikimedia Commons", "서울사진아카이브"] },
+ { "id": "need-09", "eraId": "2000s", "topic": "월드컵공원·상암 DMC", "place": "마포구 상암동", "why": "매립지의 공원화 결과 자료", "suggestedSources": ["Wikimedia Commons"] },
+ { "id": "need-10", "eraId": "2010s", "topic": "서울로7017", "place": "중구 서울역 고가", "why": "고가도로 재생 사례", "suggestedSources": ["Wikimedia Commons", "서울사진아카이브"] },
+ { "id": "need-11", "eraId": "2010s", "topic": "성수동 산업 전환", "place": "성동구 성수동", "why": "준공업지역 변화·젠트리피케이션 사례", "suggestedSources": ["Wikimedia Commons"] },
+ { "id": "need-12", "eraId": "2020s", "topic": "현재 같은 지점 비교 사진 (광화문·숭례문·명동·여의도)", "place": "도심·여의도", "why": "과거 사진과 같은 방향의 현재 사진이 있어야 과거·현재 비교가 가능", "suggestedSources": ["직접 촬영 (교사·학생, 라이선스 명시)", "Wikimedia Commons"] },
+ { "id": "need-13", "eraId": "2020s", "topic": "용산공원 시범 개방, GTX-A", "place": "용산구, 서울역", "why": "2020년대 사진이 한 건도 없음", "suggestedSources": ["Wikimedia Commons", "직접 촬영"] }
+]

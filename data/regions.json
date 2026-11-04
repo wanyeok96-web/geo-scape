@@ -1,0 +1,9 @@
+{
+  "defaultRegion": "seoul",
+  "regions": [
+    { "id": "seoul", "name": "서울", "nameEn": "Seoul", "country": "대한민국", "enabled": true, "path": "data/regions/seoul/" },
+    { "id": "dubai", "name": "두바이", "nameEn": "Dubai", "country": "아랍에미리트", "enabled": false, "path": "data/regions/dubai/" },
+    { "id": "singapore", "name": "싱가포르", "nameEn": "Singapore", "country": "싱가포르", "enabled": false, "path": "data/regions/singapore/" },
+    { "id": "shanghai", "name": "상하이", "nameEn": "Shanghai", "country": "중국", "enabled": false, "path": "data/regions/shanghai/" }
+  ]
+}

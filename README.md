@@ -1,0 +1,161 @@
+# GeoScape · 지오스케이프
+
+> **시간을 움직이면, 공간이 보인다.**
+
+GeoScape는 고등학생이 한 지역의 과거·현재(·미래)를 시간축을 따라 탐험하며 **공간 변화의 모습, 원인, 인간과 환경의 상호작용**을 탐구하는 지리 학습 웹 프로그램입니다. 현재 버전은 **Phase 1 MVP + 역사 사진 연동**이며, 서울(1960–2025)을 첫 탐구 지역으로 제공합니다.
+
+> 📷 **실제 역사 사진 55건**(1960~1980년대, Wikimedia Commons · 공공누리 제1유형/CC BY/PD)이 연동되어 있습니다. 수집·검증 과정과 추가 확보가 필요한 사진은 [docs/photo-collection-report.md](docs/photo-collection-report.md)를 보세요.
+
+---
+
+## 실행 방법
+
+브라우저 보안 정책 때문에 `index.html`을 더블클릭(file://)하면 JSON 데이터를 불러올 수 없습니다. 아래 중 하나로 **로컬 웹 서버**에서 여세요.
+
+| 방법 | 설명 |
+|---|---|
+| `start-server.bat` 더블클릭 | Windows. Python이 설치되어 있으면 서버를 켜고 브라우저를 엽니다. |
+| `python -m http.server 8000` | 프로젝트 폴더에서 실행 후 http://localhost:8000 접속 |
+| VS Code **Live Server** | `index.html` 우클릭 → *Open with Live Server* |
+| **GitHub Pages** | 저장소 Settings → Pages → 브랜치 루트 배포. 빌드 과정이 필요 없습니다. |
+
+외부 라이브러리는 CDN에서 불러오므로 **인터넷 연결**이 필요합니다. API 키는 필요 없습니다.
+
+---
+
+## Phase 1 구현 기능
+
+| 영역 | 기능 |
+|---|---|
+| 헤더 | 브랜드·슬로건, 탐구 지역 선택(서울 / 두바이·싱가포르·상하이 준비 중), 탐구 모드(시간 탐색·과거·현재 비교·미래 시나리오 *준비 중*), 도움말 |
+| 사이드바 | 지역 정보, 탐구 주제 4개(선택 시 관련 레이어 자동 구성 + 탐구 질문), 주요 시점 12개(클릭 시 연도 이동 + 지도 이동), 배경 지도 전환(밝은 지도·일반 지도·현재 위성), 레이어 on/off와 자료 상태 배지, 사진 갤러리 |
+| 지도 | Leaflet 기반. 시가지 확장 단계, 교통망(개통 연도별), 토지 이용 변화, 주요 개발 지점, 사진 촬영 지점. 연도에 따라 피처가 나타나고 사라지며(페이드 전환), 시점별 범례가 갱신됨 |
+| 정보 패널 | 시대 요약, 지리적 특징, 공간 변화의 배경, 주요 사례(클릭 → 지도 위치), 시기별 사진, 인구 그래프(현재 연도 표시), 탐구 질문, 자료 출처. 접기/펼치기 가능 |
+| 타임라인 | 연도 슬라이더, 시대 구간 표시, 주요 연도 마커(툴팁), 재생/일시정지, 속도(0.5×–4×), 이전·다음 주요 시점 |
+| 사진 | 실제 역사 사진 55건. 연도를 고르면 그 시대 사진이 선택 연도와 가까운 순으로 표시. 갤러리(시대별 필터) – 지도 연결 / 위치 미확인 / 이용 조건 미확인 / 추가 확보 필요 구분. 확대 보기에서 촬영 시기·장소·지리적 변화 해설·출처·라이선스 표시 |
+| 비교 모드 | 좌우 두 지도의 범위·확대 수준 동기화, 연도 선택, 시대 특징 비교와 변화 해설(인구 변화, 새 개발 사례) |
+| 기타 | 데이터 안내 창(자료 상태·출처), 첫 방문 도움말, 키보드 조작, 반응형(태블릿·모바일에서 서랍형 패널) |
+
+### 키보드 조작
+- `←` `→` : 1년 이동
+- `Shift` + `←` `→` : 이전·다음 주요 시점
+- `Space` : 재생 / 일시정지
+- `Esc` : 창 닫기 (사진 확대 보기에서는 `←` `→`로 사진 이동)
+
+---
+
+## 자료 원칙과 현재 자료 상태
+
+GeoScape는 **실제 관측 자료와 교육용 데모 자료를 구분**합니다. 화면 곳곳의 배지가 자료 상태를 알려 줍니다.
+
+| 배지 | 의미 | 현재 해당 자료 |
+|---|---|---|
+| `데모` | 교육용 개략 형상. 실제 경계가 아님 | 시가지 확장 범위, 토지 이용 변화 |
+| `개략` | 실제 좌표(역·지점) 기반이지만 선형·범위는 단순화 | 교통망, 주요 개발 지점, 인구 통계(원자료 대조 필요) |
+| `검증` (사진) | 이용 조건을 확인한 실제 사진 | 역사 사진 55건 (지도 마커는 피사체 시설 위치, 촬영 지점 아님) |
+| `검증` | 출처가 확인된 검증 자료 | (실제 자료 교체 시 사용) |
+
+- 자료가 없는 연도에는 **값을 보간하거나 공간 분포를 만들어 내지 않습니다.** 각 피처는 `yearStart`/`yearEnd`에 따라 표시되고, 인구 그래프는 해당 연도 이전의 가장 최근 조사값만 강조합니다.
+- 촬영 위치가 확인되지 않은 사진(`location.coords: null`)은 지도에 표시하지 않고 **지역 갤러리**에만 둡니다.
+- 사진의 촬영 시기는 확실성(`day`·`month`·`year`)과 근거(제목·설명·Commons 촬영일)를 함께 기록합니다.
+- 1990년대 이후처럼 실제 사진이 없는 시기에는 임의 이미지를 쓰지 않고 '추가 확보 필요' 목록을 보여 줍니다.
+- 설명 문안은 공개 자료를 바탕으로 한 교육용 요약입니다. **수업 사용 전 연도·수치를 원자료(KOSIS 등)로 한 번 더 확인**하세요.
+
+---
+
+## 폴더 구조
+
+```
+지오스케이프/
+├─ index.html                 # 화면 골격 (헤더·사이드바·지도·패널·타임라인·모달)
+├─ css/style.css              # 디자인 토큰, 레이아웃, 반응형
+├─ js/
+│  ├─ main.js                 # 진입점: 데이터 로드 → 상태 → 모듈 연결, 범례·데이터 안내
+│  ├─ store.js                # 구독형 상태 저장소 (year, mode, layers, basemap, topicId …)
+│  ├─ data.js                 # 지역 레지스트리·지역 데이터 로더, 시대/사진/주요 시점 헬퍼
+│  ├─ map-view.js             # Leaflet 지도 + 연도별 레이어 렌더링 (메인·비교 지도 공용)
+│  ├─ timeline.js             # 슬라이더, 재생, 주요 시점 이동, 키보드
+│  ├─ sidebar.js              # 지역 정보, 탐구 주제, 주요 시점, 레이어 UI
+│  ├─ info-panel.js           # 시대별 정보 패널
+│  ├─ stats-chart.js          # Chart.js 통계 그래프
+│  ├─ gallery.js              # 사진 갤러리 + 확대 보기
+│  ├─ compare.js              # 과거·현재 비교 모드
+│  ├─ modal.js                # 모달 공통 동작
+│  └─ utils.js                # 공통 유틸, 자료 상태 배지
+├─ data/
+│  ├─ regions.json            # 지역 목록 (활성/준비 중)
+│  ├─ photos.json             # 정식 등록 사진(전 지역 공용, region 필드로 구분) + 미확인·추가 확보 목록
+│  ├─ photo-sources/          # Commons 검증 보고서, 정정된 후보 목록, 추가 확보 필요 목록
+│  └─ regions/seoul/
+│     ├─ region.json          # 지도 설정, 시간 범위, 지역 정보, 탐구 주제, 주요 시점, 레이어 정의
+│     ├─ eras.json            # 시대별 설명·사례·탐구 질문·출처 ID
+│     ├─ stats.json           # 통계 시계열
+│     ├─ sources.json         # 출처·라이선스
+│     └─ layers/*.geojson     # 공간 레이어
+├─ assets/
+│  ├─ logo.svg
+│  └─ photos/1960s|1970s|1980s/  # 역사 사진 (1280px) + thumbs/ (420px)
+├─ docs/photo-collection-report.md  # 사진 수집·검증·연동 보고서
+├─ geoscape_seoul_photo_sources_safe/  # 제공받은 사진 후보 목록 원본 (CSV/JSON)
+├─ scripts/
+│  ├─ gen-layers.mjs          # 데모 시가지·토지이용 형상 생성 (Node.js)
+│  ├─ commons_photos.py       # Commons 사진 검증·다운로드 (Python + Pillow)
+│  └─ build_photos_json.py    # data/photos.json 생성 (사진별 해설·위치 기준 포함)
+└─ start-server.bat           # Windows 로컬 서버 실행
+```
+
+---
+
+## 데이터 편집 가이드
+
+### 1) 사진 추가하기 (`data/photos.json`)
+Wikimedia Commons 사진은 스크립트로 검증·다운로드·등록합니다. 절차는 [docs/photo-collection-report.md](docs/photo-collection-report.md) 5장을 보세요.
+
+사진 항목의 주요 필드:
+
+| 필드 | 설명 |
+|---|---|
+| `date` | `label`(표시), `iso`, `certainty`(`day`/`month`/`year`), `basis`(날짜 근거) |
+| `location` | `precision`(`camera` / `subject-facility` / `none`), `coords`([위도, 경도] 또는 `null`), `label`, `note` |
+| `geography` | 학생용 지리적 변화 해설 |
+| `source`, `license`, `attribution` | 저작자·원 출처·Commons 페이지, 라이선스 이름과 URL, 출처 표기 문구 |
+| `contentType` | `historical-photo` · `contemporary-photo` · `reconstruction`(교육용 재구성, **생성형 AI 이미지는 반드시 이것으로 표시**) |
+| `verification.notes` | 검증 중 발견한 불일치 등 |
+
+위치를 모르면 `location.coords: null`로 두세요. 이용 조건이 확인되지 않은 후보는 `photos`가 아니라 `unverified`에 넣습니다.
+
+### 2) 공간 레이어 교체하기 (`layers/*.geojson`)
+- 좌표계는 WGS84(EPSG:4326), GeoJSON 좌표 순서는 `[경도, 위도]`.
+- 피처 `properties`에 `id`, `name`, `yearStart`(필수), `yearEnd`(선택)를 넣으면 시간 필터가 자동 적용됩니다.
+- 시가지 레이어는 `stage`(색상 단계), 교통망은 `mode`, 토지 이용은 `type`을 사용하며 스타일은 `region.json`의 `layers[]`에서 정의합니다.
+- 검증된 자료로 교체했다면 `region.json`의 해당 레이어 `dataStatus`를 `"verified"`로 바꾸고 `metadata.notice`를 수정하세요.
+- 옛 항공사진·지형도로 시가지 경계를 디지타이징하려면 국토정보플랫폼(국토지리정보원)의 연도별 항공사진을 참고할 수 있습니다.
+
+### 3) 시대 설명 수정하기 (`eras.json`)
+`start`/`end` 범위, `summary`, `features`, `background`, `cases[]`(`featureId`로 지도 피처와 연결), `questions`, `sourceIds`를 수정합니다.
+
+### 4) 새 지역 추가하기 (예: 싱가포르)
+1. `data/regions/singapore/`에 서울과 같은 구조의 파일을 만듭니다.
+2. `data/regions.json`에서 해당 지역의 `"enabled": true`로 바꿉니다.
+3. UI 코드는 수정할 필요가 없습니다. 지도 중심·시간 범위·레이어·주요 시점은 모두 `region.json`에서 읽습니다.
+
+---
+
+## 확장 로드맵
+
+| 단계 | 내용 | 설계상 준비 |
+|---|---|---|
+| Phase 2 | 1990년대 이후·현재 사진 확보, 검증된 시가지 경계로 교체, 옛 지도/항공사진 배경 | `needed` 목록, `dataStatus`, 배경 지도 '옛 지도(예정)' 자리 |
+| Phase 2 | 과거·현재 사진 비교(스와이프) | 라이트박스의 '사진 비교(예정)' 버튼, `compareGroup` |
+| Phase 3 | 미래 시나리오(지속가능 도시 / 무분별한 확장 / 기후변화 적응) | 헤더 모드 버튼(비활성). 모든 미래 콘텐츠에 **'가상 시나리오'** 표시 예정, `timeRange.observedEnd` 이후 구간 |
+| Phase 3 | 두바이·싱가포르·상하이 | `regions.json` 레지스트리 |
+| 이후 | 학생 활동지(질문 답변 저장·내보내기), 교사용 수업 모드 | `store.js` 상태 확장 |
+
+---
+
+## 사용 기술과 라이선스
+
+- [Leaflet 1.9.4](https://leafletjs.com) (BSD-2) · [Chart.js 4.4.1](https://www.chartjs.org) (MIT) · [Lucide Icons](https://lucide.dev) (ISC) · [Pretendard](https://github.com/orioncactus/pretendard) (OFL)
+- 배경 지도: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors (ODbL), 위성 영상: Esri World Imagery
+- 역사 사진: 사진별 저작자·라이선스는 `data/photos.json`과 앱의 사진 확대 보기에 표시 (공공누리 제1유형, CC BY 3.0/4.0, 퍼블릭 도메인 – Wikimedia Commons 경유)
+- 각 자료의 출처·이용 조건은 `data/regions/seoul/sources.json`과 앱의 **데이터 안내** 창에서 확인할 수 있습니다.
