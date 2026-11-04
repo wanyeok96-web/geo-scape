@@ -105,7 +105,11 @@ async function boot() {
   let mainView = null;
   // 배경 지도 상태 알림 (타일 서버 차단·장애 시 자동 전환)
   function basemapNotice(st) {
-    // 더블클릭(file://) 실행에서는 대체 서버 사용이 정상 동작이므로 알리지 않음
+    // 더블클릭(file://) 실행: 공식 지도 서버를 쓸 수 없어 느린 대체 서버를 사용 → 빠른 실행 방법 안내 (한 번만)
+    if (st.ok && location.protocol === 'file:' && !storage.get('geoscape.fileTip')) {
+      storage.set('geoscape.fileTip', '1');
+      notify('파일을 직접 열면 배경 지도가 느린 해외 서버로 표시됩니다. 더 빠르게 쓰려면 폴더의 start-server.bat 으로 실행하세요.', { timeout: 12000, key: 'file-tip' });
+    }
     if (st.ok && st.fallback && location.protocol !== 'file:') notify(`배경 지도를 ${st.provider} 서버로 표시합니다. (기본 지도 서버에 연결할 수 없어 자동 전환)`, { key: 'basemap-fallback' });
     else if (!st.ok && st.switching) notify(`${st.provider} 배경 지도를 불러오지 못해 다른 서버로 전환합니다.`, { type: 'warn', key: 'basemap-switch-' + st.provider });
     else if (!st.ok) notify('배경 지도를 불러올 수 없습니다. 인터넷 연결을 확인하세요. 시간 변화 레이어와 사진은 계속 사용할 수 있습니다.', { type: 'warn', timeout: 10000, key: 'basemap-fail' });
@@ -178,10 +182,15 @@ async function boot() {
       }
     }
     const legend = $('#legend');
-    const wasOpen = legend.querySelector('details')?.open ?? !window.matchMedia('(max-width: 640px)').matches;
-    legend.innerHTML = groups.length
-      ? `<details ${wasOpen ? 'open' : ''}><summary>범례 · ${y}년</summary>${groups.join('')}</details>`
-      : '';
+    // 속도: 내용이 바뀐 경우에만 범례를 다시 그림 (재생 중 매년 전체를 다시 만들지 않음)
+    const body = groups.join('');
+    if (legend.dataset.body !== body) {
+      const wasOpen = legend.querySelector('details')?.open ?? !window.matchMedia('(max-width: 640px)').matches;
+      legend.innerHTML = groups.length ? `<details ${wasOpen ? 'open' : ''}><summary></summary>${body}</details>` : '';
+      legend.dataset.body = body;
+    }
+    const summary = legend.querySelector('summary');
+    if (summary) summary.textContent = `범례 · ${y}년`;
   }
 
   function renderYearBadge(y) {

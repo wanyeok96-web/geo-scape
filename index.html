@@ -7,6 +7,9 @@
   <meta name="description" content="GeoScape(지오스케이프) – 시간을 움직이면, 공간이 보인다. 시간에 따른 지리적 공간 변화를 탐구하는 고등학생용 지리 학습 플랫폼">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 
+  <!-- 지도 타일 서버에 미리 연결 (첫 지도 표시 시간 단축) -->
+  <link rel="preconnect" href="https://tile.openstreetmap.org">
+  <link rel="preconnect" href="https://tile.openstreetmap.de">
   <!-- 라이브러리는 vendor/ 에 함께 배포 (학교망 CDN 차단·오프라인 대비, API 키 불필요) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">

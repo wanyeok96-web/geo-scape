@@ -336,6 +336,7 @@ const TILE_PROVIDERS = {
 const PROBE_TILE = { z: 11, x: 1746, y: 792 }; // 서울 도심이 포함된 타일
 
 const BASEMAPS = {
+  // 대체 서버 순서: OSM Deutschland(HTTP/2로 여러 타일을 한 연결에서 받아 브라우저 실측이 가장 빠름) → HOT
   light: { label: '밝은 지도', providers: ['osm', 'osmde', 'hot'], className: 'gs-muted-tiles' },
   osm: { label: '일반 지도', providers: ['osm', 'osmde', 'hot'] },
   imagery: { label: '위성(현재)', providers: ['esriImagery'] }
@@ -359,7 +360,10 @@ function probeProvider(id) {
     .finally(() => clearTimeout(timer));
   return providerHealth[id];
 }
-function markProviderFailed(id) { providerHealth[id] = Promise.resolve(false); }
+const failedProviders = new Set();
+function markProviderFailed(id) { failedProviders.add(id); providerHealth[id] = Promise.resolve(false); }
+// 지금 바로 써 볼 수 있는 제공자 (file:// 에서 Referer 필요 서버, 이미 실패한 서버 제외)
+const usableNow = (pid) => !failedProviders.has(pid) && !(TILE_PROVIDERS[pid].needsReferer && location.protocol === 'file:');
 
 /**
  * @param {HTMLElement} el
@@ -552,18 +556,25 @@ function createMapView(el, data, opts = {}) {
 
   // ---------- 배경 지도: 사용 가능한 첫 제공자를 고르고, 실패하면 다음 제공자로 ----------
   let basemapToken = 0;
+  // 속도: 서버 점검을 기다리지 않고 바로 타일을 그리기 시작하고, 점검은 동시에 진행.
+  //       점검에서 차단·장애가 확인되면 그때 다음 서버로 전환합니다.
   async function setBasemap(id) {
     const b = BASEMAPS[id] || BASEMAPS.light;
     const token = ++basemapToken;
-    for (const pid of b.providers) {
-      const ok = await probeProvider(pid);
-      if (token !== basemapToken) return; // 그 사이 다른 배경 지도가 선택됨
-      if (!ok) continue;
-      useProvider(id, b, pid);
+    const pid = b.providers.find(usableNow);
+    if (!pid) {
+      if (baseLayer) { map.removeLayer(baseLayer); baseLayer = null; }
+      opts.onBasemapStatus?.({ ok: false, basemap: id });
       return;
     }
-    if (baseLayer) { map.removeLayer(baseLayer); baseLayer = null; }
-    opts.onBasemapStatus?.({ ok: false, basemap: id });
+    useProvider(id, b, pid);
+    const ok = await probeProvider(pid);
+    if (token !== basemapToken) return; // 그 사이 다른 배경 지도가 선택됨
+    if (!ok) {
+      markProviderFailed(pid);
+      opts.onBasemapStatus?.({ ok: false, basemap: id, provider: TILE_PROVIDERS[pid].name, switching: true });
+      setBasemap(id);
+    }
   }
 
   function useProvider(id, b, pid) {
@@ -571,7 +582,9 @@ function createMapView(el, data, opts = {}) {
     if (baseLayer) map.removeLayer(baseLayer);
     const layer = L.tileLayer(p.url, {
       subdomains: p.subdomains || 'abc', maxZoom: 19, maxNativeZoom: p.maxZoom,
-      attribution: p.attribution, className: b.className || '', crossOrigin: false
+      attribution: p.attribution, className: b.className || '', crossOrigin: false,
+      // 속도: 확대·축소 애니메이션 중간 단계 타일은 요청하지 않고, 화면 밖 여유 타일은 조금 더 보관
+      updateWhenZooming: false, keepBuffer: 3
     });
     // 타일 오류가 많이 나면(차단·네트워크 장애) 다음 제공자로 전환
     let errors = 0, loaded = 0;
@@ -982,12 +995,23 @@ function initInfoPanel(store, getData, { onPhotoOpen, onOpenGallery }) {
     const countEl = $('#panelPhotoCount', root);
     if (countEl) countEl.textContent = `${list.length}건`;
     if (!list.length) {
+      if (box.dataset.key === `empty:${era.id}`) return;
+      box.dataset.key = `empty:${era.id}`;
       const need = data.neededForEra(era);
       box.innerHTML = `<div class="empty">이 시기에는 이용 조건이 확인된 실제 사진이 아직 없습니다.<br>임의의 이미지는 사용하지 않습니다.</div>
         ${need.length ? `<div class="needed-list"><b>추가 확보가 필요한 사진</b><ul>${need.map((n) => `<li>${escapeHtml(n.topic)} <small>(${escapeHtml(n.place)})</small></li>`).join('')}</ul></div>` : ''}`;
       return;
     }
     const exactCount = list.filter((p) => p.year === year).length;
+    // 속도: 보여 줄 사진·표시가 같으면 다시 그리지 않음 (재생 중 이미지 깜빡임 방지)
+    const key = `${year}:${list.slice(0, MAX_STRIP).map((p) => p.id + (p.year === year ? '*' : '')).join(',')}:${list.length}`;
+    const shownKey = key.slice(key.indexOf(':') + 1);
+    if (box.dataset.key === shownKey) {
+      const hint = $('.photo-hint', box);
+      if (hint) hint.innerHTML = exactCount ? `<b>${year}년</b>에 촬영된 사진 ${exactCount}건` : `${year}년 촬영 사진은 없어 가까운 연도 순으로 표시`;
+      return;
+    }
+    box.dataset.key = shownKey;
     box.innerHTML = `
       <p class="photo-hint">${exactCount ? `<b>${year}년</b>에 촬영된 사진 ${exactCount}건` : `${year}년 촬영 사진은 없어 가까운 연도 순으로 표시`}</p>
       <div class="photo-strip">${list.slice(0, MAX_STRIP).map((p) => photoThumb(p, year)).join('')}</div>
@@ -1525,7 +1549,11 @@ async function boot() {
   let mainView = null;
   // 배경 지도 상태 알림 (타일 서버 차단·장애 시 자동 전환)
   function basemapNotice(st) {
-    // 더블클릭(file://) 실행에서는 대체 서버 사용이 정상 동작이므로 알리지 않음
+    // 더블클릭(file://) 실행: 공식 지도 서버를 쓸 수 없어 느린 대체 서버를 사용 → 빠른 실행 방법 안내 (한 번만)
+    if (st.ok && location.protocol === 'file:' && !storage.get('geoscape.fileTip')) {
+      storage.set('geoscape.fileTip', '1');
+      notify('파일을 직접 열면 배경 지도가 느린 해외 서버로 표시됩니다. 더 빠르게 쓰려면 폴더의 start-server.bat 으로 실행하세요.', { timeout: 12000, key: 'file-tip' });
+    }
     if (st.ok && st.fallback && location.protocol !== 'file:') notify(`배경 지도를 ${st.provider} 서버로 표시합니다. (기본 지도 서버에 연결할 수 없어 자동 전환)`, { key: 'basemap-fallback' });
     else if (!st.ok && st.switching) notify(`${st.provider} 배경 지도를 불러오지 못해 다른 서버로 전환합니다.`, { type: 'warn', key: 'basemap-switch-' + st.provider });
     else if (!st.ok) notify('배경 지도를 불러올 수 없습니다. 인터넷 연결을 확인하세요. 시간 변화 레이어와 사진은 계속 사용할 수 있습니다.', { type: 'warn', timeout: 10000, key: 'basemap-fail' });
@@ -1598,10 +1626,15 @@ async function boot() {
       }
     }
     const legend = $('#legend');
-    const wasOpen = legend.querySelector('details')?.open ?? !window.matchMedia('(max-width: 640px)').matches;
-    legend.innerHTML = groups.length
-      ? `<details ${wasOpen ? 'open' : ''}><summary>범례 · ${y}년</summary>${groups.join('')}</details>`
-      : '';
+    // 속도: 내용이 바뀐 경우에만 범례를 다시 그림 (재생 중 매년 전체를 다시 만들지 않음)
+    const body = groups.join('');
+    if (legend.dataset.body !== body) {
+      const wasOpen = legend.querySelector('details')?.open ?? !window.matchMedia('(max-width: 640px)').matches;
+      legend.innerHTML = groups.length ? `<details ${wasOpen ? 'open' : ''}><summary></summary>${body}</details>` : '';
+      legend.dataset.body = body;
+    }
+    const summary = legend.querySelector('summary');
+    if (summary) summary.textContent = `범례 · ${y}년`;
   }
 
   function renderYearBadge(y) {

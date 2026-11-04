@@ -28,12 +28,23 @@ export function initInfoPanel(store, getData, { onPhotoOpen, onOpenGallery }) {
     const countEl = $('#panelPhotoCount', root);
     if (countEl) countEl.textContent = `${list.length}건`;
     if (!list.length) {
+      if (box.dataset.key === `empty:${era.id}`) return;
+      box.dataset.key = `empty:${era.id}`;
       const need = data.neededForEra(era);
       box.innerHTML = `<div class="empty">이 시기에는 이용 조건이 확인된 실제 사진이 아직 없습니다.<br>임의의 이미지는 사용하지 않습니다.</div>
         ${need.length ? `<div class="needed-list"><b>추가 확보가 필요한 사진</b><ul>${need.map((n) => `<li>${escapeHtml(n.topic)} <small>(${escapeHtml(n.place)})</small></li>`).join('')}</ul></div>` : ''}`;
       return;
     }
     const exactCount = list.filter((p) => p.year === year).length;
+    // 속도: 보여 줄 사진·표시가 같으면 다시 그리지 않음 (재생 중 이미지 깜빡임 방지)
+    const key = `${year}:${list.slice(0, MAX_STRIP).map((p) => p.id + (p.year === year ? '*' : '')).join(',')}:${list.length}`;
+    const shownKey = key.slice(key.indexOf(':') + 1);
+    if (box.dataset.key === shownKey) {
+      const hint = $('.photo-hint', box);
+      if (hint) hint.innerHTML = exactCount ? `<b>${year}년</b>에 촬영된 사진 ${exactCount}건` : `${year}년 촬영 사진은 없어 가까운 연도 순으로 표시`;
+      return;
+    }
+    box.dataset.key = shownKey;
     box.innerHTML = `
       <p class="photo-hint">${exactCount ? `<b>${year}년</b>에 촬영된 사진 ${exactCount}건` : `${year}년 촬영 사진은 없어 가까운 연도 순으로 표시`}</p>
       <div class="photo-strip">${list.slice(0, MAX_STRIP).map((p) => photoThumb(p, year)).join('')}</div>

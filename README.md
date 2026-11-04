@@ -10,18 +10,20 @@ GeoScape는 고등학생이 한 지역의 과거·현재(·미래)를 시간축�
 
 ## 실행 방법
 
-| 방법 | 설명 |
-|---|---|
-| **`index.html` 더블클릭** | 가장 간단합니다. `file://`에서는 자동으로 `dist/` 번들판(데이터 포함)이 실행됩니다. |
-| `start-server.bat` 더블클릭 | Windows. Python으로 로컬 서버를 켜고 http://localhost:8000 을 엽니다. |
-| `python -m http.server 8000` | 프로젝트 폴더에서 실행 후 http://localhost:8000 접속 |
-| **GitHub Pages** | 저장소 Settings → Pages → `main` 브랜치 루트 배포. 빌드 과정이 필요 없습니다. |
+| 방법 | 지도 표시 속도* | 설명 |
+|---|---|---|
+| **`start-server.bat` 더블클릭 (권장)** | 약 0.7~1.2초 | Windows 기본 PowerShell로 로컬 서버를 켜고 브라우저를 엽니다. **Python 설치 불필요.** 창을 닫으면 종료됩니다. |
+| **GitHub Pages** | 빠름 | 저장소 Settings → Pages → `main` 브랜치 루트 배포. 학생들에게 주소만 공유하면 됩니다. |
+| `index.html` 더블클릭 | 약 2.4~2.6초 | 설치 없이 바로 실행되지만, OSM 공식 지도 서버가 파일 직접 열기를 차단해 해외(독일) 대체 서버를 쓰므로 느립니다. |
+| `python -m http.server 8000` | 빠름 | Python이 있는 경우 |
+
+\* 서울 첫 화면(타일 16장) 기준, 이 PC에서 실제 시간으로 측정한 값입니다. 네트워크 환경에 따라 다릅니다.
 
 - Leaflet·Chart.js·Lucide는 `vendor/`에 포함되어 있어 CDN이 막힌 학교망에서도 동작합니다. 배경 지도 타일(OpenStreetMap)과 글꼴(Pretendard)은 인터넷 연결이 필요합니다(글꼴은 없으면 기본 글꼴로 표시).
 - zip으로 받았다면 **압축을 푼 뒤** 실행하세요.
 
 ### 배경 지도 서버
-배경 지도는 API 키가 필요 없는 OpenStreetMap 계열 서버를 씁니다. OSM 공식 서버는 더블클릭(`file://`) 실행처럼 Referer가 없는 요청을 차단하므로, 실행할 때 시험 타일을 먼저 요청해 보고 **OSM 공식 → OSM Deutschland → Humanitarian OSM** 순으로 쓸 수 있는 서버를 자동 선택합니다. 사용 중에 타일 오류가 이어져도 다음 서버로 바뀝니다. 모든 서버에 연결할 수 없으면 배경 지도 없이 공간 레이어와 사진으로 계속 사용할 수 있습니다.
+배경 지도는 API 키가 필요 없는 OpenStreetMap 계열 서버를 씁니다. 지도는 서버 점검을 기다리지 않고 바로 그리기 시작하며, 점검은 동시에 진행합니다. OSM 공식 서버는 더블클릭(`file://`) 실행처럼 Referer가 없는 요청을 차단하므로, 실행할 때 시험 타일을 먼저 요청해 보고 **OSM 공식 → OSM Deutschland → Humanitarian OSM** 순으로 쓸 수 있는 서버를 자동 선택합니다. 사용 중에 타일 오류가 이어져도 다음 서버로 바뀝니다. 모든 서버에 연결할 수 없으면 배경 지도 없이 공간 레이어와 사진으로 계속 사용할 수 있습니다.
 
 ### 안정성 장치
 - 꼭 필요한 파일(지역 설정·시대 정보)이 아니면, 파일 하나를 불러오지 못하거나 형식이 틀려도 그 자료만 빼고 계속 실행합니다. 제외된 항목은 상단 **데이터 안내**의 '자료 점검 결과'에서 확인할 수 있습니다.
@@ -121,6 +123,7 @@ GeoScape는 **실제 관측 자료와 교육용 데모 자료를 구분**합니�
 ├─ dist/                     # 더블클릭 실행용 번들 (자동 생성: build-standalone.mjs)
 ├─ scripts/
 │  ├─ check.mjs               # 자료·코드·번들 점검 (커밋 전 실행)
+│  ├─ serve.ps1               # PowerShell 로컬 웹 서버 (start-server.bat에서 실행)
 │  ├─ build-standalone.mjs    # file:// 실행용 번들 생성
 │  ├─ gen-layers.mjs          # 데모 시가지·토지이용 형상 생성 (Node.js)
 │  ├─ commons_photos.py       # Commons 사진 검증·다운로드 (Python + Pillow)

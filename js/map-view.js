@@ -16,6 +16,7 @@ export const TILE_PROVIDERS = {
 const PROBE_TILE = { z: 11, x: 1746, y: 792 }; // 서울 도심이 포함된 타일
 
 export const BASEMAPS = {
+  // 대체 서버 순서: OSM Deutschland(HTTP/2로 여러 타일을 한 연결에서 받아 브라우저 실측이 가장 빠름) → HOT
   light: { label: '밝은 지도', providers: ['osm', 'osmde', 'hot'], className: 'gs-muted-tiles' },
   osm: { label: '일반 지도', providers: ['osm', 'osmde', 'hot'] },
   imagery: { label: '위성(현재)', providers: ['esriImagery'] }
@@ -39,7 +40,10 @@ function probeProvider(id) {
     .finally(() => clearTimeout(timer));
   return providerHealth[id];
 }
-export function markProviderFailed(id) { providerHealth[id] = Promise.resolve(false); }
+const failedProviders = new Set();
+export function markProviderFailed(id) { failedProviders.add(id); providerHealth[id] = Promise.resolve(false); }
+// 지금 바로 써 볼 수 있는 제공자 (file:// 에서 Referer 필요 서버, 이미 실패한 서버 제외)
+const usableNow = (pid) => !failedProviders.has(pid) && !(TILE_PROVIDERS[pid].needsReferer && location.protocol === 'file:');
 
 /**
  * @param {HTMLElement} el
@@ -232,18 +236,25 @@ export function createMapView(el, data, opts = {}) {
 
   // ---------- 배경 지도: 사용 가능한 첫 제공자를 고르고, 실패하면 다음 제공자로 ----------
   let basemapToken = 0;
+  // 속도: 서버 점검을 기다리지 않고 바로 타일을 그리기 시작하고, 점검은 동시에 진행.
+  //       점검에서 차단·장애가 확인되면 그때 다음 서버로 전환합니다.
   async function setBasemap(id) {
     const b = BASEMAPS[id] || BASEMAPS.light;
     const token = ++basemapToken;
-    for (const pid of b.providers) {
-      const ok = await probeProvider(pid);
-      if (token !== basemapToken) return; // 그 사이 다른 배경 지도가 선택됨
-      if (!ok) continue;
-      useProvider(id, b, pid);
+    const pid = b.providers.find(usableNow);
+    if (!pid) {
+      if (baseLayer) { map.removeLayer(baseLayer); baseLayer = null; }
+      opts.onBasemapStatus?.({ ok: false, basemap: id });
       return;
     }
-    if (baseLayer) { map.removeLayer(baseLayer); baseLayer = null; }
-    opts.onBasemapStatus?.({ ok: false, basemap: id });
+    useProvider(id, b, pid);
+    const ok = await probeProvider(pid);
+    if (token !== basemapToken) return; // 그 사이 다른 배경 지도가 선택됨
+    if (!ok) {
+      markProviderFailed(pid);
+      opts.onBasemapStatus?.({ ok: false, basemap: id, provider: TILE_PROVIDERS[pid].name, switching: true });
+      setBasemap(id);
+    }
   }
 
   function useProvider(id, b, pid) {
@@ -251,7 +262,9 @@ export function createMapView(el, data, opts = {}) {
     if (baseLayer) map.removeLayer(baseLayer);
     const layer = L.tileLayer(p.url, {
       subdomains: p.subdomains || 'abc', maxZoom: 19, maxNativeZoom: p.maxZoom,
-      attribution: p.attribution, className: b.className || '', crossOrigin: false
+      attribution: p.attribution, className: b.className || '', crossOrigin: false,
+      // 속도: 확대·축소 애니메이션 중간 단계 타일은 요청하지 않고, 화면 밖 여유 타일은 조금 더 보관
+      updateWhenZooming: false, keepBuffer: 3
     });
     // 타일 오류가 많이 나면(차단·네트워크 장애) 다음 제공자로 전환
     let errors = 0, loaded = 0;
