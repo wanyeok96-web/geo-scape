@@ -1,5 +1,5 @@
 // GeoScape 진입점: 데이터 로드 → 상태 저장소 → 각 UI 모듈 연결
-import { $, $$, escapeHtml, refreshIcons, iconSvg, statusBadge, storage, DATA_STATUS } from './utils.js';
+import { $, $$, escapeHtml, refreshIcons, iconSvg, statusBadge, storage, DATA_STATUS, notify, installImageFallback, debounce } from './utils.js';
 import { createStore } from './store.js';
 import { loadRegistry, loadRegion } from './data.js';
 import { createMapView } from './map-view.js';
@@ -39,8 +39,25 @@ async function boot() {
     return;
   }
 
-  initModals();
+  // ---------- 전역 오류 처리: 예상치 못한 오류도 화면을 멈추지 않고 알림으로 표시 ----------
+  window.addEventListener('error', (e) => {
+    if (e.target && e.target !== window) return; // 리소스(이미지 등) 오류는 각 모듈에서 처리
+    console.error('[GeoScape]', e.error || e.message);
+    notify('일시적인 오류가 발생했습니다. 계속 사용할 수 있으며, 문제가 반복되면 새로고침(F5)해 주세요.', { type: 'error', key: 'runtime-error' });
+  });
+  window.addEventListener('unhandledrejection', (e) => {
+    console.error('[GeoScape]', e.reason);
+    notify('일부 작업을 완료하지 못했습니다. 문제가 반복되면 새로고침(F5)해 주세요.', { type: 'error', key: 'runtime-error' });
+  });
+  installImageFallback();
+
+  try { initModals(); } catch (err) { console.error(err); }
   refreshIcons();
+
+  const loading = document.createElement('div');
+  loading.className = 'loading';
+  loading.innerHTML = '<div class="loading-inner"><div class="spinner"></div><div>자료를 불러오는 중…</div></div>';
+  document.body.appendChild(loading);
 
   let data;
   let registry;
@@ -50,9 +67,12 @@ async function boot() {
     data = await loadRegion(meta);
   } catch (err) {
     console.error(err);
-    fatal('데이터를 불러오지 못했습니다', `<p class="muted">${escapeHtml(err.message)}</p>`);
+    loading.remove();
+    fatal('데이터를 불러오지 못했습니다', `<p class="muted">${escapeHtml(err.message)}</p>
+      <p>인터넷 연결과 파일 위치를 확인한 뒤 새로고침해 주세요. 문제가 계속되면 <b>start-server.bat</b>으로 실행해 보세요.</p>`);
     return;
   }
+  loading.remove();
   const getData = () => data;
 
   // ---------- 상태 ----------
@@ -66,6 +86,13 @@ async function boot() {
     playing: false,
     focusRequest: null,
     mainView: null
+  }, {
+    // 연도는 항상 자료 범위 안의 정수로 유지
+    normalize: (s) => (s.year === getData().clampYear(s.year) ? s : { ...s, year: getData().clampYear(s.year) }),
+    onError: (err) => {
+      console.error('[GeoScape]', err);
+      notify('화면 일부를 갱신하지 못했습니다. 다른 기능은 계속 사용할 수 있습니다.', { type: 'error', key: 'listener-error' });
+    }
   });
 
   // ---------- 지역 선택 ----------
@@ -76,12 +103,20 @@ async function boot() {
 
   // ---------- 지도 ----------
   let mainView = null;
+  // 배경 지도 상태 알림 (타일 서버 차단·장애 시 자동 전환)
+  function basemapNotice(st) {
+    // 더블클릭(file://) 실행에서는 대체 서버 사용이 정상 동작이므로 알리지 않음
+    if (st.ok && st.fallback && location.protocol !== 'file:') notify(`배경 지도를 ${st.provider} 서버로 표시합니다. (기본 지도 서버에 연결할 수 없어 자동 전환)`, { key: 'basemap-fallback' });
+    else if (!st.ok && st.switching) notify(`${st.provider} 배경 지도를 불러오지 못해 다른 서버로 전환합니다.`, { type: 'warn', key: 'basemap-switch-' + st.provider });
+    else if (!st.ok) notify('배경 지도를 불러올 수 없습니다. 인터넷 연결을 확인하세요. 시간 변화 레이어와 사진은 계속 사용할 수 있습니다.', { type: 'warn', timeout: 10000, key: 'basemap-fail' });
+  }
   const photoOpen = (id, list) => gallery.openPhoto(id, list);
   function createMain() {
     mainView?.destroy();
     mainView = createMapView($('#map'), data, {
       onPhotoOpen: (id) => photoOpen(id, data.photosNearYear(store.get().year).filter((p) => p.mapLinked).map((p) => p.id)),
-      onLayerAutoOn: (layerId) => store.set({ layers: { ...store.get().layers, [layerId]: true } })
+      onLayerAutoOn: (layerId) => store.set({ layers: { ...store.get().layers, [layerId]: true } }),
+      onBasemapStatus: basemapNotice
     });
     mainView.setBasemap(store.get().basemap);
     Object.entries(store.get().layers).forEach(([id, on]) => mainView.setLayerVisible(id, on));
@@ -103,7 +138,16 @@ async function boot() {
       store.set(patch);
     }
   });
-  const compare = initCompare(store, getData, { onPhotoOpen: photoOpen });
+  // 비교 모드는 부가 기능: 초기화에 실패해도 나머지 기능은 동작
+  let compare;
+  try {
+    compare = initCompare(store, getData, { onPhotoOpen: photoOpen, onBasemapStatus: basemapNotice });
+  } catch (err) {
+    console.error(err);
+    compare = { reset() {}, fillSelects() {}, invalidate() {} };
+    const btn = $('.seg-btn[data-mode=compare]');
+    if (btn) { btn.disabled = true; btn.title = '비교 모드를 시작하지 못했습니다'; }
+  }
 
   // ---------- 범례 ----------
   function renderLegend() {
@@ -174,7 +218,7 @@ async function boot() {
   const afterResize = () => setTimeout(() => { mainView.invalidate(); compare.invalidate(); }, 320);
   $('#sidebarToggle').addEventListener('click', () => { app.classList.toggle('sidebar-collapsed'); afterResize(); });
   $('#panelToggle').addEventListener('click', () => { app.classList.toggle('panel-collapsed'); afterResize(); });
-  window.addEventListener('resize', () => mainView.invalidate());
+  window.addEventListener('resize', debounce(() => { mainView?.invalidate(); compare.invalidate(); }, 200));
 
   regionSel.addEventListener('change', async () => {
     const meta = registry.regions.find((r) => r.id === regionSel.value);
@@ -183,7 +227,11 @@ async function boot() {
       data = await loadRegion(meta);
       store.set({ year: data.region.timeRange.start, layers: defaultLayers(data), topicId: null, playing: false, mode: 'explore' });
       startRegion();
-    } catch (err) { alert('지역 데이터를 불러오지 못했습니다: ' + err.message); }
+    } catch (err) {
+      console.error(err);
+      notify('지역 데이터를 불러오지 못했습니다: ' + err.message, { type: 'error' });
+      regionSel.value = data.meta.id;
+    }
   });
 
   function renderDataModal() {
@@ -195,6 +243,9 @@ async function boot() {
     $('#dataBody').innerHTML = `
       <p class="muted">GeoScape는 실제 관측 자료와 교육용 데모 자료를 구분해 표시합니다. 자료가 없는 연도에는 값을 보간하거나 공간 분포를 만들어 내지 않습니다.</p>
       <table class="data-table"><thead><tr><th>자료</th><th>상태</th><th>설명</th></tr></thead><tbody>${rows}${stats}</tbody></table>
+      ${data.warnings.length ? `<h3 style="margin:18px 0 6px;font-size:14px">자료 점검 결과 (${data.warnings.length}건)</h3>
+      <p class="muted small">형식이 맞지 않거나 불러오지 못해 제외한 항목입니다.</p>
+      <ul class="plain-list small">${data.warnings.map((w) => `<li>${escapeHtml(w)}</li>`).join('')}</ul>` : ''}
       <h3 style="margin:18px 0 6px;font-size:14px">상태 표시 기준</h3>
       <ul class="source-list">${Object.values(DATA_STATUS).map((d) => `<li><span class="status-badge ${d.className}">${d.label}</span> ${escapeHtml(d.desc)}</li>`).join('')}</ul>
       <h3 style="margin:18px 0 6px;font-size:14px">전체 출처</h3>
@@ -203,15 +254,25 @@ async function boot() {
 
   function startRegion() {
     createMain();
-    timeline.build();
-    sidebar.build();
-    panel.reset();
-    compare.reset();
     const y = store.get().year;
-    timeline.render(y);
-    panel.render(y);
-    renderYearBadge(y);
-    renderLegend();
+    // 각 화면 구성 요소를 따로 실행: 하나가 실패해도 나머지는 표시
+    const steps = [
+      ['타임라인', () => { timeline.build(); timeline.render(y); }],
+      ['사이드바', () => sidebar.build()],
+      ['정보 패널', () => { panel.reset(); panel.render(y); }],
+      ['비교 모드', () => compare.reset()],
+      ['연도 표시', () => renderYearBadge(y)],
+      ['범례', () => renderLegend()]
+    ];
+    for (const [name, fn] of steps) {
+      try { fn(); } catch (err) {
+        console.error(`[GeoScape] ${name} 초기화 오류`, err);
+        notify(`${name}을(를) 표시하지 못했습니다.`, { type: 'error' });
+      }
+    }
+    if (data.warnings.length) {
+      notify(`일부 자료(${data.warnings.length}건)를 확인하지 못해 제외했습니다. 상단의 '데이터 안내'에서 볼 수 있습니다.`, { type: 'warn', key: 'data-warnings' });
+    }
   }
 
   startRegion();

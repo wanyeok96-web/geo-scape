@@ -2,24 +2,44 @@
 // 같은 함수를 메인 지도와 비교 모드 지도에서 재사용합니다.
 import { escapeHtml, iconSvg } from './utils.js';
 
-export const BASEMAPS = {
-  light: {
-    // OSM 타일을 CSS 필터로 차분하게 표현 (공간 레이어가 잘 보이도록)
-    label: '밝은 지도',
-    url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    options: { maxZoom: 19, className: 'gs-muted-tiles', attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }
-  },
-  osm: {
-    label: '일반 지도',
-    url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    options: { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }
-  },
-  imagery: {
-    label: '위성(현재)',
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    options: { maxZoom: 18, attribution: 'Imagery &copy; Esri, Maxar, Earthstar Geographics' }
-  }
+// ---------- 배경 지도 타일 제공자 ----------
+// API 키가 필요 없고 한국 지역 데이터가 있는 제공자만 사용합니다.
+// OSM 공식 서버는 Referer가 없는 요청(index.html 더블클릭 = file://)을 차단(403)하므로,
+// 실행 전 '시험 타일'을 요청해 차단·실패가 확인되면 다음 제공자로 자동 전환합니다.
+const OSM_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+export const TILE_PROVIDERS = {
+  osm: { name: 'OpenStreetMap', url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', maxZoom: 19, attribution: OSM_ATTR, needsReferer: true },
+  osmde: { name: 'OpenStreetMap Deutschland', url: 'https://tile.openstreetmap.de/{z}/{x}/{y}.png', maxZoom: 18, attribution: OSM_ATTR + ' · Tiles: openstreetmap.de' },
+  hot: { name: 'Humanitarian OSM', url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', subdomains: 'abc', maxZoom: 19, attribution: OSM_ATTR + ' · Tiles: HOT / OSM France' },
+  esriImagery: { name: 'Esri World Imagery', url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', maxZoom: 18, attribution: 'Imagery &copy; Esri, Maxar, Earthstar Geographics' }
 };
+const PROBE_TILE = { z: 11, x: 1746, y: 792 }; // 서울 도심이 포함된 타일
+
+export const BASEMAPS = {
+  light: { label: '밝은 지도', providers: ['osm', 'osmde', 'hot'], className: 'gs-muted-tiles' },
+  osm: { label: '일반 지도', providers: ['osm', 'osmde', 'hot'] },
+  imagery: { label: '위성(현재)', providers: ['esriImagery'] }
+};
+
+const tileUrl = (p, t) => p.url.replace('{s}', (p.subdomains || 'a')[0]).replace('{z}', t.z).replace('{x}', t.x).replace('{y}', t.y).replace('{r}', '');
+
+// 제공자별 사용 가능 여부 캐시 (모든 지도 뷰가 공유)
+const providerHealth = {};
+function probeProvider(id) {
+  if (providerHealth[id]) return providerHealth[id];
+  const p = TILE_PROVIDERS[id];
+  // file:// 에서는 Referer가 없으므로 Referer가 필요한 제공자는 바로 제외
+  if (p.needsReferer && location.protocol === 'file:') return (providerHealth[id] = Promise.resolve(false));
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 6000);
+  providerHealth[id] = fetch(tileUrl(p, PROBE_TILE), { mode: 'cors', signal: ctrl.signal, referrerPolicy: 'strict-origin-when-cross-origin' })
+    .then((r) => r.ok && (r.headers.get('content-type') || '').startsWith('image'))
+    // CORS를 허용하지 않는 서버는 판별할 수 없으므로 '사용 가능'으로 간주 (실제 타일 오류는 tileerror로 감시)
+    .catch((e) => (e.name === 'AbortError' ? false : true))
+    .finally(() => clearTimeout(timer));
+  return providerHealth[id];
+}
+export function markProviderFailed(id) { providerHealth[id] = Promise.resolve(false); }
 
 /**
  * @param {HTMLElement} el
@@ -46,6 +66,8 @@ export function createMapView(el, data, opts = {}) {
 
   let baseLayer = null;
   let currentYear = null;
+  let pendingPopup = null;
+  let pendingTimer = null;
   const layerCfg = Object.fromEntries(data.region.layers.map((l) => [l.id, l]));
   const groups = {};
   const visible = {};
@@ -124,7 +146,8 @@ export function createMapView(el, data, opts = {}) {
       return L.marker([lat, lng], { icon, title: p.name, riseOnHover: true }).bindPopup(devPopup(p), { maxWidth: 280 });
     }
     const style = layerId === 'urban' ? urbanStyle(p) : layerId === 'transport' ? lineStyle(p) : landuseStyle(p);
-    const pane = layerId === 'urban' ? `gs-urban-${p.stage}` : `gs-${layerId}`;
+    let pane = layerId === 'urban' ? `gs-urban-${p.stage}` : `gs-${layerId}`;
+    if (!map.getPane(pane)) pane = 'overlayPane'; // 정의되지 않은 단계·레이어는 기본 pane 사용
     const layer = L.geoJSON(ft, { pane, style: () => ({ ...style, className: 'gs-fade-in' }) });
     layer.bindPopup(layerId === 'transport' ? linePopup(p) : areaPopup(p, layerId), { maxWidth: 280 });
     if (layerId === 'transport') layer.bindTooltip(`${p.name} (${p.yearStart})`, { sticky: true });
@@ -143,9 +166,13 @@ export function createMapView(el, data, opts = {}) {
       if (!isActive(layerId, ft.properties, year)) continue;
       want.add(id);
       if (!map_.has(id)) {
-        const lyr = makeLayer(layerId, ft, year);
-        map_.set(id, lyr);
-        group.addLayer(lyr);
+        try {
+          const lyr = makeLayer(layerId, ft, year);
+          map_.set(id, lyr);
+          group.addLayer(lyr);
+        } catch (err) {
+          console.warn(`[GeoScape] 피처 '${id}' 표시 실패`, err);
+        }
       }
     }
     for (const [id, lyr] of map_) {
@@ -193,20 +220,54 @@ export function createMapView(el, data, opts = {}) {
   function setYear(year) {
     currentYear = year;
     for (const l of data.region.layers) {
-      if (l.kind === 'photos') renderPhotos(year);
-      else renderLayer(l.id, year);
+      // 한 레이어의 오류가 다른 레이어 표시를 막지 않도록 레이어별로 격리
+      try {
+        if (l.kind === 'photos') renderPhotos(year);
+        else renderLayer(l.id, year);
+      } catch (err) {
+        console.error(`[GeoScape] 레이어 '${l.id}' 표시 오류`, err);
+      }
     }
   }
 
-  function setBasemap(id) {
+  // ---------- 배경 지도: 사용 가능한 첫 제공자를 고르고, 실패하면 다음 제공자로 ----------
+  let basemapToken = 0;
+  async function setBasemap(id) {
     const b = BASEMAPS[id] || BASEMAPS.light;
+    const token = ++basemapToken;
+    for (const pid of b.providers) {
+      const ok = await probeProvider(pid);
+      if (token !== basemapToken) return; // 그 사이 다른 배경 지도가 선택됨
+      if (!ok) continue;
+      useProvider(id, b, pid);
+      return;
+    }
+    if (baseLayer) { map.removeLayer(baseLayer); baseLayer = null; }
+    opts.onBasemapStatus?.({ ok: false, basemap: id });
+  }
+
+  function useProvider(id, b, pid) {
+    const p = TILE_PROVIDERS[pid];
     if (baseLayer) map.removeLayer(baseLayer);
-    const base = L.tileLayer(b.url, b.options);
-    // 라벨 레이어는 공간 레이어 위(pane: gs-labels)에 올려 가독성 확보
-    baseLayer = b.labels
-      ? L.layerGroup([base, L.tileLayer(b.labels, { ...b.options, attribution: '', pane: 'gs-labels' })])
-      : base;
-    baseLayer.addTo(map);
+    const layer = L.tileLayer(p.url, {
+      subdomains: p.subdomains || 'abc', maxZoom: 19, maxNativeZoom: p.maxZoom,
+      attribution: p.attribution, className: b.className || '', crossOrigin: false
+    });
+    // 타일 오류가 많이 나면(차단·네트워크 장애) 다음 제공자로 전환
+    let errors = 0, loaded = 0;
+    layer.on('tileload', () => { loaded++; });
+    layer.on('tileerror', () => {
+      errors++;
+      if (errors >= 6 && errors > loaded) {
+        layer.off('tileerror');
+        markProviderFailed(pid);
+        opts.onBasemapStatus?.({ ok: false, basemap: id, provider: p.name, switching: true });
+        setBasemap(id);
+      }
+    });
+    baseLayer = layer.addTo(map);
+    baseLayer.bringToBack();
+    opts.onBasemapStatus?.({ ok: true, basemap: id, provider: p.name, fallback: pid !== b.providers[0] });
   }
 
   function setLayerVisible(id, on) {
@@ -230,17 +291,21 @@ export function createMapView(el, data, opts = {}) {
         lyr = rendered[info.layerId]?.get(target.featureId);
       }
     }
-    const zoomTo = () => { if (lyr) lyr.openPopup?.(); };
-    if (target.center) {
-      map.flyTo(target.center, target.zoom ?? map.getZoom(), { duration: 0.8 });
-      map.once('moveend', zoomTo);
-    } else if (lyr?.getBounds) {
-      map.flyToBounds(lyr.getBounds(), { padding: [60, 60], maxZoom: 14, duration: 0.8 });
-      map.once('moveend', zoomTo);
-    } else if (lyr?.getLatLng) {
-      map.flyTo(lyr.getLatLng(), Math.max(map.getZoom(), 14), { duration: 0.8 });
-      map.once('moveend', zoomTo);
-    }
+    // 이전 이동·팝업 예약을 취소하고 새로 이동 (연속 클릭 시 팝업이 엉키지 않도록)
+    map.stop();
+    if (pendingPopup) { map.off('moveend', pendingPopup); clearTimeout(pendingTimer); }
+    let done = false;
+    pendingPopup = () => {
+      if (done) return;
+      done = true;
+      map.off('moveend', pendingPopup);
+      clearTimeout(pendingTimer);
+      try { if (lyr && map.hasLayer(lyr)) lyr.openPopup?.(); } catch (e) { console.warn(e); }
+    };
+    const fly = (fn) => { map.on('moveend', pendingPopup); pendingTimer = setTimeout(pendingPopup, 2500); fn(); };
+    if (target.center) fly(() => map.flyTo(target.center, target.zoom ?? map.getZoom(), { duration: 0.8 }));
+    else if (lyr?.getBounds) fly(() => map.flyToBounds(lyr.getBounds(), { padding: [60, 60], maxZoom: 14, duration: 0.8 }));
+    else if (lyr?.getLatLng) fly(() => map.flyTo(lyr.getLatLng(), Math.max(map.getZoom(), 14), { duration: 0.8 }));
     if (lyr?.getElement) {
       const elx = lyr.getElement()?.firstElementChild;
       if (elx) { elx.classList.add('is-focus'); setTimeout(() => elx.classList.remove('is-focus'), 2500); }

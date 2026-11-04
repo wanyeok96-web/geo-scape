@@ -38,3 +38,49 @@ export const storage = {
   get(key) { try { return localStorage.getItem(key); } catch { return null; } },
   set(key, val) { try { localStorage.setItem(key, val); } catch { /* 저장소 사용 불가 시 무시 */ } }
 };
+
+// ---------- 알림(토스트): 오류·상태를 화면을 막지 않고 알려 줌 ----------
+const recentNotices = new Map();
+export function notify(message, { type = 'info', timeout = 6000, key } = {}) {
+  const k = key || message;
+  const now = Date.now();
+  if (recentNotices.has(k) && now - recentNotices.get(k) < 8000) return; // 같은 알림 반복 방지
+  recentNotices.set(k, now);
+  let box = document.getElementById('toastBox');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'toastBox';
+    box.className = 'toast-box';
+    box.setAttribute('role', 'status');
+    box.setAttribute('aria-live', 'polite');
+    document.body.appendChild(box);
+  }
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  el.innerHTML = `<span>${escapeHtml(message)}</span><button aria-label="닫기">×</button>`;
+  const close = () => el.remove();
+  el.querySelector('button').addEventListener('click', close);
+  box.appendChild(el);
+  while (box.children.length > 3) box.firstElementChild.remove();
+  if (timeout) setTimeout(close, timeout);
+}
+
+// ---------- 이미지 로드 실패 시 깨진 아이콘 대신 안내 표시 ----------
+export function installImageFallback() {
+  document.addEventListener('error', (e) => {
+    const img = e.target;
+    if (!(img instanceof HTMLImageElement) || img.dataset.failed) return;
+    if (img.closest('.leaflet-tile-container')) return; // 지도 타일은 map-view에서 처리
+    img.dataset.failed = '1';
+    img.classList.add('img-failed');
+    img.removeAttribute('src');
+    img.alt = `이미지를 불러오지 못했습니다${img.alt ? ` (${img.alt})` : ''}`;
+    img.parentElement?.classList.add('has-failed-img');
+  }, true);
+}
+
+/** 짧은 시간에 반복 호출되는 함수를 마지막 호출만 실행 */
+export function debounce(fn, ms = 150) {
+  let t;
+  return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+}

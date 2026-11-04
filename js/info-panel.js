@@ -99,7 +99,14 @@ export function initInfoPanel(store, getData, { onPhotoOpen, onOpenGallery }) {
       </section>`;
 
     chart?.destroy();
-    chart = series ? createStatsChart($('#statsCanvas', root), series, data.region.timeRange) : null;
+    try {
+      chart = series ? createStatsChart($('#statsCanvas', root), series, data.region.timeRange) : null;
+    } catch (err) {
+      console.error('[GeoScape] 그래프 오류', err);
+      chart = null;
+      const box = $('.chart-box', root);
+      if (box) box.innerHTML = '<div class="empty">그래프를 표시하지 못했습니다.</div>';
+    }
     refreshIcons();
     root.parentElement.scrollTop = 0;
   }
@@ -118,8 +125,14 @@ export function initInfoPanel(store, getData, { onPhotoOpen, onOpenGallery }) {
 
   function render(year) {
     const era = getData().getEra(year);
-    if (era.id !== currentEraId) { currentEraId = era.id; renderEra(era, year); }
-    updateYear(year);
+    try {
+      if (era.id !== currentEraId) { currentEraId = era.id; renderEra(era, year); }
+    } catch (err) {
+      console.error('[GeoScape] 정보 패널 오류', err);
+      root.innerHTML = `<div class="empty">이 시기의 정보를 표시하지 못했습니다. (${escapeHtml(era.id)})</div>`;
+      return;
+    }
+    try { updateYear(year); } catch (err) { console.error('[GeoScape] 정보 패널 갱신 오류', err); }
   }
 
   root.addEventListener('click', (e) => {

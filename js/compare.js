@@ -2,7 +2,7 @@
 import { $, escapeHtml, refreshIcons } from './utils.js';
 import { createMapView } from './map-view.js';
 
-export function initCompare(store, getData, { onPhotoOpen }) {
+export function initCompare(store, getData, { onPhotoOpen, onBasemapStatus }) {
   const wrap = $('#compare');
   const leftSel = $('#compareLeftYear');
   const rightSel = $('#compareRightYear');
@@ -32,7 +32,8 @@ export function initCompare(store, getData, { onPhotoOpen }) {
     if (left) return;
     const data = getData();
     const s = store.get();
-    left = createMapView($('#mapLeft'), data, { onPhotoOpen, compact: true });
+    // 배경 지도 알림은 왼쪽 지도에서만 (중복 알림 방지)
+    left = createMapView($('#mapLeft'), data, { onPhotoOpen, compact: true, onBasemapStatus });
     right = createMapView($('#mapRight'), data, { onPhotoOpen, compact: true });
     for (const v of [left, right]) {
       v.setBasemap(s.basemap);

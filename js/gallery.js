@@ -86,6 +86,10 @@ export function initGallery(store, getData, { onLocate }) {
     const p = data.photos.find((x) => x.id === lbList[lbIndex]);
     if (!p) return;
     const img = $('#lbImg');
+    // 이전 사진의 로드 실패 표시 초기화
+    delete img.dataset.failed;
+    img.classList.remove('img-failed');
+    img.parentElement.classList.remove('has-failed-img');
     img.src = p.src; img.alt = p.title;
     $('#lbType').textContent = data.photoInfo.contentTypes[p.contentType] || p.contentType;
     const loc = p.location || {};

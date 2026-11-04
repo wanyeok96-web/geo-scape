@@ -45,19 +45,76 @@ const storage = {
   set(key, val) { try { localStorage.setItem(key, val); } catch { /* 저장소 사용 불가 시 무시 */ } }
 };
 
+// ---------- 알림(토스트): 오류·상태를 화면을 막지 않고 알려 줌 ----------
+const recentNotices = new Map();
+function notify(message, { type = 'info', timeout = 6000, key } = {}) {
+  const k = key || message;
+  const now = Date.now();
+  if (recentNotices.has(k) && now - recentNotices.get(k) < 8000) return; // 같은 알림 반복 방지
+  recentNotices.set(k, now);
+  let box = document.getElementById('toastBox');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'toastBox';
+    box.className = 'toast-box';
+    box.setAttribute('role', 'status');
+    box.setAttribute('aria-live', 'polite');
+    document.body.appendChild(box);
+  }
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  el.innerHTML = `<span>${escapeHtml(message)}</span><button aria-label="닫기">×</button>`;
+  const close = () => el.remove();
+  el.querySelector('button').addEventListener('click', close);
+  box.appendChild(el);
+  while (box.children.length > 3) box.firstElementChild.remove();
+  if (timeout) setTimeout(close, timeout);
+}
+
+// ---------- 이미지 로드 실패 시 깨진 아이콘 대신 안내 표시 ----------
+function installImageFallback() {
+  document.addEventListener('error', (e) => {
+    const img = e.target;
+    if (!(img instanceof HTMLImageElement) || img.dataset.failed) return;
+    if (img.closest('.leaflet-tile-container')) return; // 지도 타일은 map-view에서 처리
+    img.dataset.failed = '1';
+    img.classList.add('img-failed');
+    img.removeAttribute('src');
+    img.alt = `이미지를 불러오지 못했습니다${img.alt ? ` (${img.alt})` : ''}`;
+    img.parentElement?.classList.add('has-failed-img');
+  }, true);
+}
+
+/** 짧은 시간에 반복 호출되는 함수를 마지막 호출만 실행 */
+function debounce(fn, ms = 150) {
+  let t;
+  return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+}
+
 
 // ===== js/store.js =====
 // 간단한 전역 상태 저장소 (구독형)
-function createStore(initial) {
+// - normalize: 상태가 바뀔 때마다 값을 정리(예: 연도 범위 제한)
+// - 구독자 하나에서 오류가 나도 나머지 구독자는 계속 실행되도록 격리
+function createStore(initial, { normalize, onError } = {}) {
   let state = { ...initial };
   const listeners = new Set();
+  let depth = 0;
   return {
     get: () => state,
     set(patch) {
       const prev = state;
-      state = { ...state, ...patch };
-      const changed = Object.keys(patch).filter((k) => prev[k] !== state[k]);
-      if (changed.length) listeners.forEach((fn) => fn(state, prev, changed));
+      let next = { ...state, ...patch };
+      if (normalize) next = normalize(next, prev);
+      state = next;
+      const changed = Object.keys(state).filter((k) => prev[k] !== state[k]);
+      if (!changed.length) return;
+      if (++depth > 20) { depth--; console.error('[GeoScape] 상태 갱신이 반복되어 중단했습니다.', patch); return; }
+      try {
+        for (const fn of [...listeners]) {
+          try { fn(state, prev, changed); } catch (err) { onError ? onError(err) : console.error(err); }
+        }
+      } finally { depth--; }
     },
     subscribe(fn) { listeners.add(fn); return () => listeners.delete(fn); }
   };
@@ -66,35 +123,132 @@ function createStore(initial) {
 
 // ===== js/data.js =====
 // 데이터 로더: 지역 레지스트리 → 지역별 JSON/GeoJSON 묶음
+//
+// 안정성 원칙
+// - 꼭 필요한 파일(지역 설정·시대 정보)이 없을 때만 실패로 처리하고,
+//   사진·통계·출처·공간 레이어는 하나가 실패해도 나머지로 계속 실행합니다.
+// - 모든 항목을 검사해 형식이 잘못된 항목은 건너뛰고 경고(warnings)로 모읍니다.
+const FETCH_TIMEOUT_MS = 15000;
+
 async function fetchJson(url) {
   // 더블클릭(file://) 실행: dist/geoscape-data.js 에 담긴 데이터 사용
   const embedded = window.GEOSCAPE_EMBEDDED?.[url];
   if (embedded) return JSON.parse(JSON.stringify(embedded));
-  const res = await fetch(url, { cache: 'no-cache' });
-  if (!res.ok) throw new Error(`${url} 불러오기 실패 (${res.status})`);
-  return res.json();
+  if (location.protocol === 'file:') throw new Error(`${url}: 내장 데이터에 없음 (node scripts/build-standalone.mjs 로 번들을 다시 만드세요)`);
+
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT_MS);
+  try {
+    const res = await fetch(url, { cache: 'no-cache', signal: ctrl.signal });
+    if (!res.ok) throw new Error(`${url} 불러오기 실패 (HTTP ${res.status})`);
+    try { return await res.json(); } catch { throw new Error(`${url}: JSON 형식 오류`); }
+  } catch (err) {
+    if (err.name === 'AbortError') throw new Error(`${url}: 응답 시간 초과 (${FETCH_TIMEOUT_MS / 1000}초)`);
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 function loadRegistry() {
-  return fetchJson('data/regions.json');
+  return fetchJson('data/regions.json').then((r) => {
+    if (!Array.isArray(r?.regions) || !r.regions.length) throw new Error('data/regions.json: 지역 목록이 비어 있음');
+    return r;
+  });
+}
+
+// ---------- 검사 도우미 ----------
+const isNum = (v) => typeof v === 'number' && Number.isFinite(v);
+const isLatLng = (c) => Array.isArray(c) && c.length === 2 && isNum(c[0]) && isNum(c[1]) && Math.abs(c[0]) <= 90 && Math.abs(c[1]) <= 180;
+const arr = (v) => (Array.isArray(v) ? v : []);
+
+function sanitizeRegion(region, warn) {
+  if (!region?.map || !isLatLng(region.map.center)) throw new Error('region.json: map.center 가 올바르지 않음');
+  const tr = region.timeRange || {};
+  if (!isNum(tr.start) || !isNum(tr.end) || tr.start >= tr.end) throw new Error('region.json: timeRange 가 올바르지 않음');
+  region.info = { summary: '', facts: [], ...region.info, facts: arr(region.info?.facts) };
+  region.topics = arr(region.topics).filter((t) => t?.id && t?.title).map((t) => ({ ...t, layers: arr(t.layers) }));
+  region.milestones = arr(region.milestones).filter((m) => {
+    const ok = isNum(m?.year) && m.year >= tr.start && m.year <= tr.end && m.label;
+    if (!ok) warn(`주요 시점 제외: ${JSON.stringify(m)?.slice(0, 60)}`);
+    return ok;
+  }).sort((a, b) => a.year - b.year);
+  region.layers = arr(region.layers).filter((l) => l?.id && l?.kind);
+  region.files = { eras: 'eras.json', photos: 'data/photos.json', stats: 'stats.json', sources: 'sources.json', ...region.files };
+  return region;
+}
+
+function sanitizeEras(eras, warn) {
+  const list = arr(eras?.eras).filter((e) => {
+    const ok = e?.id && isNum(e.start) && isNum(e.end) && e.start <= e.end;
+    if (!ok) warn(`시대 정보 제외: ${e?.id ?? '(id 없음)'}`);
+    return ok;
+  }).map((e) => ({
+    title: '', summary: '', background: '', ...e,
+    features: arr(e.features), cases: arr(e.cases).filter((c) => c?.title), questions: arr(e.questions), sourceIds: arr(e.sourceIds)
+  })).sort((a, b) => a.start - b.start);
+  if (!list.length) throw new Error('eras.json: 사용할 수 있는 시대 정보가 없음');
+  return list;
+}
+
+function sanitizeFeatures(fc, layerId, warn) {
+  const seen = new Set();
+  const features = arr(fc?.features).filter((ft) => {
+    const id = ft?.properties?.id;
+    const ok = id && ft.geometry?.type && Array.isArray(ft.geometry.coordinates) && !seen.has(id);
+    if (!ok) warn(`레이어 '${layerId}' 피처 제외: ${id ?? '(id 없음)'}`);
+    else seen.add(id);
+    return ok;
+  });
+  return { type: 'FeatureCollection', metadata: fc?.metadata || {}, features };
+}
+
+function sanitizePhotos(list, regionId, warn) {
+  const seen = new Set();
+  return arr(list).filter((p) => (p?.region ?? regionId) === regionId).filter((p) => {
+    const ok = p?.id && p.src && p.title && !seen.has(p.id);
+    if (!ok) warn(`사진 제외: ${p?.id ?? p?.title ?? '(id 없음)'}`);
+    else seen.add(p.id);
+    return ok;
+  }).map((p) => {
+    const loc = p.location || {};
+    const coords = isLatLng(loc.coords) ? loc.coords : null;
+    if (loc.coords && !coords) warn(`사진 ${p.id}: 좌표 형식 오류로 지도 연결 해제`);
+    return {
+      ...p,
+      eraIds: arr(p.eraIds),
+      location: { precision: coords ? loc.precision || 'subject-facility' : 'none', label: loc.label || p.place || '', note: loc.note || '', coords },
+      mapLinked: Boolean(p.mapLinked && coords),
+      source: p.source || {}, license: p.license || {}, verification: { notes: [], ...p.verification }
+    };
+  });
 }
 
 /** 지역 데이터 전체를 불러와 서로 연결된 하나의 객체로 반환 */
 async function loadRegion(meta) {
+  const warnings = [];
+  const warn = (m) => { warnings.push(m); console.warn('[GeoScape 데이터]', m); };
   const base = meta.path;
   // 'data/'로 시작하면 프로젝트 루트 기준(여러 지역 공용 파일), 아니면 지역 폴더 기준
   const resolve = (p) => (p.startsWith('data/') ? p : base + p);
-  const region = await fetchJson(base + 'region.json');
+  // 선택 파일: 실패해도 기본값으로 계속
+  const optional = (url, fallback, label) => fetchJson(url).catch((err) => { warn(`${label} 불러오기 실패 – ${err.message}`); return fallback; });
+
+  const region = sanitizeRegion(await fetchJson(base + 'region.json'), warn);
   const f = region.files;
-  const [eras, photosFile, stats, sources] = await Promise.all([
-    fetchJson(resolve(f.eras)), fetchJson(resolve(f.photos)), fetchJson(resolve(f.stats)), fetchJson(resolve(f.sources))
+  const [erasRaw, photosFile, stats, sources] = await Promise.all([
+    fetchJson(resolve(f.eras)),
+    optional(resolve(f.photos), { photos: [] }, '사진 자료'),
+    optional(resolve(f.stats), { series: [] }, '통계 자료'),
+    optional(resolve(f.sources), { sources: [] }, '출처 목록')
   ]);
-  // 이 지역의 정식 등록 사진만 사용
-  const photos = { photos: photosFile.photos.filter((p) => (p.region ?? meta.id) === meta.id) };
+  const eraList = sanitizeEras(erasRaw, warn);
+  const photoList = sanitizePhotos(photosFile?.photos, meta.id, warn);
 
   const geo = {};
   await Promise.all(region.layers.filter((l) => l.file).map(async (l) => {
-    geo[l.id] = await fetchJson(base + l.file);
+    const fc = await optional(base + l.file, null, `공간 레이어 '${l.label || l.id}'`);
+    geo[l.id] = sanitizeFeatures(fc, l.id, warn);
   }));
 
   // 피처 ID 색인 (설명 패널·주요 시점에서 지도 피처로 연결)
@@ -105,47 +259,60 @@ async function loadRegion(meta) {
       featureIndex[p.id] = { layerId, feature: ft, year: p.yearStart ?? p.year ?? null };
     }
   }
+  // 연결 검사: 시대 사례·주요 시점이 가리키는 피처가 실제로 있는지
+  for (const e of eraList) for (const c of e.cases) {
+    if (c.featureId && !featureIndex[c.featureId]) { warn(`${e.id} 사례 '${c.title}': 지도 피처 '${c.featureId}' 없음 → 지도 연결 해제`); delete c.featureId; }
+  }
+  for (const m of region.milestones) {
+    if (m.focus?.featureId && !featureIndex[m.focus.featureId]) { warn(`주요 시점 ${m.year}: 피처 '${m.focus.featureId}' 없음`); delete m.focus.featureId; }
+  }
 
-  const sourceMap = Object.fromEntries(sources.sources.map((s) => [s.id, s]));
-  const eraList = eras.eras.slice().sort((a, b) => a.start - b.start);
+  const sourceMap = Object.fromEntries(arr(sources?.sources).filter((s) => s?.id).map((s) => [s.id, s]));
+  const statSeries = arr(stats?.series).filter((s) => s?.label && arr(s.data).length)
+    .map((s) => ({ unit: '', note: '', ...s, data: arr(s.data).filter((d) => isNum(d?.year) && isNum(d?.value)).sort((a, b) => a.year - b.year) }));
 
   return {
-    meta, region, geo, featureIndex,
+    meta, region, geo, featureIndex, warnings,
     eras: eraList,
-    photos: photos.photos,
+    photos: photoList,
     photoInfo: {
-      notice: photosFile.description,
-      contentTypes: photosFile.contentTypes || {},
-      locationPrecision: photosFile.locationPrecision || {},
-      unverified: (photosFile.unverified || []),
-      needed: (photosFile.needed || [])
+      notice: photosFile?.description || '',
+      contentTypes: photosFile?.contentTypes || {},
+      locationPrecision: photosFile?.locationPrecision || {},
+      unverified: arr(photosFile?.unverified),
+      needed: arr(photosFile?.needed)
     },
-    stats: stats.series,
+    stats: statSeries,
     sources: sourceMap,
 
+    clampYear(y) {
+      const { start, end } = region.timeRange;
+      const n = Math.round(Number(y));
+      return Number.isFinite(n) ? Math.min(end, Math.max(start, n)) : start;
+    },
     getEra(year) {
       return eraList.find((e) => year >= e.start && year <= e.end) ?? (year < eraList[0].start ? eraList[0] : eraList[eraList.length - 1]);
     },
     /** 해당 시기(시대 범위)와 촬영 시기가 겹치는 사진 */
     photosForEra(era) {
-      return photos.photos.filter((p) => p.eraIds?.includes(era.id) ||
-        (p.period?.start != null && p.period.start <= era.end && (p.period.end ?? p.period.start) >= era.start));
+      return photoList.filter((p) => p.eraIds.includes(era.id) ||
+        (isNum(p.period?.start) && p.period.start <= era.end && (p.period.end ?? p.period.start) >= era.start));
     },
     /** 선택 연도 기준: 같은 시대 사진을 촬영 연도가 가까운 순으로 */
     photosNearYear(year) {
       const era = this.getEra(year);
       return this.photosForEra(era)
-        .map((p, i) => ({ p, i, d: p.year != null ? Math.abs(p.year - year) : 99 }))
+        .map((p, i) => ({ p, i, d: isNum(p.year) ? Math.abs(p.year - year) : 99 }))
         .sort((a, b) => a.d - b.d || a.i - b.i)
         .map((x) => x.p);
     },
     neededForEra(era) {
-      return (photosFile.needed || []).filter((n) => n.eraId === era.id);
+      return arr(photosFile?.needed).filter((n) => n.eraId === era.id);
     },
     /** 주요 시점 연도 목록 (시대 시작 + 마일스톤 + 끝 연도) */
     keyYears() {
       const ys = new Set([...eraList.map((e) => e.start), ...region.milestones.map((m) => m.year), region.timeRange.end]);
-      return [...ys].sort((a, b) => a - b);
+      return [...ys].filter((y) => y >= region.timeRange.start && y <= region.timeRange.end).sort((a, b) => a - b);
     }
   };
 }
@@ -155,24 +322,44 @@ async function loadRegion(meta) {
 // 지도 뷰: Leaflet 지도 + 연도별 공간 레이어 렌더링
 // 같은 함수를 메인 지도와 비교 모드 지도에서 재사용합니다.
 
-const BASEMAPS = {
-  light: {
-    // OSM 타일을 CSS 필터로 차분하게 표현 (공간 레이어가 잘 보이도록)
-    label: '밝은 지도',
-    url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    options: { maxZoom: 19, className: 'gs-muted-tiles', attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }
-  },
-  osm: {
-    label: '일반 지도',
-    url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    options: { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }
-  },
-  imagery: {
-    label: '위성(현재)',
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    options: { maxZoom: 18, attribution: 'Imagery &copy; Esri, Maxar, Earthstar Geographics' }
-  }
+// ---------- 배경 지도 타일 제공자 ----------
+// API 키가 필요 없고 한국 지역 데이터가 있는 제공자만 사용합니다.
+// OSM 공식 서버는 Referer가 없는 요청(index.html 더블클릭 = file://)을 차단(403)하므로,
+// 실행 전 '시험 타일'을 요청해 차단·실패가 확인되면 다음 제공자로 자동 전환합니다.
+const OSM_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+const TILE_PROVIDERS = {
+  osm: { name: 'OpenStreetMap', url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', maxZoom: 19, attribution: OSM_ATTR, needsReferer: true },
+  osmde: { name: 'OpenStreetMap Deutschland', url: 'https://tile.openstreetmap.de/{z}/{x}/{y}.png', maxZoom: 18, attribution: OSM_ATTR + ' · Tiles: openstreetmap.de' },
+  hot: { name: 'Humanitarian OSM', url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', subdomains: 'abc', maxZoom: 19, attribution: OSM_ATTR + ' · Tiles: HOT / OSM France' },
+  esriImagery: { name: 'Esri World Imagery', url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', maxZoom: 18, attribution: 'Imagery &copy; Esri, Maxar, Earthstar Geographics' }
 };
+const PROBE_TILE = { z: 11, x: 1746, y: 792 }; // 서울 도심이 포함된 타일
+
+const BASEMAPS = {
+  light: { label: '밝은 지도', providers: ['osm', 'osmde', 'hot'], className: 'gs-muted-tiles' },
+  osm: { label: '일반 지도', providers: ['osm', 'osmde', 'hot'] },
+  imagery: { label: '위성(현재)', providers: ['esriImagery'] }
+};
+
+const tileUrl = (p, t) => p.url.replace('{s}', (p.subdomains || 'a')[0]).replace('{z}', t.z).replace('{x}', t.x).replace('{y}', t.y).replace('{r}', '');
+
+// 제공자별 사용 가능 여부 캐시 (모든 지도 뷰가 공유)
+const providerHealth = {};
+function probeProvider(id) {
+  if (providerHealth[id]) return providerHealth[id];
+  const p = TILE_PROVIDERS[id];
+  // file:// 에서는 Referer가 없으므로 Referer가 필요한 제공자는 바로 제외
+  if (p.needsReferer && location.protocol === 'file:') return (providerHealth[id] = Promise.resolve(false));
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 6000);
+  providerHealth[id] = fetch(tileUrl(p, PROBE_TILE), { mode: 'cors', signal: ctrl.signal, referrerPolicy: 'strict-origin-when-cross-origin' })
+    .then((r) => r.ok && (r.headers.get('content-type') || '').startsWith('image'))
+    // CORS를 허용하지 않는 서버는 판별할 수 없으므로 '사용 가능'으로 간주 (실제 타일 오류는 tileerror로 감시)
+    .catch((e) => (e.name === 'AbortError' ? false : true))
+    .finally(() => clearTimeout(timer));
+  return providerHealth[id];
+}
+function markProviderFailed(id) { providerHealth[id] = Promise.resolve(false); }
 
 /**
  * @param {HTMLElement} el
@@ -199,6 +386,8 @@ function createMapView(el, data, opts = {}) {
 
   let baseLayer = null;
   let currentYear = null;
+  let pendingPopup = null;
+  let pendingTimer = null;
   const layerCfg = Object.fromEntries(data.region.layers.map((l) => [l.id, l]));
   const groups = {};
   const visible = {};
@@ -277,7 +466,8 @@ function createMapView(el, data, opts = {}) {
       return L.marker([lat, lng], { icon, title: p.name, riseOnHover: true }).bindPopup(devPopup(p), { maxWidth: 280 });
     }
     const style = layerId === 'urban' ? urbanStyle(p) : layerId === 'transport' ? lineStyle(p) : landuseStyle(p);
-    const pane = layerId === 'urban' ? `gs-urban-${p.stage}` : `gs-${layerId}`;
+    let pane = layerId === 'urban' ? `gs-urban-${p.stage}` : `gs-${layerId}`;
+    if (!map.getPane(pane)) pane = 'overlayPane'; // 정의되지 않은 단계·레이어는 기본 pane 사용
     const layer = L.geoJSON(ft, { pane, style: () => ({ ...style, className: 'gs-fade-in' }) });
     layer.bindPopup(layerId === 'transport' ? linePopup(p) : areaPopup(p, layerId), { maxWidth: 280 });
     if (layerId === 'transport') layer.bindTooltip(`${p.name} (${p.yearStart})`, { sticky: true });
@@ -296,9 +486,13 @@ function createMapView(el, data, opts = {}) {
       if (!isActive(layerId, ft.properties, year)) continue;
       want.add(id);
       if (!map_.has(id)) {
-        const lyr = makeLayer(layerId, ft, year);
-        map_.set(id, lyr);
-        group.addLayer(lyr);
+        try {
+          const lyr = makeLayer(layerId, ft, year);
+          map_.set(id, lyr);
+          group.addLayer(lyr);
+        } catch (err) {
+          console.warn(`[GeoScape] 피처 '${id}' 표시 실패`, err);
+        }
       }
     }
     for (const [id, lyr] of map_) {
@@ -346,20 +540,54 @@ function createMapView(el, data, opts = {}) {
   function setYear(year) {
     currentYear = year;
     for (const l of data.region.layers) {
-      if (l.kind === 'photos') renderPhotos(year);
-      else renderLayer(l.id, year);
+      // 한 레이어의 오류가 다른 레이어 표시를 막지 않도록 레이어별로 격리
+      try {
+        if (l.kind === 'photos') renderPhotos(year);
+        else renderLayer(l.id, year);
+      } catch (err) {
+        console.error(`[GeoScape] 레이어 '${l.id}' 표시 오류`, err);
+      }
     }
   }
 
-  function setBasemap(id) {
+  // ---------- 배경 지도: 사용 가능한 첫 제공자를 고르고, 실패하면 다음 제공자로 ----------
+  let basemapToken = 0;
+  async function setBasemap(id) {
     const b = BASEMAPS[id] || BASEMAPS.light;
+    const token = ++basemapToken;
+    for (const pid of b.providers) {
+      const ok = await probeProvider(pid);
+      if (token !== basemapToken) return; // 그 사이 다른 배경 지도가 선택됨
+      if (!ok) continue;
+      useProvider(id, b, pid);
+      return;
+    }
+    if (baseLayer) { map.removeLayer(baseLayer); baseLayer = null; }
+    opts.onBasemapStatus?.({ ok: false, basemap: id });
+  }
+
+  function useProvider(id, b, pid) {
+    const p = TILE_PROVIDERS[pid];
     if (baseLayer) map.removeLayer(baseLayer);
-    const base = L.tileLayer(b.url, b.options);
-    // 라벨 레이어는 공간 레이어 위(pane: gs-labels)에 올려 가독성 확보
-    baseLayer = b.labels
-      ? L.layerGroup([base, L.tileLayer(b.labels, { ...b.options, attribution: '', pane: 'gs-labels' })])
-      : base;
-    baseLayer.addTo(map);
+    const layer = L.tileLayer(p.url, {
+      subdomains: p.subdomains || 'abc', maxZoom: 19, maxNativeZoom: p.maxZoom,
+      attribution: p.attribution, className: b.className || '', crossOrigin: false
+    });
+    // 타일 오류가 많이 나면(차단·네트워크 장애) 다음 제공자로 전환
+    let errors = 0, loaded = 0;
+    layer.on('tileload', () => { loaded++; });
+    layer.on('tileerror', () => {
+      errors++;
+      if (errors >= 6 && errors > loaded) {
+        layer.off('tileerror');
+        markProviderFailed(pid);
+        opts.onBasemapStatus?.({ ok: false, basemap: id, provider: p.name, switching: true });
+        setBasemap(id);
+      }
+    });
+    baseLayer = layer.addTo(map);
+    baseLayer.bringToBack();
+    opts.onBasemapStatus?.({ ok: true, basemap: id, provider: p.name, fallback: pid !== b.providers[0] });
   }
 
   function setLayerVisible(id, on) {
@@ -383,17 +611,21 @@ function createMapView(el, data, opts = {}) {
         lyr = rendered[info.layerId]?.get(target.featureId);
       }
     }
-    const zoomTo = () => { if (lyr) lyr.openPopup?.(); };
-    if (target.center) {
-      map.flyTo(target.center, target.zoom ?? map.getZoom(), { duration: 0.8 });
-      map.once('moveend', zoomTo);
-    } else if (lyr?.getBounds) {
-      map.flyToBounds(lyr.getBounds(), { padding: [60, 60], maxZoom: 14, duration: 0.8 });
-      map.once('moveend', zoomTo);
-    } else if (lyr?.getLatLng) {
-      map.flyTo(lyr.getLatLng(), Math.max(map.getZoom(), 14), { duration: 0.8 });
-      map.once('moveend', zoomTo);
-    }
+    // 이전 이동·팝업 예약을 취소하고 새로 이동 (연속 클릭 시 팝업이 엉키지 않도록)
+    map.stop();
+    if (pendingPopup) { map.off('moveend', pendingPopup); clearTimeout(pendingTimer); }
+    let done = false;
+    pendingPopup = () => {
+      if (done) return;
+      done = true;
+      map.off('moveend', pendingPopup);
+      clearTimeout(pendingTimer);
+      try { if (lyr && map.hasLayer(lyr)) lyr.openPopup?.(); } catch (e) { console.warn(e); }
+    };
+    const fly = (fn) => { map.on('moveend', pendingPopup); pendingTimer = setTimeout(pendingPopup, 2500); fn(); };
+    if (target.center) fly(() => map.flyTo(target.center, target.zoom ?? map.getZoom(), { duration: 0.8 }));
+    else if (lyr?.getBounds) fly(() => map.flyToBounds(lyr.getBounds(), { padding: [60, 60], maxZoom: 14, duration: 0.8 }));
+    else if (lyr?.getLatLng) fly(() => map.flyTo(lyr.getLatLng(), Math.max(map.getZoom(), 14), { duration: 0.8 }));
     if (lyr?.getElement) {
       const elx = lyr.getElement()?.firstElementChild;
       if (elx) { elx.classList.add('is-focus'); setTimeout(() => elx.classList.remove('is-focus'), 2500); }
@@ -821,7 +1053,14 @@ function initInfoPanel(store, getData, { onPhotoOpen, onOpenGallery }) {
       </section>`;
 
     chart?.destroy();
-    chart = series ? createStatsChart($('#statsCanvas', root), series, data.region.timeRange) : null;
+    try {
+      chart = series ? createStatsChart($('#statsCanvas', root), series, data.region.timeRange) : null;
+    } catch (err) {
+      console.error('[GeoScape] 그래프 오류', err);
+      chart = null;
+      const box = $('.chart-box', root);
+      if (box) box.innerHTML = '<div class="empty">그래프를 표시하지 못했습니다.</div>';
+    }
     refreshIcons();
     root.parentElement.scrollTop = 0;
   }
@@ -840,8 +1079,14 @@ function initInfoPanel(store, getData, { onPhotoOpen, onOpenGallery }) {
 
   function render(year) {
     const era = getData().getEra(year);
-    if (era.id !== currentEraId) { currentEraId = era.id; renderEra(era, year); }
-    updateYear(year);
+    try {
+      if (era.id !== currentEraId) { currentEraId = era.id; renderEra(era, year); }
+    } catch (err) {
+      console.error('[GeoScape] 정보 패널 오류', err);
+      root.innerHTML = `<div class="empty">이 시기의 정보를 표시하지 못했습니다. (${escapeHtml(era.id)})</div>`;
+      return;
+    }
+    try { updateYear(year); } catch (err) { console.error('[GeoScape] 정보 패널 갱신 오류', err); }
   }
 
   root.addEventListener('click', (e) => {
@@ -984,6 +1229,10 @@ function initGallery(store, getData, { onLocate }) {
     const p = data.photos.find((x) => x.id === lbList[lbIndex]);
     if (!p) return;
     const img = $('#lbImg');
+    // 이전 사진의 로드 실패 표시 초기화
+    delete img.dataset.failed;
+    img.classList.remove('img-failed');
+    img.parentElement.classList.remove('has-failed-img');
     img.src = p.src; img.alt = p.title;
     $('#lbType').textContent = data.photoInfo.contentTypes[p.contentType] || p.contentType;
     const loc = p.location || {};
@@ -1058,7 +1307,7 @@ function initGallery(store, getData, { onLocate }) {
 // 과거·현재 비교 모드: 두 지도의 범위·확대 수준 동기화 + 변화 해설
 
 
-function initCompare(store, getData, { onPhotoOpen }) {
+function initCompare(store, getData, { onPhotoOpen, onBasemapStatus }) {
   const wrap = $('#compare');
   const leftSel = $('#compareLeftYear');
   const rightSel = $('#compareRightYear');
@@ -1088,7 +1337,8 @@ function initCompare(store, getData, { onPhotoOpen }) {
     if (left) return;
     const data = getData();
     const s = store.get();
-    left = createMapView($('#mapLeft'), data, { onPhotoOpen, compact: true });
+    // 배경 지도 알림은 왼쪽 지도에서만 (중복 알림 방지)
+    left = createMapView($('#mapLeft'), data, { onPhotoOpen, compact: true, onBasemapStatus });
     right = createMapView($('#mapRight'), data, { onPhotoOpen, compact: true });
     for (const v of [left, right]) {
       v.setBasemap(s.basemap);
@@ -1209,8 +1459,25 @@ async function boot() {
     return;
   }
 
-  initModals();
+  // ---------- 전역 오류 처리: 예상치 못한 오류도 화면을 멈추지 않고 알림으로 표시 ----------
+  window.addEventListener('error', (e) => {
+    if (e.target && e.target !== window) return; // 리소스(이미지 등) 오류는 각 모듈에서 처리
+    console.error('[GeoScape]', e.error || e.message);
+    notify('일시적인 오류가 발생했습니다. 계속 사용할 수 있으며, 문제가 반복되면 새로고침(F5)해 주세요.', { type: 'error', key: 'runtime-error' });
+  });
+  window.addEventListener('unhandledrejection', (e) => {
+    console.error('[GeoScape]', e.reason);
+    notify('일부 작업을 완료하지 못했습니다. 문제가 반복되면 새로고침(F5)해 주세요.', { type: 'error', key: 'runtime-error' });
+  });
+  installImageFallback();
+
+  try { initModals(); } catch (err) { console.error(err); }
   refreshIcons();
+
+  const loading = document.createElement('div');
+  loading.className = 'loading';
+  loading.innerHTML = '<div class="loading-inner"><div class="spinner"></div><div>자료를 불러오는 중…</div></div>';
+  document.body.appendChild(loading);
 
   let data;
   let registry;
@@ -1220,9 +1487,12 @@ async function boot() {
     data = await loadRegion(meta);
   } catch (err) {
     console.error(err);
-    fatal('데이터를 불러오지 못했습니다', `<p class="muted">${escapeHtml(err.message)}</p>`);
+    loading.remove();
+    fatal('데이터를 불러오지 못했습니다', `<p class="muted">${escapeHtml(err.message)}</p>
+      <p>인터넷 연결과 파일 위치를 확인한 뒤 새로고침해 주세요. 문제가 계속되면 <b>start-server.bat</b>으로 실행해 보세요.</p>`);
     return;
   }
+  loading.remove();
   const getData = () => data;
 
   // ---------- 상태 ----------
@@ -1236,6 +1506,13 @@ async function boot() {
     playing: false,
     focusRequest: null,
     mainView: null
+  }, {
+    // 연도는 항상 자료 범위 안의 정수로 유지
+    normalize: (s) => (s.year === getData().clampYear(s.year) ? s : { ...s, year: getData().clampYear(s.year) }),
+    onError: (err) => {
+      console.error('[GeoScape]', err);
+      notify('화면 일부를 갱신하지 못했습니다. 다른 기능은 계속 사용할 수 있습니다.', { type: 'error', key: 'listener-error' });
+    }
   });
 
   // ---------- 지역 선택 ----------
@@ -1246,12 +1523,20 @@ async function boot() {
 
   // ---------- 지도 ----------
   let mainView = null;
+  // 배경 지도 상태 알림 (타일 서버 차단·장애 시 자동 전환)
+  function basemapNotice(st) {
+    // 더블클릭(file://) 실행에서는 대체 서버 사용이 정상 동작이므로 알리지 않음
+    if (st.ok && st.fallback && location.protocol !== 'file:') notify(`배경 지도를 ${st.provider} 서버로 표시합니다. (기본 지도 서버에 연결할 수 없어 자동 전환)`, { key: 'basemap-fallback' });
+    else if (!st.ok && st.switching) notify(`${st.provider} 배경 지도를 불러오지 못해 다른 서버로 전환합니다.`, { type: 'warn', key: 'basemap-switch-' + st.provider });
+    else if (!st.ok) notify('배경 지도를 불러올 수 없습니다. 인터넷 연결을 확인하세요. 시간 변화 레이어와 사진은 계속 사용할 수 있습니다.', { type: 'warn', timeout: 10000, key: 'basemap-fail' });
+  }
   const photoOpen = (id, list) => gallery.openPhoto(id, list);
   function createMain() {
     mainView?.destroy();
     mainView = createMapView($('#map'), data, {
       onPhotoOpen: (id) => photoOpen(id, data.photosNearYear(store.get().year).filter((p) => p.mapLinked).map((p) => p.id)),
-      onLayerAutoOn: (layerId) => store.set({ layers: { ...store.get().layers, [layerId]: true } })
+      onLayerAutoOn: (layerId) => store.set({ layers: { ...store.get().layers, [layerId]: true } }),
+      onBasemapStatus: basemapNotice
     });
     mainView.setBasemap(store.get().basemap);
     Object.entries(store.get().layers).forEach(([id, on]) => mainView.setLayerVisible(id, on));
@@ -1273,7 +1558,16 @@ async function boot() {
       store.set(patch);
     }
   });
-  const compare = initCompare(store, getData, { onPhotoOpen: photoOpen });
+  // 비교 모드는 부가 기능: 초기화에 실패해도 나머지 기능은 동작
+  let compare;
+  try {
+    compare = initCompare(store, getData, { onPhotoOpen: photoOpen, onBasemapStatus: basemapNotice });
+  } catch (err) {
+    console.error(err);
+    compare = { reset() {}, fillSelects() {}, invalidate() {} };
+    const btn = $('.seg-btn[data-mode=compare]');
+    if (btn) { btn.disabled = true; btn.title = '비교 모드를 시작하지 못했습니다'; }
+  }
 
   // ---------- 범례 ----------
   function renderLegend() {
@@ -1344,7 +1638,7 @@ async function boot() {
   const afterResize = () => setTimeout(() => { mainView.invalidate(); compare.invalidate(); }, 320);
   $('#sidebarToggle').addEventListener('click', () => { app.classList.toggle('sidebar-collapsed'); afterResize(); });
   $('#panelToggle').addEventListener('click', () => { app.classList.toggle('panel-collapsed'); afterResize(); });
-  window.addEventListener('resize', () => mainView.invalidate());
+  window.addEventListener('resize', debounce(() => { mainView?.invalidate(); compare.invalidate(); }, 200));
 
   regionSel.addEventListener('change', async () => {
     const meta = registry.regions.find((r) => r.id === regionSel.value);
@@ -1353,7 +1647,11 @@ async function boot() {
       data = await loadRegion(meta);
       store.set({ year: data.region.timeRange.start, layers: defaultLayers(data), topicId: null, playing: false, mode: 'explore' });
       startRegion();
-    } catch (err) { alert('지역 데이터를 불러오지 못했습니다: ' + err.message); }
+    } catch (err) {
+      console.error(err);
+      notify('지역 데이터를 불러오지 못했습니다: ' + err.message, { type: 'error' });
+      regionSel.value = data.meta.id;
+    }
   });
 
   function renderDataModal() {
@@ -1365,6 +1663,9 @@ async function boot() {
     $('#dataBody').innerHTML = `
       <p class="muted">GeoScape는 실제 관측 자료와 교육용 데모 자료를 구분해 표시합니다. 자료가 없는 연도에는 값을 보간하거나 공간 분포를 만들어 내지 않습니다.</p>
       <table class="data-table"><thead><tr><th>자료</th><th>상태</th><th>설명</th></tr></thead><tbody>${rows}${stats}</tbody></table>
+      ${data.warnings.length ? `<h3 style="margin:18px 0 6px;font-size:14px">자료 점검 결과 (${data.warnings.length}건)</h3>
+      <p class="muted small">형식이 맞지 않거나 불러오지 못해 제외한 항목입니다.</p>
+      <ul class="plain-list small">${data.warnings.map((w) => `<li>${escapeHtml(w)}</li>`).join('')}</ul>` : ''}
       <h3 style="margin:18px 0 6px;font-size:14px">상태 표시 기준</h3>
       <ul class="source-list">${Object.values(DATA_STATUS).map((d) => `<li><span class="status-badge ${d.className}">${d.label}</span> ${escapeHtml(d.desc)}</li>`).join('')}</ul>
       <h3 style="margin:18px 0 6px;font-size:14px">전체 출처</h3>
@@ -1373,15 +1674,25 @@ async function boot() {
 
   function startRegion() {
     createMain();
-    timeline.build();
-    sidebar.build();
-    panel.reset();
-    compare.reset();
     const y = store.get().year;
-    timeline.render(y);
-    panel.render(y);
-    renderYearBadge(y);
-    renderLegend();
+    // 각 화면 구성 요소를 따로 실행: 하나가 실패해도 나머지는 표시
+    const steps = [
+      ['타임라인', () => { timeline.build(); timeline.render(y); }],
+      ['사이드바', () => sidebar.build()],
+      ['정보 패널', () => { panel.reset(); panel.render(y); }],
+      ['비교 모드', () => compare.reset()],
+      ['연도 표시', () => renderYearBadge(y)],
+      ['범례', () => renderLegend()]
+    ];
+    for (const [name, fn] of steps) {
+      try { fn(); } catch (err) {
+        console.error(`[GeoScape] ${name} 초기화 오류`, err);
+        notify(`${name}을(를) 표시하지 못했습니다.`, { type: 'error' });
+      }
+    }
+    if (data.warnings.length) {
+      notify(`일부 자료(${data.warnings.length}건)를 확인하지 못해 제외했습니다. 상단의 '데이터 안내'에서 볼 수 있습니다.`, { type: 'warn', key: 'data-warnings' });
+    }
   }
 
   startRegion();
