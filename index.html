@@ -7,15 +7,40 @@
   <meta name="description" content="GeoScape(지오스케이프) – 시간을 움직이면, 공간이 보인다. 시간에 따른 지리적 공간 변화를 탐구하는 고등학생용 지리 학습 플랫폼">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 
-  <!-- 외부 라이브러리 (API 키 불필요) -->
+  <!-- 라이브러리는 vendor/ 에 함께 배포 (학교망 CDN 차단·오프라인 대비, API 키 불필요) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
-  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js" defer></script>
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+  <script src="vendor/leaflet/leaflet.js" defer></script>
+  <script src="vendor/chart.umd.min.js" defer></script>
+  <script src="vendor/lucide.min.js" defer></script>
 
   <link rel="stylesheet" href="css/style.css">
+  <!-- 웹 서버·GitHub Pages: ES 모듈판 -->
   <script type="module" src="js/main.js"></script>
+  <!-- 더블클릭(file://) 실행: 모듈과 JSON을 쓸 수 없으므로 번들판을 불러옴 -->
+  <script>
+    if (location.protocol === 'file:') {
+      ['dist/geoscape-data.js', 'dist/geoscape.bundle.js'].forEach(function (src) {
+        var s = document.createElement('script');
+        s.src = src; s.async = false; s.defer = true;
+        document.head.appendChild(s);
+      });
+    }
+    // 안전장치: 프로그램이 시작되지 않으면 빈 화면 대신 안내를 보여 줌
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        if (window.__geoscapeBooted) return;
+        var d = document.createElement('div');
+        d.className = 'fatal';
+        d.innerHTML = '<div class="fatal-box"><h2>GeoScape를 시작하지 못했습니다</h2>' +
+          '<p class="muted">브라우저가 프로그램 파일을 불러오지 못했습니다.</p>' +
+          '<p>① 프로젝트 폴더의 <b>start-server.bat</b>을 실행한 뒤 <b>http://localhost:8000</b> 으로 접속하거나,<br>' +
+          '② 압축(zip)으로 받았다면 <b>압축을 푼 폴더</b>에서 index.html을 여세요.</p>' +
+          '<p class="muted">문제가 계속되면 Chrome·Edge 최신 버전에서 열고 Ctrl+F5로 새로고침해 주세요.</p></div>';
+        document.body.appendChild(d);
+      }, 6000);
+    });
+  </script>
 </head>
 <body>
   <div class="app" id="app">

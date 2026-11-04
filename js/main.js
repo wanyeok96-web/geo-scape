@@ -20,16 +20,22 @@ function fatal(title, html) {
 }
 
 async function boot() {
-  if (location.protocol === 'file:') {
-    fatal('로컬 서버에서 실행해 주세요', `
-      <p class="muted">브라우저 보안 정책 때문에 파일을 직접 열면(file://) JSON 데이터를 불러올 수 없습니다.</p>
-      <p>프로젝트 폴더의 <b>start-server.bat</b>을 실행하거나, 폴더에서 다음 명령을 실행한 뒤 접속하세요.</p>
-      <code>python -m http.server 8000</code>
-      <p>→ <b>http://localhost:8000</b></p>`);
+  // 모듈판(js/main.js)과 번들판(dist/geoscape.bundle.js)이 함께 실행되지 않도록 한 번만 부팅
+  if (window.__geoscapeBooted) return;
+  const bundled = typeof __GEOSCAPE_BUNDLED !== 'undefined';
+  // file:// 에서는 번들판이 담당 (모듈판은 데이터를 불러올 수 없음)
+  if (location.protocol === 'file:' && !bundled) return;
+  window.__geoscapeBooted = true;
+
+  if (location.protocol === 'file:' && !window.GEOSCAPE_EMBEDDED) {
+    fatal('데이터 파일이 없습니다', `
+      <p class="muted">파일을 직접 열어 실행하려면 <b>dist/geoscape-data.js</b>가 필요합니다.</p>
+      <p>프로젝트 폴더의 <b>start-server.bat</b>을 실행하거나, 아래 명령으로 번들을 다시 만드세요.</p>
+      <code>node scripts/build-standalone.mjs</code>`);
     return;
   }
   if (!window.L) {
-    fatal('지도 라이브러리를 불러오지 못했습니다', '<p class="muted">인터넷 연결을 확인한 뒤 새로고침해 주세요. (Leaflet CDN)</p>');
+    fatal('지도 라이브러리를 불러오지 못했습니다', '<p class="muted">vendor/leaflet 폴더가 있는지 확인한 뒤 새로고침해 주세요.</p>');
     return;
   }
 

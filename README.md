@@ -10,16 +10,22 @@ GeoScape는 고등학생이 한 지역의 과거·현재(·미래)를 시간축�
 
 ## 실행 방법
 
-브라우저 보안 정책 때문에 `index.html`을 더블클릭(file://)하면 JSON 데이터를 불러올 수 없습니다. 아래 중 하나로 **로컬 웹 서버**에서 여세요.
-
 | 방법 | 설명 |
 |---|---|
-| `start-server.bat` 더블클릭 | Windows. Python이 설치되어 있으면 서버를 켜고 브라우저를 엽니다. |
+| **`index.html` 더블클릭** | 가장 간단합니다. `file://`에서는 자동으로 `dist/` 번들판(데이터 포함)이 실행됩니다. |
+| `start-server.bat` 더블클릭 | Windows. Python으로 로컬 서버를 켜고 http://localhost:8000 을 엽니다. |
 | `python -m http.server 8000` | 프로젝트 폴더에서 실행 후 http://localhost:8000 접속 |
-| VS Code **Live Server** | `index.html` 우클릭 → *Open with Live Server* |
-| **GitHub Pages** | 저장소 Settings → Pages → 브랜치 루트 배포. 빌드 과정이 필요 없습니다. |
+| **GitHub Pages** | 저장소 Settings → Pages → `main` 브랜치 루트 배포. 빌드 과정이 필요 없습니다. |
 
-외부 라이브러리는 CDN에서 불러오므로 **인터넷 연결**이 필요합니다. API 키는 필요 없습니다.
+- Leaflet·Chart.js·Lucide는 `vendor/`에 포함되어 있어 CDN이 막힌 학교망에서도 동작합니다. 배경 지도 타일(OpenStreetMap)과 글꼴(Pretendard)은 인터넷 연결이 필요합니다(글꼴은 없으면 기본 글꼴로 표시).
+- zip으로 받았다면 **압축을 푼 뒤** 실행하세요.
+
+### 더블클릭용 번들 다시 만들기
+`js/` 또는 `data/`를 수정했다면 아래 명령으로 `dist/`를 다시 만들어야 더블클릭 실행에 반영됩니다. (웹 서버·GitHub Pages 실행에는 영향 없음)
+
+```bash
+node scripts/build-standalone.mjs
+```
 
 ---
 
@@ -97,7 +103,10 @@ GeoScape는 **실제 관측 자료와 교육용 데모 자료를 구분**합니�
 │  └─ photos/1960s|1970s|1980s/  # 역사 사진 (1280px) + thumbs/ (420px)
 ├─ docs/photo-collection-report.md  # 사진 수집·검증·연동 보고서
 ├─ geoscape_seoul_photo_sources_safe/  # 제공받은 사진 후보 목록 원본 (CSV/JSON)
+├─ vendor/                   # Leaflet 1.9.4, Chart.js 4.4.1, Lucide 0.469.0 (로컬 사본)
+├─ dist/                     # 더블클릭 실행용 번들 (자동 생성: build-standalone.mjs)
 ├─ scripts/
+│  ├─ build-standalone.mjs    # file:// 실행용 번들 생성
 │  ├─ gen-layers.mjs          # 데모 시가지·토지이용 형상 생성 (Node.js)
 │  ├─ commons_photos.py       # Commons 사진 검증·다운로드 (Python + Pillow)
 │  └─ build_photos_json.py    # data/photos.json 생성 (사진별 해설·위치 기준 포함)

@@ -1,5 +1,8 @@
 // 데이터 로더: 지역 레지스트리 → 지역별 JSON/GeoJSON 묶음
 async function fetchJson(url) {
+  // 더블클릭(file://) 실행: dist/geoscape-data.js 에 담긴 데이터 사용
+  const embedded = window.GEOSCAPE_EMBEDDED?.[url];
+  if (embedded) return JSON.parse(JSON.stringify(embedded));
   const res = await fetch(url, { cache: 'no-cache' });
   if (!res.ok) throw new Error(`${url} 불러오기 실패 (${res.status})`);
   return res.json();
