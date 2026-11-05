@@ -430,3 +430,39 @@ img.img-failed { visibility: hidden; }
   .brand-text { display: none; }
   .tl-scale span:nth-child(even) { display: none; }
 }
+
+/* ---------- 시간 변화 애니메이션: 퍼지듯·그려지듯·떠오르듯 ---------- */
+/* 면(시가지·토지 이용): 중심에서 퍼져 나감 */
+.gs-anim-spread { transform-box: fill-box; transform-origin: center; animation: gsSpread 1s cubic-bezier(.2, .75, .25, 1) backwards; }
+@keyframes gsSpread {
+  0% { transform: scale(.3); opacity: 0; }
+  55% { opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+/* 점선 교통망: 서서히 떠오름 */
+.gs-anim-fade { animation: gsFade .8s ease-out backwards; }
+/* 마커: 살짝 튀어 오르며 등장 + 퍼지는 고리 */
+.gs-anim-pop { animation: gsPop .6s cubic-bezier(.34, 1.56, .64, 1) backwards; }
+@keyframes gsPop {
+  0% { transform: scale(0) translateY(6px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+.gs-marker.gs-anim-pop::after {
+  content: ""; position: absolute; inset: -3px; border-radius: inherit; border: 2px solid var(--teal-500);
+  pointer-events: none; animation: gsRing 1.3s ease-out .15s both;
+}
+@keyframes gsRing {
+  0% { transform: scale(1); opacity: .9; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+/* 면이 나타날 때 중심에서 퍼지는 물결 */
+.gs-ripple { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--c, #14b8a6); background: color-mix(in srgb, var(--c, #14b8a6) 25%, transparent); animation: gsRipple 1.4s ease-out both; }
+@keyframes gsRipple {
+  0% { transform: scale(.4); opacity: .9; }
+  100% { transform: scale(7); opacity: 0; }
+}
+/* 사라질 때: 서서히 흐려지며 살짝 줄어듦 */
+.gs-anim-leave { animation: none !important; transition: opacity .45s ease, transform .45s ease !important; opacity: 0 !important; transform: scale(.85) !important; transform-box: fill-box; transform-origin: center; pointer-events: none; }
+.gs-marker.gs-anim-leave::after { display: none; }
+/* 연도 숫자 전환 */
+.year-badge-year, .tl-year-num { transition: color .3s; }

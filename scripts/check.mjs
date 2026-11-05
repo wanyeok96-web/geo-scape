@@ -82,7 +82,7 @@ for (const f of readdirSync(join(ROOT, 'js'))) {
 }
 
 // ---------- dist 번들 최신 여부 ----------
-const distFiles = ['dist/geoscape.bundle.js', 'dist/geoscape-data.js'];
+const distFiles = ['dist/geoscape.bundle.js', 'dist/geoscape-data.js', 'index.html'];
 const before = distFiles.map((f) => (existsSync(join(ROOT, f)) ? readFileSync(join(ROOT, f), 'utf8') : ''));
 execFileSync(process.execPath, [join(ROOT, 'scripts/build-standalone.mjs')], { stdio: 'pipe' });
 const after = distFiles.map((f) => readFileSync(join(ROOT, f), 'utf8'));
@@ -92,7 +92,7 @@ if (stale) {
   else {
     // 점검 모드에서는 원래 파일로 되돌리고 오류로 보고
     for (const [i, f] of distFiles.entries()) if (before[i]) writeFileSync(join(ROOT, f), before[i]);
-    err('dist/ 번들이 js/·data/ 와 다릅니다 → node scripts/check.mjs --fix (또는 build-standalone.mjs) 실행 필요');
+    err('dist/ 번들 또는 index.html 버전 표시가 js/·css/·data/ 와 다릅니다 → node scripts/check.mjs --fix (또는 build-standalone.mjs) 실행 필요');
   }
 }
 try { execFileSync(process.execPath, ['--check', join(ROOT, 'dist/geoscape.bundle.js')], { stdio: 'pipe' }); }

@@ -17,13 +17,16 @@
   <script src="vendor/chart.umd.min.js" defer></script>
   <script src="vendor/lucide.min.js" defer></script>
 
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=a098776d63">
+  <!-- importmap:start (자동 생성) -->
+  <script type="importmap">{"imports":{"./js/utils.js":"./js/utils.js?v=a098776d63","./js/store.js":"./js/store.js?v=a098776d63","./js/data.js":"./js/data.js?v=a098776d63","./js/map-view.js":"./js/map-view.js?v=a098776d63","./js/timeline.js":"./js/timeline.js?v=a098776d63","./js/sidebar.js":"./js/sidebar.js?v=a098776d63","./js/stats-chart.js":"./js/stats-chart.js?v=a098776d63","./js/info-panel.js":"./js/info-panel.js?v=a098776d63","./js/modal.js":"./js/modal.js?v=a098776d63","./js/gallery.js":"./js/gallery.js?v=a098776d63","./js/compare.js":"./js/compare.js?v=a098776d63","./js/main.js":"./js/main.js?v=a098776d63"}}</script>
+  <!-- importmap:end -->
   <!-- 웹 서버·GitHub Pages: ES 모듈판 -->
-  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/main.js?v=a098776d63"></script>
   <!-- 더블클릭(file://) 실행: 모듈과 JSON을 쓸 수 없으므로 번들판을 불러옴 -->
   <script>
     if (location.protocol === 'file:') {
-      ['dist/geoscape-data.js', 'dist/geoscape.bundle.js'].forEach(function (src) {
+      ['dist/geoscape-data.js?v=a098776d63', 'dist/geoscape.bundle.js?v=a098776d63'].forEach(function (src) {
         var s = document.createElement('script');
         s.src = src; s.async = false; s.defer = true;
         document.head.appendChild(s);
@@ -172,7 +175,7 @@
       <div class="tl-track-wrap">
         <div class="tl-eras" id="tlEras"></div>
         <div class="tl-track">
-          <input type="range" id="tlSlider" min="1970" max="2025" step="1" value="1970" aria-label="연도 선택">
+          <input type="range" id="tlSlider" min="1960" max="2025" step="any" value="1960" aria-label="연도 선택">
           <div class="tl-marks" id="tlMarks"></div>
         </div>
         <div class="tl-scale" id="tlScale"></div>

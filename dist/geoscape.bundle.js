@@ -388,6 +388,65 @@ function createMapView(el, data, opts = {}) {
   labelsPane.style.zIndex = 430;
   labelsPane.style.pointerEvents = 'none';
 
+  // 나타남 효과(물결)용 pane: 공간 레이어 위, 마커 아래, 클릭 통과
+  const fxPane = map.createPane('gs-fx');
+  fxPane.style.zIndex = 450;
+  fxPane.style.pointerEvents = 'none';
+
+  // ---------- 나타남·사라짐 애니메이션 ----------
+  const LEAVE_MS = 450;
+  const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let initialized = false; // 첫 화면에서는 물결 효과를 생략 (한꺼번에 퍼지지 않도록)
+  const leaving = new Map(); // key → { lyr, timer }
+
+  // 레이어의 실제 DOM 요소 (SVG path 또는 마커 아이콘)
+  function elementsOf(lyr) {
+    const out = [];
+    const push = (l) => { const el = l.getElement?.(); if (el) out.push(l instanceof L.Marker ? el.firstElementChild || el : el); };
+    if (lyr.eachLayer) lyr.eachLayer(push); else push(lyr);
+    return out;
+  }
+  // 선: 처음부터 끝까지 그려지는 효과 (점선 스타일은 페이드만)
+  function drawOn(lyr) {
+    if (reducedMotion()) return;
+    lyr.eachLayer?.((sub) => {
+      const el = sub.getElement?.();
+      if (!el || sub.options.dashArray || !el.getTotalLength) return;
+      const len = Math.ceil(el.getTotalLength());
+      if (!len) return;
+      el.style.transition = 'none';
+      el.style.strokeDasharray = `${len} ${len}`;
+      el.style.strokeDashoffset = len;
+      el.getBoundingClientRect(); // 시작 상태 확정
+      el.style.transition = 'stroke-dashoffset 1.3s cubic-bezier(.3,.6,.2,1)';
+      el.style.strokeDashoffset = '0';
+      setTimeout(() => { el.style.transition = ''; el.style.strokeDasharray = ''; el.style.strokeDashoffset = ''; }, 1400);
+    });
+  }
+  // 면: 중심에서 퍼지는 물결
+  function ripple(latlng, color) {
+    if (!initialized || reducedMotion()) return;
+    const icon = L.divIcon({ className: '', html: `<div class="gs-ripple" style="--c:${color}"></div>`, iconSize: [24, 24], iconAnchor: [12, 12] });
+    const m = L.marker(latlng, { icon, pane: 'gs-fx', interactive: false, keyboard: false }).addTo(map);
+    setTimeout(() => map.removeLayer(m), 1500);
+  }
+  // 사라질 때: 서서히 흐려진 뒤 제거 (되돌아오면 취소하고 재사용)
+  function retire(key, lyr, group) {
+    const els = elementsOf(lyr);
+    if (reducedMotion() || !els.length) { group.removeLayer(lyr); return; }
+    els.forEach((el) => el.classList.add('gs-anim-leave'));
+    const timer = setTimeout(() => { group.removeLayer(lyr); leaving.delete(key); }, LEAVE_MS);
+    leaving.set(key, { lyr, timer });
+  }
+  function revive(key) {
+    const item = leaving.get(key);
+    if (!item) return null;
+    clearTimeout(item.timer);
+    leaving.delete(key);
+    elementsOf(item.lyr).forEach((el) => el.classList.remove('gs-anim-leave'));
+    return item.lyr;
+  }
+
   let baseLayer = null;
   let currentYear = null;
   let pendingPopup = null;
@@ -466,13 +525,15 @@ function createMapView(el, data, opts = {}) {
     const p = ft.properties;
     if (layerId === 'developments') {
       const [lng, lat] = ft.geometry.coordinates;
-      const icon = L.divIcon({ className: '', html: `<div class="gs-marker gs-fade-in">${iconSvg('map-pin', 14)}</div>`, iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -12] });
+      const icon = L.divIcon({ className: '', html: `<div class="gs-marker gs-anim-pop">${iconSvg('map-pin', 14)}</div>`, iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -12] });
       return L.marker([lat, lng], { icon, title: p.name, riseOnHover: true }).bindPopup(devPopup(p), { maxWidth: 280 });
     }
     const style = layerId === 'urban' ? urbanStyle(p) : layerId === 'transport' ? lineStyle(p) : landuseStyle(p);
     let pane = layerId === 'urban' ? `gs-urban-${p.stage}` : `gs-${layerId}`;
     if (!map.getPane(pane)) pane = 'overlayPane'; // 정의되지 않은 단계·레이어는 기본 pane 사용
-    const layer = L.geoJSON(ft, { pane, style: () => ({ ...style, className: 'gs-fade-in' }) });
+    // 면은 중심에서 퍼지듯, 선은 그려지듯 나타남 (선 효과는 지도에 추가된 뒤 drawOn에서 시작)
+    const anim = layerId === 'transport' ? (style.dashArray ? 'gs-anim-fade' : '') : 'gs-anim-spread';
+    const layer = L.geoJSON(ft, { pane, style: () => ({ ...style, className: anim }) });
     layer.bindPopup(layerId === 'transport' ? linePopup(p) : areaPopup(p, layerId), { maxWidth: 280 });
     if (layerId === 'transport') layer.bindTooltip(`${p.name} (${p.yearStart})`, { sticky: true });
     else layer.bindTooltip(p.name, { sticky: true, opacity: 0.9 });
@@ -490,17 +551,25 @@ function createMapView(el, data, opts = {}) {
       if (!isActive(layerId, ft.properties, year)) continue;
       want.add(id);
       if (!map_.has(id)) {
+        // 사라지는 중이던 피처가 다시 필요해지면 새로 만들지 않고 되살림
+        const back = revive(`${layerId}:${id}`);
+        if (back) { map_.set(id, back); continue; }
         try {
           const lyr = makeLayer(layerId, ft, year);
           map_.set(id, lyr);
           group.addLayer(lyr);
+          if (layerId === 'transport') drawOn(lyr);
+          else if (layerId === 'urban' || layerId === 'landuse') {
+            const c = lyr.options?.style?.()?.fillColor || lyr.getLayers?.()[0]?.options?.fillColor || '#14b8a6';
+            if (map.hasLayer(group)) ripple(lyr.getBounds().getCenter(), c);
+          }
         } catch (err) {
           console.warn(`[GeoScape] 피처 '${id}' 표시 실패`, err);
         }
       }
     }
     for (const [id, lyr] of map_) {
-      if (!want.has(id)) { group.removeLayer(lyr); map_.delete(id); }
+      if (!want.has(id)) { retire(`${layerId}:${id}`, lyr, group); map_.delete(id); }
     }
     // 최근 개발 지점 강조
     if (layerId === 'developments') {
@@ -527,8 +596,10 @@ function createMapView(el, data, opts = {}) {
     }
     for (const [key, list] of groupsByKey) {
       if (photoMarkers.has(key)) continue;
+      const back = revive(`photo:${key}`);
+      if (back) { photoMarkers.set(key, back); continue; }
       const badge = list.length > 1 ? `<span class="gs-marker-count">${list.length}</span>` : '';
-      const icon = L.divIcon({ className: '', html: `<div class="gs-marker photo gs-fade-in">${iconSvg('camera', 14)}${badge}</div>`, iconSize: [26, 26], iconAnchor: [13, 13], popupAnchor: [0, -12] });
+      const icon = L.divIcon({ className: '', html: `<div class="gs-marker photo gs-anim-pop">${iconSvg('camera', 14)}${badge}</div>`, iconSize: [26, 26], iconAnchor: [13, 13], popupAnchor: [0, -12] });
       const m = L.marker(list[0].location.coords, { icon, title: list.map((p) => p.title).join(', '), zIndexOffset: 500 })
         .bindPopup(photoPopup(list), { maxWidth: 280, minWidth: 250 });
       m.photoIds = list.map((p) => p.id);
@@ -536,7 +607,7 @@ function createMapView(el, data, opts = {}) {
       group.addLayer(m);
     }
     for (const [key, m] of photoMarkers) {
-      if (!groupsByKey.has(key)) { group.removeLayer(m); photoMarkers.delete(key); }
+      if (!groupsByKey.has(key)) { retire(`photo:${key}`, m, group); photoMarkers.delete(key); }
     }
   }
   const markerForPhoto = (id) => [...photoMarkers.values()].find((m) => m.photoIds.includes(id));
@@ -552,6 +623,7 @@ function createMapView(el, data, opts = {}) {
         console.error(`[GeoScape] 레이어 '${l.id}' 표시 오류`, err);
       }
     }
+    initialized = true;
   }
 
   // ---------- 배경 지도: 사용 가능한 첫 제공자를 고르고, 실패하면 다음 제공자로 ----------
@@ -663,6 +735,9 @@ function createMapView(el, data, opts = {}) {
 // 하단 타임라인: 슬라이더, 주요 연도 마커, 재생/속도, 이전·다음 시점
 
 const BASE_STEP_MS = 900; // 1× 속도에서 1년당 시간
+const GLIDE_MS = 420;      // 클릭으로 연도를 옮길 때 막대가 미끄러지는 시간
+const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const easeInOut = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
 
 function initTimeline(store, getData) {
   const slider = $('#tlSlider');
@@ -672,7 +747,14 @@ function initTimeline(store, getData) {
   const yearEl = $('#tlYear');
   const playBtn = $('#tlPlay');
   const speedSel = $('#tlSpeed');
-  let timer = null;
+  // 막대 위치(pos)는 실수로 연속 이동하고, 지도·자료는 정수 연도가 바뀔 때만 갱신합니다.
+  // (자료가 없는 연도 사이 값을 만들어 내지 않는 원칙 유지 – 움직임만 부드럽게)
+  let pos = null;          // 현재 막대 위치 (실수 연도)
+  let rafId = null;        // 재생 루프
+  let glideId = null;      // 클릭 이동 애니메이션
+  let lastTs = null;
+  let fromLoop = false;    // 재생 루프가 바꾼 연도인지
+  let dragging = false;
 
   const pct = (y) => {
     const { start, end } = getData().region.timeRange;
@@ -700,9 +782,31 @@ function initTimeline(store, getData) {
     scale.innerHTML = ticks.map((y) => `<span style="left:${pct(y)}%">${y}</span>`).join('');
   }
 
+  // 막대(슬라이더 손잡이·진행 막대)만 그리기
+  function setVisual(v) {
+    pos = v;
+    slider.value = v;
+    slider.style.setProperty('--p', pct(v) + '%');
+  }
+  // 현재 위치에서 목표 연도까지 부드럽게 이동
+  function glideTo(target) {
+    cancelAnimationFrame(glideId);
+    const from = pos ?? target;
+    if (reducedMotion() || Math.abs(target - from) < 0.01) { setVisual(target); return; }
+    const t0 = performance.now();
+    const dur = Math.min(GLIDE_MS + Math.abs(target - from) * 8, 900); // 먼 거리는 조금 더 길게
+    const frame = (now) => {
+      const k = Math.min(1, (now - t0) / dur);
+      setVisual(from + (target - from) * easeInOut(k));
+      if (k < 1) glideId = requestAnimationFrame(frame);
+    };
+    glideId = requestAnimationFrame(frame);
+  }
+
   function render(year) {
-    slider.value = year;
-    slider.style.setProperty('--p', pct(year) + '%');
+    if (fromLoop || dragging) { /* 막대는 루프·손가락이 이미 그리는 중 */ }
+    else if (pos == null) setVisual(year);
+    else glideTo(year);
     yearEl.textContent = year;
     const era = getData().getEra(year);
     erasEl.querySelectorAll('.tl-era').forEach((b) => b.classList.toggle('is-active', b.dataset.era === era.id));
@@ -716,25 +820,37 @@ function initTimeline(store, getData) {
     playBtn.setAttribute('aria-label', playBtn.title);
     refreshIcons();
   }
-  function tick() {
-    const { year } = store.get();
+  // 매 프레임 막대를 조금씩 이동, 정수 연도를 넘을 때만 상태(지도·패널) 갱신
+  function loop(ts) {
+    if (!store.get().playing) return;
+    const dt = lastTs == null ? 0 : Math.min(ts - lastTs, 100); // 탭 전환 후 급점프 방지
+    lastTs = ts;
     const end = getData().region.timeRange.end;
-    if (year >= end) { stop(); return; }
-    store.set({ year: year + 1 });
-  }
-  function schedule() {
-    clearInterval(timer);
-    timer = setInterval(tick, BASE_STEP_MS / +speedSel.value);
+    const next = Math.min(end, pos + (dt / BASE_STEP_MS) * +speedSel.value);
+    setVisual(next);
+    const y = Math.floor(next + 1e-6);
+    if (y !== store.get().year) {
+      fromLoop = true;
+      try { store.set({ year: y }); } finally { fromLoop = false; }
+    }
+    if (next >= end) { stop(); return; }
+    rafId = requestAnimationFrame(loop);
   }
   function play() {
     const { start, end } = getData().region.timeRange;
+    cancelAnimationFrame(glideId);
     if (store.get().year >= end) store.set({ year: start });
+    setVisual(store.get().year);
+    lastTs = null;
     store.set({ playing: true });
-    schedule();
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
   }
   function stop() {
-    clearInterval(timer); timer = null;
+    cancelAnimationFrame(rafId); rafId = null;
     store.set({ playing: false });
+    // 멈춘 자리에서 현재 연도 눈금으로 살짝 맞춤
+    glideTo(store.get().year);
   }
   const toggle = () => (store.get().playing ? stop() : play());
 
@@ -751,11 +867,33 @@ function initTimeline(store, getData) {
   }
 
   // ---------- 이벤트 ----------
-  slider.addEventListener('input', () => { if (store.get().playing) stop(); store.set({ year: +slider.value }); });
+  // 끌기: 막대는 손가락을 그대로 따라가고, 연도는 반올림한 값으로 갱신 → 놓으면 눈금에 맞춤
+  slider.addEventListener('input', () => {
+    if (store.get().playing) { cancelAnimationFrame(rafId); store.set({ playing: false }); }
+    cancelAnimationFrame(glideId);
+    dragging = true;
+    setVisual(+slider.value);
+    store.set({ year: Math.round(+slider.value) });
+  });
+  const endDrag = () => { if (!dragging) return; dragging = false; glideTo(store.get().year); };
+  slider.addEventListener('change', endDrag);
+  slider.addEventListener('pointerup', endDrag);
+  slider.addEventListener('blur', endDrag);
+  // step="any" 이므로 키보드 조작은 직접 1년 단위로 처리
+  slider.addEventListener('keydown', (e) => {
+    const map = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 };
+    if (e.key in map) { e.preventDefault(); e.shiftKey ? step(map[e.key]) : nudge(map[e.key]); }
+    else if (e.key === 'Home' || e.key === 'End') {
+      e.preventDefault();
+      const { start, end } = getData().region.timeRange;
+      if (store.get().playing) stop();
+      store.set({ year: e.key === 'Home' ? start : end });
+    }
+  });
   playBtn.addEventListener('click', toggle);
   $('#tlPrev').addEventListener('click', () => step(-1));
   $('#tlNext').addEventListener('click', () => step(1));
-  speedSel.addEventListener('change', () => { if (store.get().playing) schedule(); });
+  // 속도 변경은 재생 루프가 매 프레임 읽으므로 따로 처리할 필요 없음
   erasEl.addEventListener('click', (e) => { const b = e.target.closest('[data-year]'); if (b) { stop(); store.set({ year: +b.dataset.year }); } });
   marks.addEventListener('click', (e) => {
     const b = e.target.closest('[data-year]');
@@ -783,7 +921,7 @@ function initTimeline(store, getData) {
   store.subscribe((s, prev, changed) => {
     if (changed.includes('year')) render(s.year);
     if (changed.includes('playing')) {
-      if (!s.playing && timer) { clearInterval(timer); timer = null; }
+      if (!s.playing && rafId) { cancelAnimationFrame(rafId); rafId = null; }
       setPlayIcon(s.playing);
     }
     if (changed.includes('mode') && s.mode !== 'explore') stop();

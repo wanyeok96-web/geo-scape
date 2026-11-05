@@ -68,6 +68,65 @@ export function createMapView(el, data, opts = {}) {
   labelsPane.style.zIndex = 430;
   labelsPane.style.pointerEvents = 'none';
 
+  // 나타남 효과(물결)용 pane: 공간 레이어 위, 마커 아래, 클릭 통과
+  const fxPane = map.createPane('gs-fx');
+  fxPane.style.zIndex = 450;
+  fxPane.style.pointerEvents = 'none';
+
+  // ---------- 나타남·사라짐 애니메이션 ----------
+  const LEAVE_MS = 450;
+  const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let initialized = false; // 첫 화면에서는 물결 효과를 생략 (한꺼번에 퍼지지 않도록)
+  const leaving = new Map(); // key → { lyr, timer }
+
+  // 레이어의 실제 DOM 요소 (SVG path 또는 마커 아이콘)
+  function elementsOf(lyr) {
+    const out = [];
+    const push = (l) => { const el = l.getElement?.(); if (el) out.push(l instanceof L.Marker ? el.firstElementChild || el : el); };
+    if (lyr.eachLayer) lyr.eachLayer(push); else push(lyr);
+    return out;
+  }
+  // 선: 처음부터 끝까지 그려지는 효과 (점선 스타일은 페이드만)
+  function drawOn(lyr) {
+    if (reducedMotion()) return;
+    lyr.eachLayer?.((sub) => {
+      const el = sub.getElement?.();
+      if (!el || sub.options.dashArray || !el.getTotalLength) return;
+      const len = Math.ceil(el.getTotalLength());
+      if (!len) return;
+      el.style.transition = 'none';
+      el.style.strokeDasharray = `${len} ${len}`;
+      el.style.strokeDashoffset = len;
+      el.getBoundingClientRect(); // 시작 상태 확정
+      el.style.transition = 'stroke-dashoffset 1.3s cubic-bezier(.3,.6,.2,1)';
+      el.style.strokeDashoffset = '0';
+      setTimeout(() => { el.style.transition = ''; el.style.strokeDasharray = ''; el.style.strokeDashoffset = ''; }, 1400);
+    });
+  }
+  // 면: 중심에서 퍼지는 물결
+  function ripple(latlng, color) {
+    if (!initialized || reducedMotion()) return;
+    const icon = L.divIcon({ className: '', html: `<div class="gs-ripple" style="--c:${color}"></div>`, iconSize: [24, 24], iconAnchor: [12, 12] });
+    const m = L.marker(latlng, { icon, pane: 'gs-fx', interactive: false, keyboard: false }).addTo(map);
+    setTimeout(() => map.removeLayer(m), 1500);
+  }
+  // 사라질 때: 서서히 흐려진 뒤 제거 (되돌아오면 취소하고 재사용)
+  function retire(key, lyr, group) {
+    const els = elementsOf(lyr);
+    if (reducedMotion() || !els.length) { group.removeLayer(lyr); return; }
+    els.forEach((el) => el.classList.add('gs-anim-leave'));
+    const timer = setTimeout(() => { group.removeLayer(lyr); leaving.delete(key); }, LEAVE_MS);
+    leaving.set(key, { lyr, timer });
+  }
+  function revive(key) {
+    const item = leaving.get(key);
+    if (!item) return null;
+    clearTimeout(item.timer);
+    leaving.delete(key);
+    elementsOf(item.lyr).forEach((el) => el.classList.remove('gs-anim-leave'));
+    return item.lyr;
+  }
+
   let baseLayer = null;
   let currentYear = null;
   let pendingPopup = null;
@@ -146,13 +205,15 @@ export function createMapView(el, data, opts = {}) {
     const p = ft.properties;
     if (layerId === 'developments') {
       const [lng, lat] = ft.geometry.coordinates;
-      const icon = L.divIcon({ className: '', html: `<div class="gs-marker gs-fade-in">${iconSvg('map-pin', 14)}</div>`, iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -12] });
+      const icon = L.divIcon({ className: '', html: `<div class="gs-marker gs-anim-pop">${iconSvg('map-pin', 14)}</div>`, iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -12] });
       return L.marker([lat, lng], { icon, title: p.name, riseOnHover: true }).bindPopup(devPopup(p), { maxWidth: 280 });
     }
     const style = layerId === 'urban' ? urbanStyle(p) : layerId === 'transport' ? lineStyle(p) : landuseStyle(p);
     let pane = layerId === 'urban' ? `gs-urban-${p.stage}` : `gs-${layerId}`;
     if (!map.getPane(pane)) pane = 'overlayPane'; // 정의되지 않은 단계·레이어는 기본 pane 사용
-    const layer = L.geoJSON(ft, { pane, style: () => ({ ...style, className: 'gs-fade-in' }) });
+    // 면은 중심에서 퍼지듯, 선은 그려지듯 나타남 (선 효과는 지도에 추가된 뒤 drawOn에서 시작)
+    const anim = layerId === 'transport' ? (style.dashArray ? 'gs-anim-fade' : '') : 'gs-anim-spread';
+    const layer = L.geoJSON(ft, { pane, style: () => ({ ...style, className: anim }) });
     layer.bindPopup(layerId === 'transport' ? linePopup(p) : areaPopup(p, layerId), { maxWidth: 280 });
     if (layerId === 'transport') layer.bindTooltip(`${p.name} (${p.yearStart})`, { sticky: true });
     else layer.bindTooltip(p.name, { sticky: true, opacity: 0.9 });
@@ -170,17 +231,25 @@ export function createMapView(el, data, opts = {}) {
       if (!isActive(layerId, ft.properties, year)) continue;
       want.add(id);
       if (!map_.has(id)) {
+        // 사라지는 중이던 피처가 다시 필요해지면 새로 만들지 않고 되살림
+        const back = revive(`${layerId}:${id}`);
+        if (back) { map_.set(id, back); continue; }
         try {
           const lyr = makeLayer(layerId, ft, year);
           map_.set(id, lyr);
           group.addLayer(lyr);
+          if (layerId === 'transport') drawOn(lyr);
+          else if (layerId === 'urban' || layerId === 'landuse') {
+            const c = lyr.options?.style?.()?.fillColor || lyr.getLayers?.()[0]?.options?.fillColor || '#14b8a6';
+            if (map.hasLayer(group)) ripple(lyr.getBounds().getCenter(), c);
+          }
         } catch (err) {
           console.warn(`[GeoScape] 피처 '${id}' 표시 실패`, err);
         }
       }
     }
     for (const [id, lyr] of map_) {
-      if (!want.has(id)) { group.removeLayer(lyr); map_.delete(id); }
+      if (!want.has(id)) { retire(`${layerId}:${id}`, lyr, group); map_.delete(id); }
     }
     // 최근 개발 지점 강조
     if (layerId === 'developments') {
@@ -207,8 +276,10 @@ export function createMapView(el, data, opts = {}) {
     }
     for (const [key, list] of groupsByKey) {
       if (photoMarkers.has(key)) continue;
+      const back = revive(`photo:${key}`);
+      if (back) { photoMarkers.set(key, back); continue; }
       const badge = list.length > 1 ? `<span class="gs-marker-count">${list.length}</span>` : '';
-      const icon = L.divIcon({ className: '', html: `<div class="gs-marker photo gs-fade-in">${iconSvg('camera', 14)}${badge}</div>`, iconSize: [26, 26], iconAnchor: [13, 13], popupAnchor: [0, -12] });
+      const icon = L.divIcon({ className: '', html: `<div class="gs-marker photo gs-anim-pop">${iconSvg('camera', 14)}${badge}</div>`, iconSize: [26, 26], iconAnchor: [13, 13], popupAnchor: [0, -12] });
       const m = L.marker(list[0].location.coords, { icon, title: list.map((p) => p.title).join(', '), zIndexOffset: 500 })
         .bindPopup(photoPopup(list), { maxWidth: 280, minWidth: 250 });
       m.photoIds = list.map((p) => p.id);
@@ -216,7 +287,7 @@ export function createMapView(el, data, opts = {}) {
       group.addLayer(m);
     }
     for (const [key, m] of photoMarkers) {
-      if (!groupsByKey.has(key)) { group.removeLayer(m); photoMarkers.delete(key); }
+      if (!groupsByKey.has(key)) { retire(`photo:${key}`, m, group); photoMarkers.delete(key); }
     }
   }
   const markerForPhoto = (id) => [...photoMarkers.values()].find((m) => m.photoIds.includes(id));
@@ -232,6 +303,7 @@ export function createMapView(el, data, opts = {}) {
         console.error(`[GeoScape] 레이어 '${l.id}' 표시 오류`, err);
       }
     }
+    initialized = true;
   }
 
   // ---------- 배경 지도: 사용 가능한 첫 제공자를 고르고, 실패하면 다음 제공자로 ----------

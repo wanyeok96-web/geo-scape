@@ -8,6 +8,7 @@
 // 을 만들고, index.html 이 file:// 일 때만 이 두 파일을 불러옵니다.
 // ※ data/ 나 js/ 를 수정한 뒤에는 이 스크립트를 다시 실행하세요. (웹 서버·GitHub Pages 실행에는 필요 없음)
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -40,4 +41,30 @@ const embedded = {};
 for (const p of files) embedded[relative(ROOT, p).split(sep).join('/')] = JSON.parse(readFileSync(p, 'utf8'));
 writeFileSync(join(ROOT, 'dist/geoscape-data.js'), `${banner}window.GEOSCAPE_EMBEDDED = ${JSON.stringify(embedded)};\n`);
 
-console.log('bundle ok:', ORDER.length, 'modules,', Object.keys(embedded).length, 'data files');
+// ---------- 캐시 무효화: index.html 의 CSS·JS 주소에 내용 해시 버전을 붙임 ----------
+// 새 버전을 배포했는데 브라우저가 옛 CSS·JS를 캐시에서 꺼내 새 HTML과 섞이는 문제를 막습니다.
+// (모듈끼리의 import 는 import map 으로 같은 버전 주소에 연결)
+const hash = createHash('sha1');
+for (const name of ORDER) hash.update(readFileSync(join(ROOT, 'js', name + '.js')));
+hash.update(readFileSync(join(ROOT, 'css/style.css')));
+hash.update(readFileSync(join(ROOT, 'dist/geoscape-data.js')));
+const v = hash.digest('hex').slice(0, 10);
+const indexPath = join(ROOT, 'index.html');
+let html = readFileSync(indexPath, 'utf8');
+const importMap = `<!-- importmap:start (자동 생성) -->
+  <script type="importmap">${JSON.stringify({ imports: Object.fromEntries(ORDER.map((n) => [`./js/${n}.js`, `./js/${n}.js?v=${v}`])) })}</script>
+  <!-- importmap:end -->`;
+if (!html.includes('<!-- importmap:start')) {
+  html = html.replace('<!-- 웹 서버·GitHub Pages: ES 모듈판 -->', `${importMap}
+  <!-- 웹 서버·GitHub Pages: ES 모듈판 -->`);
+} else {
+  html = html.replace(/<!-- importmap:start[\s\S]*?<!-- importmap:end -->/, importMap);
+}
+html = html
+  .replace(/href="css\/style\.css(\?v=[^"]*)?"/, `href="css/style.css?v=${v}"`)
+  .replace(/src="js\/main\.js(\?v=[^"]*)?"/, `src="js/main.js?v=${v}"`)
+  .replace(/'dist\/geoscape-data\.js(\?v=[^']*)?'/, `'dist/geoscape-data.js?v=${v}'`)
+  .replace(/'dist\/geoscape\.bundle\.js(\?v=[^']*)?'/, `'dist/geoscape.bundle.js?v=${v}'`);
+writeFileSync(indexPath, html);
+
+console.log('bundle ok:', ORDER.length, 'modules,', Object.keys(embedded).length, 'data files, version', v);

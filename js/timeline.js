@@ -2,6 +2,9 @@
 import { $, escapeHtml, refreshIcons } from './utils.js';
 
 const BASE_STEP_MS = 900; // 1× 속도에서 1년당 시간
+const GLIDE_MS = 420;      // 클릭으로 연도를 옮길 때 막대가 미끄러지는 시간
+const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const easeInOut = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
 
 export function initTimeline(store, getData) {
   const slider = $('#tlSlider');
@@ -11,7 +14,14 @@ export function initTimeline(store, getData) {
   const yearEl = $('#tlYear');
   const playBtn = $('#tlPlay');
   const speedSel = $('#tlSpeed');
-  let timer = null;
+  // 막대 위치(pos)는 실수로 연속 이동하고, 지도·자료는 정수 연도가 바뀔 때만 갱신합니다.
+  // (자료가 없는 연도 사이 값을 만들어 내지 않는 원칙 유지 – 움직임만 부드럽게)
+  let pos = null;          // 현재 막대 위치 (실수 연도)
+  let rafId = null;        // 재생 루프
+  let glideId = null;      // 클릭 이동 애니메이션
+  let lastTs = null;
+  let fromLoop = false;    // 재생 루프가 바꾼 연도인지
+  let dragging = false;
 
   const pct = (y) => {
     const { start, end } = getData().region.timeRange;
@@ -39,9 +49,31 @@ export function initTimeline(store, getData) {
     scale.innerHTML = ticks.map((y) => `<span style="left:${pct(y)}%">${y}</span>`).join('');
   }
 
+  // 막대(슬라이더 손잡이·진행 막대)만 그리기
+  function setVisual(v) {
+    pos = v;
+    slider.value = v;
+    slider.style.setProperty('--p', pct(v) + '%');
+  }
+  // 현재 위치에서 목표 연도까지 부드럽게 이동
+  function glideTo(target) {
+    cancelAnimationFrame(glideId);
+    const from = pos ?? target;
+    if (reducedMotion() || Math.abs(target - from) < 0.01) { setVisual(target); return; }
+    const t0 = performance.now();
+    const dur = Math.min(GLIDE_MS + Math.abs(target - from) * 8, 900); // 먼 거리는 조금 더 길게
+    const frame = (now) => {
+      const k = Math.min(1, (now - t0) / dur);
+      setVisual(from + (target - from) * easeInOut(k));
+      if (k < 1) glideId = requestAnimationFrame(frame);
+    };
+    glideId = requestAnimationFrame(frame);
+  }
+
   function render(year) {
-    slider.value = year;
-    slider.style.setProperty('--p', pct(year) + '%');
+    if (fromLoop || dragging) { /* 막대는 루프·손가락이 이미 그리는 중 */ }
+    else if (pos == null) setVisual(year);
+    else glideTo(year);
     yearEl.textContent = year;
     const era = getData().getEra(year);
     erasEl.querySelectorAll('.tl-era').forEach((b) => b.classList.toggle('is-active', b.dataset.era === era.id));
@@ -55,25 +87,37 @@ export function initTimeline(store, getData) {
     playBtn.setAttribute('aria-label', playBtn.title);
     refreshIcons();
   }
-  function tick() {
-    const { year } = store.get();
+  // 매 프레임 막대를 조금씩 이동, 정수 연도를 넘을 때만 상태(지도·패널) 갱신
+  function loop(ts) {
+    if (!store.get().playing) return;
+    const dt = lastTs == null ? 0 : Math.min(ts - lastTs, 100); // 탭 전환 후 급점프 방지
+    lastTs = ts;
     const end = getData().region.timeRange.end;
-    if (year >= end) { stop(); return; }
-    store.set({ year: year + 1 });
-  }
-  function schedule() {
-    clearInterval(timer);
-    timer = setInterval(tick, BASE_STEP_MS / +speedSel.value);
+    const next = Math.min(end, pos + (dt / BASE_STEP_MS) * +speedSel.value);
+    setVisual(next);
+    const y = Math.floor(next + 1e-6);
+    if (y !== store.get().year) {
+      fromLoop = true;
+      try { store.set({ year: y }); } finally { fromLoop = false; }
+    }
+    if (next >= end) { stop(); return; }
+    rafId = requestAnimationFrame(loop);
   }
   function play() {
     const { start, end } = getData().region.timeRange;
+    cancelAnimationFrame(glideId);
     if (store.get().year >= end) store.set({ year: start });
+    setVisual(store.get().year);
+    lastTs = null;
     store.set({ playing: true });
-    schedule();
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
   }
   function stop() {
-    clearInterval(timer); timer = null;
+    cancelAnimationFrame(rafId); rafId = null;
     store.set({ playing: false });
+    // 멈춘 자리에서 현재 연도 눈금으로 살짝 맞춤
+    glideTo(store.get().year);
   }
   const toggle = () => (store.get().playing ? stop() : play());
 
@@ -90,11 +134,33 @@ export function initTimeline(store, getData) {
   }
 
   // ---------- 이벤트 ----------
-  slider.addEventListener('input', () => { if (store.get().playing) stop(); store.set({ year: +slider.value }); });
+  // 끌기: 막대는 손가락을 그대로 따라가고, 연도는 반올림한 값으로 갱신 → 놓으면 눈금에 맞춤
+  slider.addEventListener('input', () => {
+    if (store.get().playing) { cancelAnimationFrame(rafId); store.set({ playing: false }); }
+    cancelAnimationFrame(glideId);
+    dragging = true;
+    setVisual(+slider.value);
+    store.set({ year: Math.round(+slider.value) });
+  });
+  const endDrag = () => { if (!dragging) return; dragging = false; glideTo(store.get().year); };
+  slider.addEventListener('change', endDrag);
+  slider.addEventListener('pointerup', endDrag);
+  slider.addEventListener('blur', endDrag);
+  // step="any" 이므로 키보드 조작은 직접 1년 단위로 처리
+  slider.addEventListener('keydown', (e) => {
+    const map = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 };
+    if (e.key in map) { e.preventDefault(); e.shiftKey ? step(map[e.key]) : nudge(map[e.key]); }
+    else if (e.key === 'Home' || e.key === 'End') {
+      e.preventDefault();
+      const { start, end } = getData().region.timeRange;
+      if (store.get().playing) stop();
+      store.set({ year: e.key === 'Home' ? start : end });
+    }
+  });
   playBtn.addEventListener('click', toggle);
   $('#tlPrev').addEventListener('click', () => step(-1));
   $('#tlNext').addEventListener('click', () => step(1));
-  speedSel.addEventListener('change', () => { if (store.get().playing) schedule(); });
+  // 속도 변경은 재생 루프가 매 프레임 읽으므로 따로 처리할 필요 없음
   erasEl.addEventListener('click', (e) => { const b = e.target.closest('[data-year]'); if (b) { stop(); store.set({ year: +b.dataset.year }); } });
   marks.addEventListener('click', (e) => {
     const b = e.target.closest('[data-year]');
@@ -122,7 +188,7 @@ export function initTimeline(store, getData) {
   store.subscribe((s, prev, changed) => {
     if (changed.includes('year')) render(s.year);
     if (changed.includes('playing')) {
-      if (!s.playing && timer) { clearInterval(timer); timer = null; }
+      if (!s.playing && rafId) { cancelAnimationFrame(rafId); rafId = null; }
       setPlayIcon(s.playing);
     }
     if (changed.includes('mode') && s.mode !== 'explore') stop();
