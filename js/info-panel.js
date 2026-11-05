@@ -106,7 +106,7 @@ export function initInfoPanel(store, getData, { onPhotoOpen, onOpenGallery }) {
         <ul class="source-list">${sources.map((s) => `
           <li><a href="${escapeHtml(s.url)}" target="_blank" rel="noopener">${escapeHtml(s.title)}</a>
           <small>${escapeHtml(s.publisher)} · ${escapeHtml(s.license)} · ${escapeHtml(s.usedFor)}</small></li>`).join('')}</ul>
-        <p class="callout" style="margin-top:10px"><i data-lucide="info"></i><span>설명 문안은 공개 자료를 바탕으로 작성된 교육용 요약입니다. 지도 레이어는 데모·개략 자료이며, 사진은 플레이스홀더입니다.</span></p>
+        <p class="callout" style="margin-top:10px"><i data-lucide="info"></i><span>설명 문안은 공개 자료를 바탕으로 작성된 교육용 요약입니다. 도시화(위성 실측)·지하철(실제 선형) 레이어와 역사 사진은 출처가 확인된 자료이고, 도로·개발 지점은 개략, 토지 이용은 데모 자료입니다.</span></p>
       </section>`;
 
     chart?.destroy();

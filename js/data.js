@@ -103,6 +103,35 @@ function sanitizePhotos(list, regionId, warn) {
   });
 }
 
+/**
+ * 시뮬레이터용 지하철 자료(sim/subway.json) → 탐구 화면용 피처
+ * 같은 노선·같은 개통일의 구간을 하나의 피처로 묶음 (id: 'L2-1984-05-22')
+ */
+function subwayToFeatures(raw) {
+  if (!raw || !Array.isArray(raw.lines)) return null;
+  const features = [];
+  for (const line of raw.lines) {
+    const byDate = new Map();
+    for (const s of line.segments || []) {
+      if (!byDate.has(s.open)) byDate.set(s.open, []);
+      byDate.get(s.open).push(s.coords);
+    }
+    for (const [date, parts] of byDate) {
+      const ev = (raw.events || []).find((e) => e.line === line.id && e.date === date && e.kind === 'section');
+      features.push({
+        type: 'Feature',
+        properties: {
+          id: `${line.id}-${date}`, name: `${line.name} ${ev ? ev.sections.join(', ') : ''}`.trim(),
+          line: line.id, lineName: line.name, color: line.color, openDate: date, yearStart: Number(date.slice(0, 4)),
+          sections: ev ? ev.sections : []
+        },
+        geometry: { type: 'MultiLineString', coordinates: parts }
+      });
+    }
+  }
+  return { type: 'FeatureCollection', metadata: { notice: '실제 선로 선형(OpenStreetMap)과 구간 개통일(한국어 위키백과 노선 문서)로 만든 노선망입니다.', sources: raw.sources }, features };
+}
+
 /** 지역 데이터 전체를 불러와 서로 연결된 하나의 객체로 반환 */
 export async function loadRegion(meta) {
   const warnings = [];
@@ -125,8 +154,16 @@ export async function loadRegion(meta) {
   const photoList = sanitizePhotos(photosFile?.photos, meta.id, warn);
 
   const geo = {};
+  const grids = {};
   await Promise.all(region.layers.filter((l) => l.file).map(async (l) => {
-    const fc = await optional(base + l.file, null, `공간 레이어 '${l.label || l.id}'`);
+    const raw = await optional(base + l.file, null, `공간 레이어 '${l.label || l.id}'`);
+    if (l.kind === 'urban-grid') {
+      // 위성 실측 도시화 격자 (GHSL) – 피처가 아니라 격자 자료 그대로 사용
+      if (raw?.grid && Array.isArray(raw.cells) && Array.isArray(raw.epochs)) grids[l.id] = raw;
+      else if (raw) warn(`공간 레이어 '${l.label || l.id}': 격자 자료 형식 오류`);
+      return;
+    }
+    const fc = l.kind === 'subway' ? subwayToFeatures(raw) : raw;
     geo[l.id] = sanitizeFeatures(fc, l.id, warn);
   }));
 
@@ -151,7 +188,24 @@ export async function loadRegion(meta) {
     .map((s) => ({ unit: '', note: '', ...s, data: arr(s.data).filter((d) => isNum(d?.year) && isNum(d?.value)).sort((a, b) => a.year - b.year) }));
 
   return {
-    meta, region, geo, featureIndex, warnings,
+    meta, region, geo, grids, featureIndex, warnings,
+    /** 위성 관측 연도 중 해당 연도 이하의 가장 최근 값 (없으면 null) */
+    gridEpoch(layerId, year) {
+      const g = grids[layerId];
+      if (!g) return null;
+      let e = null;
+      for (const ep of g.epochs) if (ep <= year) e = ep;
+      return e;
+    },
+    /** 격자 전체의 건물 피복 면적(km²) */
+    gridBuiltArea(layerId, epoch) {
+      const g = grids[layerId];
+      if (!g || epoch == null) return null;
+      const k = g.epochs.indexOf(epoch);
+      const gg = g.grid;
+      const area = (gg.dlat * 111.32) * (gg.dlon * 111.32 * Math.cos((gg.lat0 - gg.rows * gg.dlat / 2) * Math.PI / 180));
+      return g.cells.reduce((s, c) => s + c[2 + k], 0) / 100 * area;
+    },
     eras: eraList,
     photos: photoList,
     photoInfo: {

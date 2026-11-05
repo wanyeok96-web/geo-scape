@@ -538,3 +538,18 @@ img.img-failed { visibility: hidden; }
   .sim-year { font-size: 32px; }
   .sim-headline { bottom: 140px; }
 }
+
+/* ---------- 탐구 화면: 위성 실측 도시화 격자·실제 지하철 ---------- */
+.gs-grid-img { image-rendering: pixelated; transition: opacity .8s ease; }
+.legend-grad { height: 8px; border-radius: 4px; margin: 2px 0 2px; background: linear-gradient(90deg, #a6e3d7, #5DCAA5, #1D9E75, #0F6E56, #085041, #0b2a43); }
+.legend-scale { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-3); }
+.legend-row.small { font-size: 11px; color: var(--text-3); }
+.legend-lines { display: flex; flex-wrap: wrap; gap: 4px 10px; }
+.legend-line { display: inline-flex; align-items: center; gap: 5px; color: var(--text-2); }
+.legend-line i { width: 14px; height: 4px; border-radius: 2px; display: inline-block; }
+.popup-line-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: 0; }
+.cell-bars { display: flex; align-items: flex-end; gap: 3px; height: 58px; margin: 8px 0 2px; }
+.cell-bar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px; }
+.cell-bar i { width: 100%; background: #a6e3d7; border-radius: 2px 2px 0 0; display: block; }
+.cell-bar.on i { background: var(--teal-600); }
+.cell-bar small { font-size: 9.5px; color: var(--text-3); }

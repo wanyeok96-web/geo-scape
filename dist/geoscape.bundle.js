@@ -234,6 +234,35 @@ function sanitizePhotos(list, regionId, warn) {
   });
 }
 
+/**
+ * 시뮬레이터용 지하철 자료(sim/subway.json) → 탐구 화면용 피처
+ * 같은 노선·같은 개통일의 구간을 하나의 피처로 묶음 (id: 'L2-1984-05-22')
+ */
+function subwayToFeatures(raw) {
+  if (!raw || !Array.isArray(raw.lines)) return null;
+  const features = [];
+  for (const line of raw.lines) {
+    const byDate = new Map();
+    for (const s of line.segments || []) {
+      if (!byDate.has(s.open)) byDate.set(s.open, []);
+      byDate.get(s.open).push(s.coords);
+    }
+    for (const [date, parts] of byDate) {
+      const ev = (raw.events || []).find((e) => e.line === line.id && e.date === date && e.kind === 'section');
+      features.push({
+        type: 'Feature',
+        properties: {
+          id: `${line.id}-${date}`, name: `${line.name} ${ev ? ev.sections.join(', ') : ''}`.trim(),
+          line: line.id, lineName: line.name, color: line.color, openDate: date, yearStart: Number(date.slice(0, 4)),
+          sections: ev ? ev.sections : []
+        },
+        geometry: { type: 'MultiLineString', coordinates: parts }
+      });
+    }
+  }
+  return { type: 'FeatureCollection', metadata: { notice: '실제 선로 선형(OpenStreetMap)과 구간 개통일(한국어 위키백과 노선 문서)로 만든 노선망입니다.', sources: raw.sources }, features };
+}
+
 /** 지역 데이터 전체를 불러와 서로 연결된 하나의 객체로 반환 */
 async function loadRegion(meta) {
   const warnings = [];
@@ -256,8 +285,16 @@ async function loadRegion(meta) {
   const photoList = sanitizePhotos(photosFile?.photos, meta.id, warn);
 
   const geo = {};
+  const grids = {};
   await Promise.all(region.layers.filter((l) => l.file).map(async (l) => {
-    const fc = await optional(base + l.file, null, `공간 레이어 '${l.label || l.id}'`);
+    const raw = await optional(base + l.file, null, `공간 레이어 '${l.label || l.id}'`);
+    if (l.kind === 'urban-grid') {
+      // 위성 실측 도시화 격자 (GHSL) – 피처가 아니라 격자 자료 그대로 사용
+      if (raw?.grid && Array.isArray(raw.cells) && Array.isArray(raw.epochs)) grids[l.id] = raw;
+      else if (raw) warn(`공간 레이어 '${l.label || l.id}': 격자 자료 형식 오류`);
+      return;
+    }
+    const fc = l.kind === 'subway' ? subwayToFeatures(raw) : raw;
     geo[l.id] = sanitizeFeatures(fc, l.id, warn);
   }));
 
@@ -282,7 +319,24 @@ async function loadRegion(meta) {
     .map((s) => ({ unit: '', note: '', ...s, data: arr(s.data).filter((d) => isNum(d?.year) && isNum(d?.value)).sort((a, b) => a.year - b.year) }));
 
   return {
-    meta, region, geo, featureIndex, warnings,
+    meta, region, geo, grids, featureIndex, warnings,
+    /** 위성 관측 연도 중 해당 연도 이하의 가장 최근 값 (없으면 null) */
+    gridEpoch(layerId, year) {
+      const g = grids[layerId];
+      if (!g) return null;
+      let e = null;
+      for (const ep of g.epochs) if (ep <= year) e = ep;
+      return e;
+    },
+    /** 격자 전체의 건물 피복 면적(km²) */
+    gridBuiltArea(layerId, epoch) {
+      const g = grids[layerId];
+      if (!g || epoch == null) return null;
+      const k = g.epochs.indexOf(epoch);
+      const gg = g.grid;
+      const area = (gg.dlat * 111.32) * (gg.dlon * 111.32 * Math.cos((gg.lat0 - gg.rows * gg.dlat / 2) * Math.PI / 180));
+      return g.cells.reduce((s, c) => s + c[2 + k], 0) / 100 * area;
+    },
     eras: eraList,
     photos: photoList,
     photoInfo: {
@@ -392,11 +446,11 @@ function createMapView(el, data, opts = {}) {
   });
   if (opts.compact) L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-  // 레이어 순서용 pane: 오래된 시가지 단계일수록 위, 그 위에 토지 이용·교통망
-  const stages = Object.keys(data.region.layers.find((l) => l.id === 'urban')?.stageColors || {});
-  stages.forEach((s, i) => { map.createPane(`gs-urban-${s}`).style.zIndex = 410 - i; });
+  // 레이어 순서용 pane: 도시화 격자 → 토지 이용 → 도로 → 지하철 (위로 갈수록 나중)
+  map.createPane('gs-grid').style.zIndex = 405;
   map.createPane('gs-landuse').style.zIndex = 415;
   map.createPane('gs-transport').style.zIndex = 420;
+  map.createPane('gs-subway').style.zIndex = 425;
   const labelsPane = map.createPane('gs-labels');
   labelsPane.style.zIndex = 430;
   labelsPane.style.pointerEvents = 'none';
@@ -476,10 +530,7 @@ function createMapView(el, data, opts = {}) {
   }
 
   // ---------- 스타일 ----------
-  const urbanStyle = (p) => {
-    const c = layerCfg.urban.stageColors[p.stage] || '#1a9c9c';
-    return { color: c, weight: 1, fillColor: c, fillOpacity: 0.42, opacity: 0.8 };
-  };
+  const subwayStyle = (p) => ({ color: p.color || '#2563eb', weight: 4.5, opacity: 0.95, lineCap: 'round', lineJoin: 'round' });
   const lineStyle = (p) => {
     const s = layerCfg.transport.modeStyles[p.mode] || { color: '#333', weight: 3 };
     return { color: s.color, weight: s.weight, dashArray: s.dashArray, opacity: 0.95, lineCap: 'round' };
@@ -501,6 +552,11 @@ function createMapView(el, data, opts = {}) {
     <div class="popup-year">${p.yearStart}년 개통</div>
     <p class="popup-desc">${escapeHtml(p.note || '')}</p>
     <p class="popup-desc small">※ 주요 지점을 연결한 개략 노선</p>`;
+  const subwayPopup = (p) => `
+    <div class="popup-cat"><span class="popup-line-dot" style="background:${escapeHtml(p.color)}"></span>${escapeHtml(p.lineName)}</div>
+    <div class="popup-title">${escapeHtml((p.sections || []).join(', ') || p.name)}</div>
+    <div class="popup-year">${escapeHtml(p.openDate.replace(/-/g, '.'))} 개통</div>
+    <p class="popup-desc small">선형: OpenStreetMap · 개통일: 한국어 위키백과 노선 문서</p>`;
   const areaPopup = (p, kind) => `
     <div class="popup-cat">${kind === 'urban' ? '시가지 확장 (데모)' : escapeHtml(layerCfg.landuse.typeStyles[p.type]?.label || '') + ' (데모)'}</div>
     <div class="popup-title">${escapeHtml(p.name)}</div>
@@ -541,14 +597,17 @@ function createMapView(el, data, opts = {}) {
       const icon = L.divIcon({ className: '', html: `<div class="gs-marker gs-anim-pop">${iconSvg('map-pin', 14)}</div>`, iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -12] });
       return L.marker([lat, lng], { icon, title: p.name, riseOnHover: true }).bindPopup(devPopup(p), { maxWidth: 280 });
     }
-    const style = layerId === 'urban' ? urbanStyle(p) : layerId === 'transport' ? lineStyle(p) : landuseStyle(p);
-    let pane = layerId === 'urban' ? `gs-urban-${p.stage}` : `gs-${layerId}`;
-    if (!map.getPane(pane)) pane = 'overlayPane'; // 정의되지 않은 단계·레이어는 기본 pane 사용
+    const kind = layerCfg[layerId]?.kind;
+    const isLine = kind === 'line' || kind === 'subway';
+    const style = kind === 'subway' ? subwayStyle(p) : kind === 'line' ? lineStyle(p) : landuseStyle(p);
+    let pane = `gs-${layerId}`;
+    if (!map.getPane(pane)) pane = 'overlayPane'; // 정의되지 않은 레이어는 기본 pane 사용
     // 면은 중심에서 퍼지듯, 선은 그려지듯 나타남 (선 효과는 지도에 추가된 뒤 drawOn에서 시작)
-    const anim = layerId === 'transport' ? (style.dashArray ? 'gs-anim-fade' : '') : 'gs-anim-spread';
+    const anim = isLine ? (style.dashArray ? 'gs-anim-fade' : '') : 'gs-anim-spread';
     const layer = L.geoJSON(ft, { pane, style: () => ({ ...style, className: anim }) });
-    layer.bindPopup(layerId === 'transport' ? linePopup(p) : areaPopup(p, layerId), { maxWidth: 280 });
-    if (layerId === 'transport') layer.bindTooltip(`${p.name} (${p.yearStart})`, { sticky: true });
+    layer.bindPopup(kind === 'subway' ? subwayPopup(p) : kind === 'line' ? linePopup(p) : areaPopup(p, layerId), { maxWidth: 280 });
+    if (kind === 'subway') layer.bindTooltip(`${p.lineName} · ${p.openDate.slice(0, 4)}년 개통`, { sticky: true });
+    else if (kind === 'line') layer.bindTooltip(`${p.name} (${p.yearStart})`, { sticky: true });
     else layer.bindTooltip(p.name, { sticky: true, opacity: 0.9 });
     return layer;
   }
@@ -571,8 +630,9 @@ function createMapView(el, data, opts = {}) {
           const lyr = makeLayer(layerId, ft, year);
           map_.set(id, lyr);
           group.addLayer(lyr);
-          if (layerId === 'transport') drawOn(lyr);
-          else if (layerId === 'urban' || layerId === 'landuse') {
+          const k = layerCfg[layerId]?.kind;
+          if (k === 'line' || k === 'subway') drawOn(lyr);
+          else if (k === 'landuse') {
             const c = lyr.options?.style?.()?.fillColor || lyr.getLayers?.()[0]?.options?.fillColor || '#14b8a6';
             if (map.hasLayer(group)) ripple(lyr.getBounds().getCenter(), c);
           }
@@ -592,6 +652,84 @@ function createMapView(el, data, opts = {}) {
       }
     }
   }
+
+  // ---------- 위성 실측 도시화 격자 (GHSL): 관측 연도별 이미지를 만들어 교차 전환 ----------
+  // 8천여 칸을 도형으로 그리면 느리므로, 관측 연도마다 한 장의 이미지로 그려 지도에 겹칩니다.
+  const GRID_STOPS = [[0, [215, 243, 239]], [5, [166, 227, 215]], [15, [93, 202, 165]], [30, [29, 158, 117]], [45, [15, 110, 86]], [60, [8, 80, 65]], [80, [11, 42, 67]]];
+  function gridColor(v) {
+    let i = 0;
+    while (i < GRID_STOPS.length - 2 && v > GRID_STOPS[i + 1][0]) i++;
+    const [a, ca] = GRID_STOPS[i], [b, cb] = GRID_STOPS[i + 1];
+    const k = Math.max(0, Math.min(1, (v - a) / (b - a)));
+    return ca.map((x, j) => Math.round(x + (cb[j] - x) * k));
+  }
+  const gridAlpha = (v) => (v < 3 ? 0 : Math.min(0.82, 0.18 + v / 60));
+  const gridImages = {};  // 'layerId:epoch' → dataURL
+  const gridState = {};   // layerId → { epoch, overlay }
+  function gridBounds(g) {
+    const s = g.grid;
+    return L.latLngBounds([s.lat0 - s.rows * s.dlat, s.lon0], [s.lat0, s.lon0 + s.cols * s.dlon]);
+  }
+  function gridImage(layerId, epoch) {
+    const key = layerId + ':' + epoch;
+    if (gridImages[key]) return gridImages[key];
+    const g = data.grids[layerId], s = g.grid, k = g.epochs.indexOf(epoch);
+    const PX = 8, GAP = 1;
+    const cv = document.createElement('canvas');
+    cv.width = s.cols * PX; cv.height = s.rows * PX;
+    const ctx = cv.getContext('2d');
+    for (const c of g.cells) {
+      const v = c[2 + k];
+      const al = gridAlpha(v);
+      if (!al) continue;
+      const [r, gg, b] = gridColor(v);
+      ctx.fillStyle = 'rgba(' + r + ',' + gg + ',' + b + ',' + al + ')';
+      ctx.fillRect(c[0] * PX, c[1] * PX, PX - GAP, PX - GAP);
+    }
+    return (gridImages[key] = cv.toDataURL('image/png'));
+  }
+  function renderGrid(layerId, year) {
+    const g = data.grids[layerId];
+    const group = groups[layerId];
+    if (!g || !group) return;
+    const epoch = data.gridEpoch(layerId, year);
+    const st = gridState[layerId] || (gridState[layerId] = { epoch: undefined, overlay: null });
+    if (st.epoch === epoch) return;
+    st.epoch = epoch;
+    const old = st.overlay;
+    st.overlay = null;
+    if (epoch != null) {
+      const ov = L.imageOverlay(gridImage(layerId, epoch), gridBounds(g), { pane: 'gs-grid', className: 'gs-grid-img', opacity: reducedMotion() ? 1 : 0, interactive: false });
+      group.addLayer(ov);
+      st.overlay = ov;
+      if (!reducedMotion()) requestAnimationFrame(() => requestAnimationFrame(() => ov.setOpacity(1)));
+    }
+    if (old) {
+      if (reducedMotion()) group.removeLayer(old);
+      else { old.setOpacity(0); setTimeout(() => group.removeLayer(old), 900); }
+    }
+  }
+  // 격자 칸 클릭: 그 칸의 연도별 건물 피복률
+  map.on('click', (e) => {
+    const t = e.originalEvent && e.originalEvent.target;
+    if (t && t.closest && t.closest('.leaflet-interactive, .leaflet-marker-icon, .leaflet-popup')) return;
+    for (const l of data.region.layers) {
+      if (l.kind !== 'urban-grid' || !visible[l.id] || !data.grids[l.id]) continue;
+      const g = data.grids[l.id], s = g.grid;
+      const col = Math.floor((e.latlng.lng - s.lon0) / s.dlon), row = Math.floor((s.lat0 - e.latlng.lat) / s.dlat);
+      const cell = g.cells.find((c) => c[0] === col && c[1] === row);
+      if (!cell) return;
+      const cur = data.gridEpoch(l.id, currentYear ?? g.epochs[g.epochs.length - 1]);
+      const max = Math.max(...cell.slice(2), 1);
+      const bars = g.epochs.map((ep, i) => '<div class="cell-bar' + (ep === cur ? ' on' : '') + '" title="' + ep + '년 ' + cell[2 + i] + '%"><i style="height:' + Math.max(2, cell[2 + i] / max * 40) + 'px"></i><small>' + String(ep).slice(2) + '</small></div>').join('');
+      const title = cur == null ? '1975년 이전 자료 없음' : cur + '년 ' + cell[2 + g.epochs.indexOf(cur)] + '%';
+      L.popup({ maxWidth: 260 }).setLatLng(e.latlng).setContent(
+        '<div class="popup-cat">건물 피복률 (위성 관측)</div><div class="popup-title">' + title + '</div>' +
+        '<div class="cell-bars">' + bars + '</div>' +
+        '<p class="popup-desc small">약 660 m × 650 m 칸에서 건물이 덮은 면적의 비율 · GHSL (EC JRC)</p>').openOn(map);
+      return;
+    }
+  });
 
   const photoMarkers = new Map();
   function renderPhotos(year) {
@@ -631,6 +769,7 @@ function createMapView(el, data, opts = {}) {
       // 한 레이어의 오류가 다른 레이어 표시를 막지 않도록 레이어별로 격리
       try {
         if (l.kind === 'photos') renderPhotos(year);
+        else if (l.kind === 'urban-grid') renderGrid(l.id, year);
         else renderLayer(l.id, year);
       } catch (err) {
         console.error(`[GeoScape] 레이어 '${l.id}' 표시 오류`, err);
@@ -1237,7 +1376,7 @@ function initInfoPanel(store, getData, { onPhotoOpen, onOpenGallery }) {
         <ul class="source-list">${sources.map((s) => `
           <li><a href="${escapeHtml(s.url)}" target="_blank" rel="noopener">${escapeHtml(s.title)}</a>
           <small>${escapeHtml(s.publisher)} · ${escapeHtml(s.license)} · ${escapeHtml(s.usedFor)}</small></li>`).join('')}</ul>
-        <p class="callout" style="margin-top:10px"><i data-lucide="info"></i><span>설명 문안은 공개 자료를 바탕으로 작성된 교육용 요약입니다. 지도 레이어는 데모·개략 자료이며, 사진은 플레이스홀더입니다.</span></p>
+        <p class="callout" style="margin-top:10px"><i data-lucide="info"></i><span>설명 문안은 공개 자료를 바탕으로 작성된 교육용 요약입니다. 도시화(위성 실측)·지하철(실제 선형) 레이어와 역사 사진은 출처가 확인된 자료이고, 도로·개발 지점은 개략, 토지 이용은 데모 자료입니다.</span></p>
       </section>`;
 
     chart?.destroy();
@@ -1557,7 +1696,11 @@ function initCompare(store, getData, { onPhotoOpen, onBasemapStatus }) {
     const ly = +leftSel.value, ry = +rightSel.value;
     const le = data.getEra(ly), re = data.getEra(ry);
     const lp = popAt(data, ly), rp = popAt(data, ry);
-    const count = (y) => data.geo.urban?.features.filter((f) => f.properties.yearStart <= y).length ?? 0;
+    const builtText = (y) => {
+      const ep = data.gridEpoch('urban', y);
+      return ep == null ? '자료 없음' : `약 ${Math.round(data.gridBuiltArea('urban', ep)).toLocaleString()} km²(${ep})`;
+    };
+    const linesOpen = (y) => new Set((data.geo.subway?.features || []).filter((f) => f.properties.yearStart <= y).map((f) => f.properties.line)).size;
     const newDev = data.geo.developments?.features.filter((f) => f.properties.year > ly && f.properties.year <= ry) ?? [];
 
     let diff = '';
@@ -1565,7 +1708,7 @@ function initCompare(store, getData, { onPhotoOpen, onBasemapStatus }) {
       const delta = rp.value - lp.value;
       diff += `<b>${escapeHtml(lp.label)}</b> ${lp.value.toLocaleString()}${lp.unit}(${lp.year}) → ${rp.value.toLocaleString()}${rp.unit}(${rp.year}), <b>${delta >= 0 ? '+' : ''}${delta.toLocaleString()}${rp.unit}</b>. `;
     }
-    diff += `시가지 확장 구역(데모) ${count(ly)}개 → ${count(ry)}개. `;
+    diff += `건물 피복 면적(위성 관측) ${builtText(ly)} → ${builtText(ry)}. 지하철 노선 ${linesOpen(ly)}개 → ${linesOpen(ry)}개. `;
     if (newDev.length) diff += `그 사이 주요 개발: ${newDev.map((f) => escapeHtml(f.properties.name)).join(', ')}.`;
 
     commentary.innerHTML = `
@@ -2187,10 +2330,19 @@ async function boot() {
     for (const l of data.region.layers) {
       if (!s.layers[l.id]) continue;
       const fc = data.geo[l.id];
-      if (l.kind === 'urban-stage') {
-        const present = new Set(fc.features.filter((f) => f.properties.yearStart <= y).map((f) => f.properties.stage));
-        groups.push(`<div class="legend-group"><h4>${escapeHtml(l.label)} ${statusBadge(l.dataStatus)}</h4>${Object.entries(l.stageColors).map(([k, c]) =>
-          `<div class="legend-row ${present.has(k) ? '' : 'is-dim'}"><span class="swatch" style="background:${c}"></span>${escapeHtml(l.stageLabels[k])}</div>`).join('')}</div>`);
+      if (l.kind === 'urban-grid') {
+        const ep = data.gridEpoch(l.id, y);
+        const area = data.gridBuiltArea(l.id, ep);
+        groups.push(`<div class="legend-group"><h4>${escapeHtml(l.label)} ${statusBadge(l.dataStatus)}</h4>
+          <div class="legend-grad"></div><div class="legend-scale"><span>5%</span><span>건물이 덮은 면적 비율</span><span>60%+</span></div>
+          <div class="legend-row">${ep == null ? '1975년 이전: 위성 관측 자료 없음' : `${ep}년 관측 · 건물 피복 약 ${Math.round(area).toLocaleString()} km²`}</div>
+          <div class="legend-row small">칸을 누르면 연도별 값을 볼 수 있습니다</div></div>`);
+      } else if (l.kind === 'subway') {
+        const open = new Map();
+        for (const f of fc?.features || []) if (f.properties.yearStart <= y) open.set(f.properties.line, f.properties);
+        groups.push(`<div class="legend-group"><h4>${escapeHtml(l.label)} ${statusBadge(l.dataStatus)}</h4>${open.size
+          ? `<div class="legend-lines">${[...open.values()].map((p) => `<span class="legend-line"><i style="background:${p.color}"></i>${escapeHtml(p.lineName)}</span>`).join('')}</div>`
+          : '<div class="legend-row">아직 지하철이 없습니다 (1974년 개통)</div>'}</div>`);
       } else if (l.kind === 'line') {
         const present = new Set(fc.features.filter((f) => f.properties.yearStart <= y).map((f) => f.properties.mode));
         groups.push(`<div class="legend-group"><h4>${escapeHtml(l.label)} ${statusBadge(l.dataStatus)}</h4>${Object.entries(l.modeStyles).map(([k, st]) =>
@@ -2298,7 +2450,8 @@ async function boot() {
 
   function renderDataModal() {
     const rows = data.region.layers.map((l) => {
-      const notice = data.geo[l.id]?.metadata?.notice || (l.kind === 'photos' ? data.photoInfo.notice : '');
+      const grid = data.grids[l.id];
+      const notice = data.geo[l.id]?.metadata?.notice || (grid ? grid.description + ' · ' + grid.source + ' · ' + grid.license : '') || (l.kind === 'photos' ? data.photoInfo.notice : '');
       return `<tr><td><b>${escapeHtml(l.label)}</b></td><td>${statusBadge(l.dataStatus)}</td><td class="muted">${escapeHtml(notice)}</td></tr>`;
     }).join('');
     const stats = data.stats.map((s) => `<tr><td><b>${escapeHtml(s.label)}</b></td><td>${statusBadge(s.verified ? 'verified' : 'approx')}</td><td class="muted">${escapeHtml(s.note)}</td></tr>`).join('');

@@ -39,6 +39,19 @@ for (const r of registry?.regions ?? []) {
   for (const l of region.layers ?? []) {
     if (!l.file) continue;
     const fc = read(base + l.file);
+    if (l.kind === 'subway') {
+      // 탐구 화면은 '노선-개통일'을 피처 id로 사용 (js/data.js subwayToFeatures)
+      for (const line of fc?.lines ?? []) for (const sg of line.segments ?? []) {
+        featureIds.add(`${line.id}-${sg.open}`);
+        const y = Number(sg.open.slice(0, 4));
+        if (y < start || y > end) warn(`${l.file}: ${line.name} ${sg.from}~${sg.to} 개통 ${y}년이 timeRange 밖`);
+      }
+      continue;
+    }
+    if (l.kind === 'urban-grid') {
+      if (!fc?.grid || !Array.isArray(fc?.cells)) err(`${l.file}: 격자 자료 형식 오류`);
+      continue;
+    }
     for (const ft of fc?.features ?? []) {
       const id = ft.properties?.id;
       if (!id) err(`${l.file}: id 없는 피처`);

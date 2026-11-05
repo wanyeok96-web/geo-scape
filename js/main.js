@@ -162,10 +162,19 @@ async function boot() {
     for (const l of data.region.layers) {
       if (!s.layers[l.id]) continue;
       const fc = data.geo[l.id];
-      if (l.kind === 'urban-stage') {
-        const present = new Set(fc.features.filter((f) => f.properties.yearStart <= y).map((f) => f.properties.stage));
-        groups.push(`<div class="legend-group"><h4>${escapeHtml(l.label)} ${statusBadge(l.dataStatus)}</h4>${Object.entries(l.stageColors).map(([k, c]) =>
-          `<div class="legend-row ${present.has(k) ? '' : 'is-dim'}"><span class="swatch" style="background:${c}"></span>${escapeHtml(l.stageLabels[k])}</div>`).join('')}</div>`);
+      if (l.kind === 'urban-grid') {
+        const ep = data.gridEpoch(l.id, y);
+        const area = data.gridBuiltArea(l.id, ep);
+        groups.push(`<div class="legend-group"><h4>${escapeHtml(l.label)} ${statusBadge(l.dataStatus)}</h4>
+          <div class="legend-grad"></div><div class="legend-scale"><span>5%</span><span>건물이 덮은 면적 비율</span><span>60%+</span></div>
+          <div class="legend-row">${ep == null ? '1975년 이전: 위성 관측 자료 없음' : `${ep}년 관측 · 건물 피복 약 ${Math.round(area).toLocaleString()} km²`}</div>
+          <div class="legend-row small">칸을 누르면 연도별 값을 볼 수 있습니다</div></div>`);
+      } else if (l.kind === 'subway') {
+        const open = new Map();
+        for (const f of fc?.features || []) if (f.properties.yearStart <= y) open.set(f.properties.line, f.properties);
+        groups.push(`<div class="legend-group"><h4>${escapeHtml(l.label)} ${statusBadge(l.dataStatus)}</h4>${open.size
+          ? `<div class="legend-lines">${[...open.values()].map((p) => `<span class="legend-line"><i style="background:${p.color}"></i>${escapeHtml(p.lineName)}</span>`).join('')}</div>`
+          : '<div class="legend-row">아직 지하철이 없습니다 (1974년 개통)</div>'}</div>`);
       } else if (l.kind === 'line') {
         const present = new Set(fc.features.filter((f) => f.properties.yearStart <= y).map((f) => f.properties.mode));
         groups.push(`<div class="legend-group"><h4>${escapeHtml(l.label)} ${statusBadge(l.dataStatus)}</h4>${Object.entries(l.modeStyles).map(([k, st]) =>
@@ -273,7 +282,8 @@ async function boot() {
 
   function renderDataModal() {
     const rows = data.region.layers.map((l) => {
-      const notice = data.geo[l.id]?.metadata?.notice || (l.kind === 'photos' ? data.photoInfo.notice : '');
+      const grid = data.grids[l.id];
+      const notice = data.geo[l.id]?.metadata?.notice || (grid ? grid.description + ' · ' + grid.source + ' · ' + grid.license : '') || (l.kind === 'photos' ? data.photoInfo.notice : '');
       return `<tr><td><b>${escapeHtml(l.label)}</b></td><td>${statusBadge(l.dataStatus)}</td><td class="muted">${escapeHtml(notice)}</td></tr>`;
     }).join('');
     const stats = data.stats.map((s) => `<tr><td><b>${escapeHtml(s.label)}</b></td><td>${statusBadge(s.verified ? 'verified' : 'approx')}</td><td class="muted">${escapeHtml(s.note)}</td></tr>`).join('');

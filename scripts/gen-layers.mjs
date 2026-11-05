@@ -23,48 +23,7 @@ function blob(lat, lng, rxKm, ryKm, seed = 1, n = 18) {
 const close = (arr) => [[...arr, arr[0]]];
 const poly = (props, coords) => ({ type: 'Feature', properties: props, geometry: { type: 'Polygon', coordinates: coords } });
 
-// ---------- 시가지 확장 범위 (데모) ----------
-const urban = [
-  poly({ id: 'u1970-core', name: '도심·강북 기성 시가지', stage: '1970', yearStart: 1970 }, close([
-    [126.895, 37.565], [126.905, 37.592], [126.935, 37.612], [126.97, 37.622], [127.01, 37.617], [127.045, 37.603],
-    [127.075, 37.585], [127.08, 37.562], [127.06, 37.546], [127.02, 37.536], [126.985, 37.533], [126.955, 37.538], [126.925, 37.545]
-  ])),
-  poly({ id: 'u1970-ydp', name: '영등포 공업 지역', stage: '1970', yearStart: 1970 }, close([
-    [126.875, 37.532], [126.905, 37.536], [126.925, 37.527], [126.918, 37.505], [126.9, 37.49], [126.875, 37.488], [126.86, 37.508]
-  ])),
-  poly({ id: 'u1980-south', name: '강남·잠실·여의도 개발지', stage: '1980', yearStart: 1980 }, close([
-    [126.915, 37.532], [126.94, 37.527], [126.975, 37.52], [127.01, 37.525], [127.05, 37.528], [127.09, 37.527], [127.125, 37.518],
-    [127.125, 37.495], [127.09, 37.485], [127.05, 37.478], [127.015, 37.475], [126.985, 37.478], [126.955, 37.485], [126.93, 37.5]
-  ])),
-  poly({ id: 'u1980-north', name: '강북 외곽 확장', stage: '1980', yearStart: 1980 }, close([
-    [126.89, 37.6], [126.92, 37.632], [126.97, 37.645], [127.03, 37.64], [127.08, 37.62], [127.105, 37.59], [127.1, 37.56],
-    [127.08, 37.585], [127.045, 37.603], [127.01, 37.617], [126.97, 37.622], [126.935, 37.612], [126.905, 37.592]
-  ])),
-  poly({ id: 'u1990-west', name: '목동·강서 신시가지', stage: '1990', yearStart: 1990 }, close([
-    [126.82, 37.555], [126.86, 37.56], [126.89, 37.548], [126.89, 37.52], [126.875, 37.5], [126.84, 37.495], [126.815, 37.52]
-  ])),
-  poly({ id: 'u1990-ne', name: '상계·중계 택지', stage: '1990', yearStart: 1990 }, close([
-    [127.04, 37.64], [127.05, 37.672], [127.075, 37.68], [127.095, 37.66], [127.09, 37.625], [127.06, 37.625]
-  ])),
-  poly({ id: 'u1990-se', name: '개포·고덕·송파 확장', stage: '1990', yearStart: 1990 }, close([
-    [127.04, 37.478], [127.08, 37.484], [127.125, 37.495], [127.16, 37.53], [127.175, 37.555], [127.15, 37.565], [127.13, 37.535],
-    [127.13, 37.49], [127.11, 37.47], [127.07, 37.465]
-  ])),
-  poly({ id: 'u1991-bundang', name: '분당 신도시', stage: '1990', yearStart: 1991 }, blob(37.375, 127.12, 2.2, 4.2, 3)),
-  poly({ id: 'u1992-ilsan', name: '일산 신도시', stage: '1990', yearStart: 1992 }, blob(37.665, 126.77, 3.2, 2.4, 5)),
-  poly({ id: 'u1992-pyeongchon', name: '평촌 신도시', stage: '1990', yearStart: 1992 }, blob(37.392, 126.962, 1.6, 1.3, 7)),
-  poly({ id: 'u1992-sanbon', name: '산본 신도시', stage: '1990', yearStart: 1992 }, blob(37.36, 126.932, 1.3, 1.4, 9)),
-  poly({ id: 'u1993-jungdong', name: '중동 신도시', stage: '1990', yearStart: 1993 }, blob(37.503, 126.765, 1.6, 1.2, 11)),
-  poly({ id: 'u2002-sangam', name: '상암 DMC·월드컵 지구', stage: '2000', yearStart: 2002 }, blob(37.578, 126.889, 1.4, 1.1, 13)),
-  poly({ id: 'u2007-dongtan', name: '동탄 신도시', stage: '2000', yearStart: 2007 }, blob(37.205, 127.075, 2.6, 3.0, 15)),
-  poly({ id: 'u2008-eunpyeong', name: '은평 뉴타운', stage: '2000', yearStart: 2008 }, blob(37.638, 126.918, 1.2, 1.4, 17)),
-  poly({ id: 'u2009-pangyo', name: '판교 신도시', stage: '2000', yearStart: 2009 }, blob(37.395, 127.105, 1.8, 1.3, 19)),
-  poly({ id: 'u2009-unjeong', name: '파주 운정 신도시', stage: '2000', yearStart: 2009 }, blob(37.715, 126.75, 2.2, 1.8, 21)),
-  poly({ id: 'u2011-gwanggyo', name: '광교 신도시', stage: '2010', yearStart: 2011 }, blob(37.288, 127.05, 1.8, 2.0, 23)),
-  poly({ id: 'u2011-gimpo', name: '김포 한강 신도시', stage: '2010', yearStart: 2011 }, blob(37.643, 126.67, 2.2, 1.8, 25)),
-  poly({ id: 'u2013-wirye', name: '위례 신도시', stage: '2010', yearStart: 2013 }, blob(37.478, 127.145, 1.3, 1.2, 27)),
-  poly({ id: 'u2014-magok', name: '마곡 지구', stage: '2010', yearStart: 2014 }, blob(37.562, 126.83, 1.5, 1.2, 29))
-];
+// 시가지 확장 범위는 위성 실측 자료(GHSL, scripts/build_ghsl_grid.py)로 대체되어 더 이상 만들지 않습니다.
 
 // ---------- 토지 이용 변화 (데모) ----------
 const lu = (id, name, type, yearStart, yearEnd, lat, lng, rx, ry, seed, note) =>
@@ -93,6 +52,5 @@ const demoMeta = (title) => ({
   notice: '교육용 개략 형상(데모 데이터)입니다. 실제 경계가 아니며, 검증된 공간 자료로 교체해야 합니다.',
   generatedBy: 'scripts/gen-layers.mjs'
 });
-writeFileSync(join(out, 'urban-extent.geojson'), JSON.stringify(fc(urban, demoMeta('시가지 확장 범위')), null, 1));
 writeFileSync(join(out, 'landuse.geojson'), JSON.stringify(fc(landuse, demoMeta('토지 이용 변화')), null, 1));
-console.log('urban', urban.length, 'landuse', landuse.length);
+console.log('landuse', landuse.length);

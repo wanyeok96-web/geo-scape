@@ -55,7 +55,11 @@ export function initCompare(store, getData, { onPhotoOpen, onBasemapStatus }) {
     const ly = +leftSel.value, ry = +rightSel.value;
     const le = data.getEra(ly), re = data.getEra(ry);
     const lp = popAt(data, ly), rp = popAt(data, ry);
-    const count = (y) => data.geo.urban?.features.filter((f) => f.properties.yearStart <= y).length ?? 0;
+    const builtText = (y) => {
+      const ep = data.gridEpoch('urban', y);
+      return ep == null ? '자료 없음' : `약 ${Math.round(data.gridBuiltArea('urban', ep)).toLocaleString()} km²(${ep})`;
+    };
+    const linesOpen = (y) => new Set((data.geo.subway?.features || []).filter((f) => f.properties.yearStart <= y).map((f) => f.properties.line)).size;
     const newDev = data.geo.developments?.features.filter((f) => f.properties.year > ly && f.properties.year <= ry) ?? [];
 
     let diff = '';
@@ -63,7 +67,7 @@ export function initCompare(store, getData, { onPhotoOpen, onBasemapStatus }) {
       const delta = rp.value - lp.value;
       diff += `<b>${escapeHtml(lp.label)}</b> ${lp.value.toLocaleString()}${lp.unit}(${lp.year}) → ${rp.value.toLocaleString()}${rp.unit}(${rp.year}), <b>${delta >= 0 ? '+' : ''}${delta.toLocaleString()}${rp.unit}</b>. `;
     }
-    diff += `시가지 확장 구역(데모) ${count(ly)}개 → ${count(ry)}개. `;
+    diff += `건물 피복 면적(위성 관측) ${builtText(ly)} → ${builtText(ry)}. 지하철 노선 ${linesOpen(ly)}개 → ${linesOpen(ry)}개. `;
     if (newDev.length) diff += `그 사이 주요 개발: ${newDev.map((f) => escapeHtml(f.properties.name)).join(', ')}.`;
 
     commentary.innerHTML = `
