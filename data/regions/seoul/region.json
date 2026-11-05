@@ -390,5 +390,9 @@
     "photos": "data/photos.json",
     "stats": "stats.json",
     "sources": "sources.json"
+  },
+  "simulator": {
+    "urbanGrid": "sim/urban-grid.json",
+    "subway": "sim/subway.json"
   }
 }

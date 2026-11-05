@@ -17,16 +17,16 @@
   <script src="vendor/chart.umd.min.js" defer></script>
   <script src="vendor/lucide.min.js" defer></script>
 
-  <link rel="stylesheet" href="css/style.css?v=a098776d63">
+  <link rel="stylesheet" href="css/style.css?v=91e8a29422">
   <!-- importmap:start (자동 생성) -->
-  <script type="importmap">{"imports":{"./js/utils.js":"./js/utils.js?v=a098776d63","./js/store.js":"./js/store.js?v=a098776d63","./js/data.js":"./js/data.js?v=a098776d63","./js/map-view.js":"./js/map-view.js?v=a098776d63","./js/timeline.js":"./js/timeline.js?v=a098776d63","./js/sidebar.js":"./js/sidebar.js?v=a098776d63","./js/stats-chart.js":"./js/stats-chart.js?v=a098776d63","./js/info-panel.js":"./js/info-panel.js?v=a098776d63","./js/modal.js":"./js/modal.js?v=a098776d63","./js/gallery.js":"./js/gallery.js?v=a098776d63","./js/compare.js":"./js/compare.js?v=a098776d63","./js/main.js":"./js/main.js?v=a098776d63"}}</script>
+  <script type="importmap">{"imports":{"./js/utils.js":"./js/utils.js?v=91e8a29422","./js/store.js":"./js/store.js?v=91e8a29422","./js/data.js":"./js/data.js?v=91e8a29422","./js/map-view.js":"./js/map-view.js?v=91e8a29422","./js/timeline.js":"./js/timeline.js?v=91e8a29422","./js/sidebar.js":"./js/sidebar.js?v=91e8a29422","./js/stats-chart.js":"./js/stats-chart.js?v=91e8a29422","./js/info-panel.js":"./js/info-panel.js?v=91e8a29422","./js/modal.js":"./js/modal.js?v=91e8a29422","./js/gallery.js":"./js/gallery.js?v=91e8a29422","./js/compare.js":"./js/compare.js?v=91e8a29422","./js/simulator.js":"./js/simulator.js?v=91e8a29422","./js/main.js":"./js/main.js?v=91e8a29422"}}</script>
   <!-- importmap:end -->
   <!-- 웹 서버·GitHub Pages: ES 모듈판 -->
-  <script type="module" src="js/main.js?v=a098776d63"></script>
+  <script type="module" src="js/main.js?v=91e8a29422"></script>
   <!-- 더블클릭(file://) 실행: 모듈과 JSON을 쓸 수 없으므로 번들판을 불러옴 -->
   <script>
     if (location.protocol === 'file:') {
-      ['dist/geoscape-data.js?v=a098776d63', 'dist/geoscape.bundle.js?v=a098776d63'].forEach(function (src) {
+      ['dist/geoscape-data.js?v=91e8a29422', 'dist/geoscape.bundle.js?v=91e8a29422'].forEach(function (src) {
         var s = document.createElement('script');
         s.src = src; s.async = false; s.defer = true;
         document.head.appendChild(s);
@@ -69,6 +69,10 @@
           <span class="field-label"><i data-lucide="globe-2"></i>탐구 지역</span>
           <select id="regionSelect" aria-label="탐구 지역 선택"></select>
         </label>
+
+        <button class="sim-switch" id="simToggle" aria-pressed="false" title="탐구 화면과 시뮬레이터를 오갑니다">
+          <i data-lucide="orbit"></i><span class="sim-switch-label">시뮬레이터</span>
+        </button>
 
         <div class="segmented" role="tablist" aria-label="탐구 모드">
           <button class="seg-btn is-active" data-mode="explore" role="tab" aria-selected="true"><i data-lucide="clock-3"></i><span>시간 탐색</span></button>
@@ -150,6 +154,9 @@
         </div>
       </main>
 
+      <!-- ===== 시뮬레이터 (MapLibre GL, 처음 열 때 불러옴) ===== -->
+      <section class="simulator" id="simulator" hidden aria-label="서울 공간 구조 시뮬레이터"></section>
+
       <!-- ===== D. 오른쪽 정보 패널 ===== -->
       <aside class="panel" id="panel" aria-label="시기별 정보">
         <div class="panel-inner" id="panelContent"></div>
@@ -203,6 +210,7 @@
         <li><span class="step-icon"><i data-lucide="map-pin"></i></span><div><b>지도 위 마커를 클릭하세요.</b> 개발 지역 설명과 사진 자료를 볼 수 있습니다.</div></li>
         <li><span class="step-icon"><i data-lucide="message-circle-question"></i></span><div><b>탐구 질문에 답해 보세요.</b> 오른쪽 패널의 질문은 변화의 원인과 영향을 생각하도록 돕습니다.</div></li>
         <li><span class="step-icon"><i data-lucide="columns-2"></i></span><div><b>과거·현재 비교 모드</b>에서 두 시점의 지도를 나란히 놓고 비교할 수 있습니다.</div></li>
+        <li><span class="step-icon"><i data-lucide="orbit"></i></span><div><b>시뮬레이터</b> 버튼을 누르면 실제 위성 자료로 본 도시화와 지하철 노선망이 시간에 따라 자라나는 모습을 볼 수 있습니다. 같은 버튼으로 다시 돌아옵니다.</div></li>
       </ol>
       <div class="help-keys">
         <span><kbd>←</kbd><kbd>→</kbd> 1년 이동</span>

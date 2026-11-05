@@ -54,6 +54,7 @@ export function initTimeline(store, getData) {
     pos = v;
     slider.value = v;
     slider.style.setProperty('--p', pct(v) + '%');
+    window.dispatchEvent(new CustomEvent('gs:timepos', { detail: v })); // 시뮬레이터가 연속 시간으로 사용
   }
   // 현재 위치에서 목표 연도까지 부드럽게 이동
   function glideTo(target) {

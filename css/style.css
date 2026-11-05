@@ -466,3 +466,75 @@ img.img-failed { visibility: hidden; }
 .gs-marker.gs-anim-leave::after { display: none; }
 /* 연도 숫자 전환 */
 .year-badge-year, .tl-year-num { transition: color .3s; }
+
+/* =========================================================
+   시뮬레이터 (MapLibre GL) – 탐구 화면과 전환
+   ========================================================= */
+.sim-switch { display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--teal-500); background: transparent; color: var(--teal-400); font-weight: 700; font-size: 13px; white-space: nowrap; transition: background .2s, color .2s; }
+.sim-switch:hover { background: rgba(20, 184, 166, .12); }
+.sim-switch.is-active { background: var(--teal-500); color: var(--navy-900); }
+.app.view-sim .body { grid-template-columns: minmax(0, 1fr) !important; }
+.app.view-sim .sidebar, .app.view-sim .map-area, .app.view-sim .panel { display: none !important; }
+.app.view-sim .segmented { opacity: .4; pointer-events: none; }
+.simulator { position: relative; min-height: 0; background: #e9eef1; overflow: hidden; }
+.simulator[hidden] { display: none !important; }
+/* maplibre-gl.css 의 .maplibregl-map { position: relative } 보다 우선 */
+.simulator .sim-map, .simulator .sim-map.maplibregl-map { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sim-hud { position: absolute; z-index: 5; background: rgba(255, 255, 255, .94); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); backdrop-filter: blur(6px); }
+.sim-title { left: 14px; top: 14px; padding: 10px 16px 12px; min-width: 210px; }
+.sim-kicker { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--teal-600); }
+.sim-year { font-size: 44px; font-weight: 800; line-height: 1.05; color: var(--navy-900); font-variant-numeric: tabular-nums; letter-spacing: -.03em; }
+.sim-sub { font-size: 12px; color: var(--text-2); max-width: 240px; }
+.sim-controls { left: 14px; top: 150px; padding: 10px 12px; width: 210px; display: flex; flex-direction: column; gap: 4px; }
+.sim-toggle { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 4px 2px; cursor: pointer; }
+.sim-toggle input { accent-color: var(--teal-600); margin: 0; }
+.sim-swatch { width: 14px; height: 10px; border-radius: 3px; flex: none; }
+.sim-sw-urban { background: linear-gradient(90deg, #a6e3d7, #0F6E56); }
+.sim-sw-subway { background: linear-gradient(90deg, #0052A4 0 25%, #00A84D 25% 50%, #EF7C1C 50% 75%, #00A5DE 75%); }
+.sim-sw-label { background: #fff; border: 1px solid #13324b; }
+.sim-sw-3d { background: #0b2a43; }
+.sim-legend { margin-top: 6px; padding-top: 8px; border-top: 1px dashed var(--border); }
+.sim-legend-title { font-size: 11.5px; color: var(--text-2); margin-bottom: 4px; }
+.sim-legend-bar { height: 8px; border-radius: 4px; background: linear-gradient(90deg, #a6e3d7, #5DCAA5, #1D9E75, #0F6E56, #085041, #0b2a43); }
+.sim-legend-scale { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-3); margin-top: 2px; }
+.sim-sources { margin-top: 6px; font-size: 12px; }
+.sim-sources summary { cursor: pointer; color: var(--text-2); }
+.sim-sources p { margin: 6px 0 0; line-height: 1.45; word-break: break-all; }
+.sim-stats { right: 14px; top: 14px; width: 250px; padding: 12px 14px; }
+.sim-stat span { display: block; font-size: 11.5px; color: var(--text-3); }
+.sim-stat b { font-size: 18px; color: var(--navy-900); font-variant-numeric: tabular-nums; }
+.sim-stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); }
+.sim-stat-row b { font-size: 15px; }
+.sim-spark { width: 100%; height: 44px; margin-top: 4px; }
+.sim-spark rect { fill: #cfe9e3; transition: fill .3s; }
+.sim-spark rect.on { fill: var(--teal-600); }
+.sim-spark-l { font-size: 9px; fill: var(--text-3); }
+.sim-feed-title { font-size: 11.5px; color: var(--text-3); margin: 10px 0 4px; }
+.sim-feed { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; }
+.sim-feed li { display: flex; gap: 8px; align-items: flex-start; padding: 5px 6px; border-radius: 6px; line-height: 1.35; }
+.sim-feed li.is-recent { background: var(--teal-50); }
+.sim-feed small { color: var(--text-2); }
+.sim-feed-empty { color: var(--text-3); }
+.sim-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; margin-top: 3px; display: inline-block; }
+.sim-headline { position: absolute; left: 50%; top: 18px; transform: translate(-50%, -10px); z-index: 6; display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 99px; background: var(--navy-900); color: #fff; font-size: 13.5px; box-shadow: var(--shadow-lg); opacity: 0; pointer-events: none; white-space: nowrap; max-width: calc(100% - 560px); overflow: hidden; text-overflow: ellipsis; }
+.sim-headline.is-on { animation: simHead 3.2s ease both; }
+.sim-headline .sim-dot { margin-top: 0; }
+@keyframes simHead { 0% { opacity: 0; transform: translate(-50%, -10px); } 10%, 80% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; transform: translate(-50%, -6px); } }
+.sim-ripple { width: 18px; height: 18px; border-radius: 50%; border: 3px solid var(--c, #14b8a6); animation: simRipple 1.5s ease-out both; pointer-events: none; }
+@keyframes simRipple { 0% { transform: scale(.3); opacity: 1; } 100% { transform: scale(3.2); opacity: 0; } }
+.sim-loading { position: absolute; inset: 0; z-index: 8; display: grid; place-items: center; align-content: center; gap: 12px; background: rgba(233, 238, 241, .92); color: var(--text-2); }
+.sim-error { max-width: 420px; text-align: center; background: var(--surface); padding: 18px 20px; border-radius: var(--radius); box-shadow: var(--shadow); }
+.simulator .maplibregl-ctrl-attrib { font-size: 10.5px; }
+@media (max-width: 1024px) {
+  .sim-switch-label { display: none; }
+  .sim-switch { padding: 0 10px; }
+  .sim-headline { max-width: calc(100% - 40px); top: auto; bottom: 16px; }
+}
+@media (max-width: 760px) {
+  .sim-stats { top: auto; bottom: 12px; right: 12px; left: 12px; width: auto; padding: 8px 12px; }
+  .sim-stats .sim-spark, .sim-stats .sim-feed, .sim-stats .sim-feed-title { display: none; }
+  .sim-controls { top: auto; bottom: 120px; width: 180px; }
+  .sim-title { min-width: 0; padding: 8px 12px; }
+  .sim-year { font-size: 32px; }
+  .sim-headline { bottom: 140px; }
+}

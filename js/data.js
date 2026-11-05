@@ -26,6 +26,9 @@ async function fetchJson(url) {
   }
 }
 
+/** 시뮬레이터 등 다른 모듈에서 JSON 불러오기 (내장 데이터·시간 제한 동일 적용) */
+export const loadJson = (url) => fetchJson(url);
+
 export function loadRegistry() {
   return fetchJson('data/regions.json').then((r) => {
     if (!Array.isArray(r?.regions) || !r.regions.length) throw new Error('data/regions.json: 지역 목록이 비어 있음');

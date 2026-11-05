@@ -13,16 +13,26 @@ import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..');
-const ORDER = ['utils', 'store', 'data', 'map-view', 'timeline', 'sidebar', 'stats-chart', 'info-panel', 'modal', 'gallery', 'compare', 'main'];
+const ORDER = ['utils', 'store', 'data', 'map-view', 'timeline', 'sidebar', 'stats-chart', 'info-panel', 'modal', 'gallery', 'compare', 'simulator', 'main'];
 
 // ---------- JS 번들 ----------
+// 모듈마다 자기 범위(함수)로 감싸 내부 이름이 서로 부딪히지 않게 하고, export 한 이름만 바깥으로 꺼냅니다.
+// (실제 ES 모듈과 같은 규칙. 두 모듈이 같은 이름을 export 하면 빌드를 멈춤)
 let code = '';
+const exported = new Map();
 for (const name of ORDER) {
-  const src = readFileSync(join(ROOT, 'js', name + '.js'), 'utf8')
-    .replace(/^import[\s\S]*?from\s+['"][^'"]+['"];?\s*$/gm, '') // import 문 제거
+  const raw = readFileSync(join(ROOT, 'js', name + '.js'), 'utf8');
+  const names = [...raw.matchAll(/^export\s+(?:async\s+)?(?:function\s*\*?|const|let|class)\s+([A-Za-z_$][\w$]*)/gm)].map((m) => m[1]);
+  for (const n of names) {
+    if (exported.has(n)) throw new Error(`'${n}' 를 ${exported.get(n)}.js 와 ${name}.js 가 함께 export 합니다.`);
+    exported.set(n, name);
+  }
+  const src = raw
+    .replace(/^import[\s\S]*?from\s+['"][^'"]+['"];?\s*$/gm, '') // import 문 제거 (앞 모듈이 꺼낸 이름을 그대로 사용)
     .replace(/^export\s+(?=(async\s+)?function|const|let|class)/gm, ''); // export 키워드 제거
   if (/^\s*(import|export)\s/m.test(src)) throw new Error(`${name}.js 에 처리되지 않은 import/export 가 있습니다.`);
-  code += `\n// ===== js/${name}.js =====\n${src}\n`;
+  const head = names.length ? `const { ${names.join(', ')} } = ` : '';
+  code += `\n// ===== js/${name}.js =====\n${head}(function () {\n${src}\nreturn { ${names.join(', ')} };\n})();\n`;
 }
 const banner = `/* GeoScape standalone bundle – 자동 생성 파일입니다. 직접 수정하지 말고 scripts/build-standalone.mjs 를 실행하세요. */\n`;
 mkdirSync(join(ROOT, 'dist'), { recursive: true });

@@ -73,6 +73,31 @@ node scripts/build-standalone.mjs
 
 ---
 
+## 공간 구조 시뮬레이터 (MapLibre GL)
+
+헤더의 **시뮬레이터** 버튼으로 기존 탐구 화면과 시뮬레이터를 오갈 수 있습니다. 하단 타임라인(연도·재생)은 두 화면이 함께 씁니다. 시뮬레이터는 처음 열 때만 불러오므로 탐구 화면은 느려지지 않습니다.
+
+| 요소 | 자료 | 표현 |
+|---|---|---|
+| 도시화 격자 | **GHSL GHS-BUILT-S R2023A** (EC JRC, 위성영상 기반 건물 피복 면적, 1975~2020년 5년 간격, CC BY 4.0) | 약 660 m × 650 m 칸 8,427개. 칸마다 건물이 덮은 면적 비율(%)을 색으로, 3D 보기에서는 높이로 표시 |
+| 지하철 노선 | 선형·역: **OpenStreetMap** (ODbL) / 구간 개통일: **한국어 위키백과** 각 노선 「역사」 항목 대조 | 1~9호선·신분당선·GTX-A를 공식 색으로, 실제 개통일에 해당 구간이 선로를 따라 그려지며 새 역에 물결 표시 |
+| 통계·알림 | 위 자료에서 계산 | 건물 피복 면적(km²), 운행 노선 수, 노선 길이(km), 역 수, 개통 소식 |
+
+- **자료 원칙:** 도시화 격자는 관측 연도(1975, 1980, …, 2020) 값만 쓰며, 사이 연도에는 직전 관측값을 표시합니다(화면에 '○○년 위성 관측값'으로 안내). 1975년 이전은 위성 자료가 없어 지하철만 표시합니다. 관측값이 바뀔 때의 전환 효과와 구간이 그려지는 효과는 움직임일 뿐 자료가 아닙니다.
+- **검증:** 만든 노선 길이를 공식 연장과 비교했습니다 (2호선 60.2 km, 3호선 57.3 km / 공식 57.4, 6호선 36.4 km, 9호선 40.6 km, 신분당선 33.2 km / 공식 33.4). 1975년 1호선 역 수 38개는 위키백과의 '1974년 38개 역 개통'과 일치합니다.
+- **알려진 한계:** 1호선은 2개 운행 계통(인천~연천, 광운대~신창)만 반영해 광명·서동탄 지선은 빠져 있습니다. 4호선 진접선, 경의중앙선·공항철도·분당선·수인선 등은 아직 넣지 않았습니다.
+- **배경 지도:** OpenFreeMap 벡터 지도(API 키 불필요). 연결이 안 되면 배경 없이 격자와 노선만 표시합니다.
+
+### 시뮬레이터 자료 다시 만들기
+```bash
+python scripts/build_ghsl_grid.py <작업폴더> data/regions/seoul/sim/urban-grid.json
+python scripts/build_subway.py <작업폴더> data/regions/seoul/sim/subway.json
+node scripts/check.mjs --fix
+```
+`build_subway.py`의 `STAGES` 표에 노선·구간·개통일을 추가하면 새 노선을 넣을 수 있습니다. GHSL 타일은 약 30 MB × 10개를 내려받아 잘라 쓴 뒤 지웁니다.
+
+---
+
 ## 자료 원칙과 현재 자료 상태
 
 GeoScape는 **실제 관측 자료와 교육용 데모 자료를 구분**합니다. 화면 곳곳의 배지가 자료 상태를 알려 줍니다.
@@ -118,6 +143,7 @@ GeoScape는 **실제 관측 자료와 교육용 데모 자료를 구분**합니�
 │  └─ regions/seoul/
 │     ├─ region.json          # 지도 설정, 시간 범위, 지역 정보, 탐구 주제, 주요 시점, 레이어 정의
 │     ├─ eras.json            # 시대별 설명·사례·탐구 질문·출처 ID
+│     ├─ sim/                 # 시뮬레이터 자료 (urban-grid.json, subway.json)
 │     ├─ stats.json           # 통계 시계열
 │     ├─ sources.json         # 출처·라이선스
 │     └─ layers/*.geojson     # 공간 레이어
@@ -126,10 +152,12 @@ GeoScape는 **실제 관측 자료와 교육용 데모 자료를 구분**합니�
 │  └─ photos/1960s|1970s|1980s/  # 역사 사진 (1280px) + thumbs/ (420px)
 ├─ docs/photo-collection-report.md  # 사진 수집·검증·연동 보고서
 ├─ geoscape_seoul_photo_sources_safe/  # 제공받은 사진 후보 목록 원본 (CSV/JSON)
-├─ vendor/                   # Leaflet 1.9.4, Chart.js 4.4.1, Lucide 0.469.0 (로컬 사본)
+├─ vendor/                   # Leaflet 1.9.4, MapLibre GL 4.7.1, Chart.js 4.4.1, Lucide 0.469.0 (로컬 사본)
 ├─ dist/                     # 더블클릭 실행용 번들 (자동 생성: build-standalone.mjs)
 ├─ scripts/
 │  ├─ check.mjs               # 자료·코드·번들 점검 (커밋 전 실행)
+│  ├─ build_ghsl_grid.py      # 시뮬레이터 도시화 격자 (GHSL)
+│  ├─ build_subway.py         # 시뮬레이터 지하철 노선망 (OSM + 개통일 표)
 │  ├─ serve.ps1               # PowerShell 로컬 웹 서버 (start-server.bat에서 실행)
 │  ├─ build-standalone.mjs    # file:// 실행용 번들 생성
 │  ├─ gen-layers.mjs          # 데모 시가지·토지이용 형상 생성 (Node.js)
@@ -189,7 +217,8 @@ Wikimedia Commons 사진은 스크립트로 검증·다운로드·등록합니�
 
 ## 사용 기술과 라이선스
 
-- [Leaflet 1.9.4](https://leafletjs.com) (BSD-2) · [Chart.js 4.4.1](https://www.chartjs.org) (MIT) · [Lucide Icons](https://lucide.dev) (ISC) · [Pretendard](https://github.com/orioncactus/pretendard) (OFL)
-- 배경 지도: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors (ODbL), 위성 영상: Esri World Imagery
+- [Leaflet 1.9.4](https://leafletjs.com) (BSD-2) · [MapLibre GL JS 4.7.1](https://maplibre.org) (BSD-3) · [Chart.js 4.4.1](https://www.chartjs.org) (MIT) · [Lucide Icons](https://lucide.dev) (ISC) · [Pretendard](https://github.com/orioncactus/pretendard) (OFL)
+- 배경 지도: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors (ODbL), 위성 영상: Esri World Imagery, 시뮬레이터 배경: [OpenFreeMap](https://openfreemap.org) · © OpenMapTiles
+- 시뮬레이터 자료: GHSL GHS-BUILT-S R2023A © European Commission JRC (CC BY 4.0) · 지하철 선형 © OpenStreetMap contributors (ODbL) · 개통일 한국어 위키백과 (CC BY-SA 4.0)
 - 역사 사진: 사진별 저작자·라이선스는 `data/photos.json`과 앱의 사진 확대 보기에 표시 (공공누리 제1유형, CC BY 3.0/4.0, 퍼블릭 도메인 – Wikimedia Commons 경유)
 - 각 자료의 출처·이용 조건은 `data/regions/seoul/sources.json`과 앱의 **데이터 안내** 창에서 확인할 수 있습니다.

@@ -8,6 +8,7 @@ import { initSidebar } from './sidebar.js';
 import { initInfoPanel } from './info-panel.js';
 import { initGallery } from './gallery.js';
 import { initCompare } from './compare.js';
+import { initSimulator } from './simulator.js';
 import { initModals, openModal } from './modal.js';
 
 const app = $('#app');
@@ -220,6 +221,33 @@ async function boot() {
 
   // ---------- 헤더·패널 조작 ----------
   $$('.seg-btn').forEach((b) => b.addEventListener('click', () => { if (!b.disabled) store.set({ mode: b.dataset.mode }); }));
+  // ---------- 시뮬레이터 ↔ 탐구 화면 전환 (하단 타임라인은 함께 사용) ----------
+  let simulator = null;
+  const simBtn = $('#simToggle');
+  async function setView(view) {
+    const sim = view === 'sim';
+    app.classList.toggle('view-sim', sim);
+    simBtn.setAttribute('aria-pressed', String(sim));
+    simBtn.classList.toggle('is-active', sim);
+    simBtn.querySelector('.sim-switch-label').textContent = sim ? '탐구 화면으로' : '시뮬레이터';
+    if (sim) {
+      if (store.get().mode !== 'explore') store.set({ mode: 'explore' });
+      try {
+        simulator ??= initSimulator(store, getData);
+        window.GeoScape.simulator = simulator;
+        await simulator.show();
+      } catch (err) {
+        console.error(err);
+        notify('시뮬레이터를 열지 못했습니다: ' + err.message, { type: 'error' });
+      }
+    } else {
+      simulator?.hide();
+      setTimeout(() => mainView?.invalidate(), 60);
+    }
+  }
+  simBtn.addEventListener('click', () => setView(app.classList.contains('view-sim') ? 'explore' : 'sim'));
+  window.addEventListener('resize', debounce(() => simulator?.resize(), 200));
+
   $('#helpBtn').addEventListener('click', () => openModal('helpModal'));
   $('#openGalleryBtn').addEventListener('click', () => gallery.openGallery());
   $('#dataNoticeBtn').addEventListener('click', () => { renderDataModal(); openModal('dataModal'); });
